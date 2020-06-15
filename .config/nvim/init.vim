@@ -2,6 +2,14 @@
 set nocompatible
 filetype off
 
+if empty(glob("~/.local/share/nvim/site/autoload/plug.vim"))
+    silent !curl -fLo $HOME/.local/share/nvim/site/autoload/plug.vim
+        \ --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall --sync
+        \ | source $MYVIMRC
+endif
+
 call plug#begin('~/.config/nvim/plugged')
 
 " git plugin for vim
@@ -14,11 +22,14 @@ Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
+" Golang
+Plug 'fatih/vim-go'
+
 call plug#end()
 
 filetype plugin indent on
 
-" Configurations from https://missing.csail.mit.edu/2020/editors/
+" Configurations from https://missing.csail.mit.edu/2020/editors/ ------------
 
 " Disable default startup message.
 set shortmess+=I
@@ -48,20 +59,25 @@ set noerrorbells visualbell t_vb=
 " Enable mouse support.
 set mouse+=a
 
-" Do this in normal mode...
-nnoremap <Left>  :echoe "Use h"<CR>
-nnoremap <Right> :echoe "Use l"<CR>
-nnoremap <Up>    :echoe "Use k"<CR>
-nnoremap <Down>  :echoe "Use j"<CR>
-" ...and in insert mode
-inoremap <Left>  <ESC>:echoe "Use h"<CR>
-inoremap <Right> <ESC>:echoe "Use l"<CR>
-inoremap <Up>    <ESC>:echoe "Use k"<CR>
-inoremap <Down>  <ESC>:echoe "Use j"<CR>
+" When editing a file, always jump to the last known cursor position.
+" Don't do it when the position is invalid or when inside an event handler
+" (happens when dropping a file on gvim).
+" Also don't do it when the mark is in the first line, that is the default
+" position when opening a file.
+" Also, do not restore last edit position when file type is 'gitcommit'
+autocmd BufReadPost *
+    \ if line("'\"") > 1 && line("'\"") <= line("$") |
+    \   if match(&filetype, "gitcommit") != 0 |
+    \       exe "normal! g`\"" |
+    \   endif |
+    \ endif
 
 " Custom settings begin ======================================================
 
-" Map `mode()`'s return value to human readable format -------------------
+nnoremap <M-d> <C-e>
+nnoremap <M-u> <C-y>
+
+" Map `mode()`'s return value to human readable format -----------------------
 let g:current_mode = {
     \ "n"       : "Normal",
     \ "no"      : "Normal·Operator Pending",
@@ -96,31 +112,6 @@ endfunction
 function! CurrentBranch()
     let l:branch = FugitiveHead()
     if strlen(l:branch) > 0
-        let l:message = "(" . l:branch . ") "
-    else
-        let l:message = ""
-    endif
-    return l:message
-endfunction
-
-function! ColorMode()
-    let cmode = Cmode()
-    if cmode == "NORMAL"
-        let ret = "%1*"
-    else
-        let ret = "%2*"
-    endif
-    return ret.'\ '.cmode.'\ %*'
-endfunction
-
-function! Cmode()
-    let message = toupper(g:current_mode[mode()])
-    return message
-endfunction
-
-function! CurrentBranch()
-    let l:branch = FugitiveHead()
-    if strlen(l:branch) > 0
         let l:message = "[" . l:branch . "] "
     else
         let l:message = ""
@@ -152,7 +143,13 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 set softtabstop=-1
-set ttimeoutlen=0 timeoutlen=0
+
+" Disable <ESC> wait time
+set nottimeout
+" Set map timeout to 1000ms
+set timeoutlen=1000
+" Use <space> as mapleader
+let mapleader = ' '
 
 set formatoptions=tcroqlm2
 " Use 78 as textwidth according to RFC2822
@@ -188,6 +185,7 @@ if exists('+termguicolors')
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
     set termguicolors
     colorscheme minimalist
+    hi pmenu         guibg=#202c2f gui=none
     hi cursorline    guibg=#0c0c0c gui=none
     hi colorcolumn   guibg=#262626
 
@@ -285,9 +283,9 @@ set stl+=\ %#percarea#\ %3p%%\ %#stlbg#
 set stl+=\ %4l:%-3c
 
 " ----------------------------------------------------------------------------
-" Configuratoin for 'coc'
+" Configuration for 'coc'
 source $HOME/.config/nvim/coc.init.vim
-" Configuratoin for 'Defx'
+" Configuration for 'Defx'
 source $HOME/.config/nvim/defx.init.vim
 " Configuration for 'fzf'
 source $HOME/.config/nvim/fzf.init.vim
