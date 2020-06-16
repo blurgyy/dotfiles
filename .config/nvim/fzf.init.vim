@@ -1,5 +1,3 @@
-let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -l'
-
 " If current buffer is under a git repository, find files in it; Otherwise
 " find under current directory.
 " From: https://github.com/junegunn/fzf.vim/issues/47#issuecomment-160237795
