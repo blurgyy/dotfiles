@@ -12,8 +12,6 @@ endif
 
 call plug#begin('~/.config/nvim/plugged')
 
-" git plugin for vim
-Plug 'tpope/vim-fugitive'
 " Auto-completion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " File explorer
@@ -77,58 +75,6 @@ autocmd BufReadPost *
 nnoremap <M-d> <C-e>
 nnoremap <M-u> <C-y>
 
-" Map `mode()`'s return value to human readable format -----------------------
-let g:current_mode = {
-    \ "n"       : "Normal",
-    \ "no"      : "Normal·Operator Pending",
-    \ "v"       : "Visual",
-    \ "V"       : "V·Line",
-    \ "\<C-V>"  : "V·Block",
-    \ "s"       : "Select",
-    \ "S"       : "S·Line",
-    \ "\<C-S>"  : "S·Block",
-    \ "i"       : "Insert",
-    \ "R"       : "Replace",
-    \ "Rv"      : "V·Replace",
-    \ "c"       : "Command",
-    \ "cv"      : "Vim Ex",
-    \ "ce"      : "Ex",
-    \ "r"       : "Prompt",
-    \ "rm"      : "More",
-    \ "r?"      : "Confirm",
-    \ "!"       : "Shell",
-    \ "t"       : "Terminal"
-\}
-
-" Functions ------------------------------------------------------------------
-" Returns current mode
-function! Cmode()
-    let message = toupper(g:current_mode[mode()])
-    return message
-endfunction
-
-" Returns current branch
-" Requires vim-fugitive to be installed
-function! CurrentBranch()
-    let l:branch = FugitiveHead()
-    if strlen(l:branch) > 0
-        let l:message = "[" . l:branch . "] "
-    else
-        let l:message = ""
-    endif
-    return l:message
-endfunction
-
-function! ColorMode()
-    let cmode = Cmode()
-    if cmode == "NORMAL"
-        let ret = "%1*"
-    else
-        let ret = "%2*"
-    endif
-    return ret.'\ '.cmode.'\ %*'
-endfunction
-
 " Global settings ------------------------------------------------------------
 " '512: Marks will be rememberd for the last 512 edited files
 " <1024: Limits the numbr of lines saved for each register to 1024 lines, if a
@@ -172,7 +118,7 @@ syntax enable
 " from: https://stackoverflow.com/a/30552423/13482274
 augroup Comment_Keyword_Highlight
     au!
-    au Syntax * syn match ComHi /\v\c<(FIXME|NOTE|TODO|SHOULD|ONLY)/
+    au Syntax * syn match ComHi /\v\c<(FIXME|NOTE|TODO|SHOULD|MUST|ONLY)/
         \ containedin=.*Comment.*,vimCommentTitle
         \ contained
 augroup END
@@ -185,7 +131,8 @@ if exists('+termguicolors')
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
     set termguicolors
     colorscheme minimalist
-    hi pmenu         guibg=#202c2f gui=none
+    hi pmenu         guibg=#27304a gui=none
+    hi CocHighlightText guibg=#27304a
     hi cursorline    guibg=#0c0c0c gui=none
     hi colorcolumn   guibg=#262626
 
@@ -195,7 +142,7 @@ if exists('+termguicolors')
     hi percarea      guibg=#3a3a3a guifg=#eeeeee
     hi stlbg         guibg=#262626 guifg=#6a6a6a
 
-    " trailing white spaces
+    " trailing whitespaces
     hi extrawhitespace guibg=#3a3a3a
 
     " Change bg color mod mode area on status line, based on current mode is
@@ -258,30 +205,7 @@ match extrawhitespace /\s\+$/
 nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 
 " Status line settings -------------------------------------------------------
-" Always show the status line at the bottom, even if you only have one window
-" open.
-set laststatus=2
-" Do not show current mode on command area
-set noshowmode
-" `stl` stands for `statusline`
-set stl=
-set stl+=\ %{Cmode()}\ %#stlbg#
-set stl+=%#fnamearea#
-set stl+=\ %t
-set stl+=%#brancharea#
-set stl+=\ %{CurrentBranch()}
-set stl+=%#stlbg#
-set stl+=\ %M
-set stl+=\ %H
-set stl+=\ %R
-
-set stl+=%=
-set stl+=%{&fileformat}
-set stl+=\ \|\ %{(&fileencoding!=''?&fenc:&enc)}
-set stl+=\ \|\ %Y
-set stl+=\ %#percarea#\ %3p%%\ %#stlbg#
-set stl+=\ %4l:%-3c
-
+source $HOME/.config/nvim/statusline.vim
 " ----------------------------------------------------------------------------
 " Configuration for 'coc'
 source $HOME/.config/nvim/coc.init.vim
