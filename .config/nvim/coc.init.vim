@@ -1,9 +1,6 @@
 " Example configuration for coc.
 " From: https://github.com/neoclide/coc.nvim#example-vim-configuration
 
-" Disable "version too low" warning at startup
-let g:coc_disable_startup_warning = 1
-
 " Set texlab TeX auto-completion
 let g:tex_flavor = 'latex'
 
@@ -15,11 +12,7 @@ set nobackup
 set nowritebackup
 
 " Give more space for displaying messages.
-set cmdheight=2
-
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience.
-set updatetime=300
+set cmdheight=1
 
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
@@ -59,9 +52,9 @@ else
   inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endif
 
-" Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+" Use `g9` and `g0` to navigate diagnostics
+nmap <silent> g9 <Plug>(coc-diagnostic-prev)
+nmap <silent> g0 <Plug>(coc-diagnostic-next)
 
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
@@ -90,7 +83,7 @@ nmap <leader>rn <Plug>(coc-rename)
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
-augroup mygroup
+augroup cocinitaugroup
   autocmd!
   " Setup formatexpr specified filetype(s).
   autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
@@ -136,7 +129,8 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " Add (Neo)Vim's native statusline support.
 " NOTE: Please see `:h coc-status` for integrations with external plugins that
 " provide custom statusline: lightline.vim, vim-airline.
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+" NOTE: Coc statusline is disabled.
+" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Mappings using CoCList:
 " Show all diagnostics.

@@ -8,3 +8,4 @@ command! ProjectFiles execute 'Files' s:find_git_root()
 
 " Use Ctrl-p to call above function
 nnoremap <silent> <c-p> :ProjectFiles<CR>
+nnoremap <silent> <c-l> :Lines<CR>

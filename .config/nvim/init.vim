@@ -12,6 +12,8 @@ endif
 
 call plug#begin('~/.config/nvim/plugged')
 
+" Git plugin, also required by statusline
+Plug 'tpope/vim-fugitive'
 " Auto-completion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " File explorer
@@ -75,6 +77,10 @@ autocmd BufReadPost *
 nnoremap <M-d> <C-e>
 nnoremap <M-u> <C-y>
 
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=100
+
 " Global settings ------------------------------------------------------------
 " '512: Marks will be rememberd for the last 512 edited files
 " <1024: Limits the numbr of lines saved for each register to 1024 lines, if a
@@ -118,7 +124,8 @@ syntax enable
 " from: https://stackoverflow.com/a/30552423/13482274
 augroup Comment_Keyword_Highlight
     au!
-    au Syntax * syn match ComHi /\v\c<(FIXME|NOTE|TODO|SHOULD|MUST|ONLY)/
+    au Syntax * syn match ComHi
+        \ /\v\c<(FIXME|NOTE|TODO|SHOULD|MUST|ONLY|WARNING)/
         \ containedin=.*Comment.*,vimCommentTitle
         \ contained
 augroup END
@@ -131,72 +138,27 @@ if exists('+termguicolors')
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
     set termguicolors
     colorscheme minimalist
-    hi pmenu         guibg=#27304a gui=none
+    hi pmenu        guibg=#27304a gui=none
     hi CocHighlightText guibg=#27304a
-    hi cursorline    guibg=#0c0c0c gui=none
-    hi colorcolumn   guibg=#262626
-
-    " Status line highlighting
-    hi fnamearea     guibg=#3a3a3a guifg=#eeeeee
-    hi brancharea    guibg=#3a3a3a guifg=#87d7ff gui=bold
-    hi percarea      guibg=#3a3a3a guifg=#eeeeee
-    hi stlbg         guibg=#262626 guifg=#6a6a6a
+    hi cursorline   guibg=#0c0c0c gui=none
+    hi colorcolumn  guibg=#262626
+    hi visual       guibg=#4e4a44
 
     " trailing whitespaces
     hi extrawhitespace guibg=#3a3a3a
-
-    " Change bg color mod mode area on status line, based on current mode is
-    " 'INSERT' or not
-    hi clear statusline
-    hi statusline guibg=#ffff87 guifg=#1c1c1c gui=none
-    au InsertEnter * hi statusline guibg=#87d7ff guifg=#1c1c1c gui=none
-    au InsertLeave * hi statusline guibg=#ffff87 guifg=#1c1c1c gui=none
 elseif &t_Co == 256
     colorscheme minimalist
     hi cursorline    ctermbg=234 cterm=none
     hi colorcolumn   ctermbg=235
 
-    " Status line highlighting
-    hi fnamearea     ctermbg=237 ctermfg=255
-    hi brancharea    ctermbg=237 ctermfg=117 cterm=bold
-    hi percarea      ctermbg=237 ctermfg=255
-    hi stlbg         ctermbg=235 ctermfg=241
-
-    " trailing white spaces
+    " trailing whitespaces
     hi extrawhitespace ctermbg=237 guibg=237
-
-    " Change bg color mod mode area on status line, based on current mode is
-    " 'INSERT' or not
-    hi clear statusline
-    hi statusline ctermbg=228 ctermfg=232 cterm=none
-    au InsertEnter * hi statusline ctermbg=117 ctermfg=232 cterm=none
-    au InsertLeave * hi statusline ctermbg=228 ctermfg=232 cterm=none
-    " CmdlineEnter/Leave do not work well with auto-completion plugins.
-    "au CmdlineEnter * hi statusline ctermbg=190 ctermfg=232 cterm=none|redraw
-    "au CmdlineLeave * hi statusline ctermbg=219 ctermfg=232 cterm=none|redraw
 else
     set nocursorline
     highlight colorcolumn   ctermbg=darkgray
 
-    " Status line highlighting
-    hi fnamearea     ctermbg=darkgray    ctermfg=white
-    hi brancharea    ctermbg=darkgray    ctermfg=lightblue
-    hi percarea      ctermbg=darkgray    ctermfg=white
-    hi stlbg         ctermbg=black       ctermfg=darkgray
-
-    " trailing white spaces
+    " trailing whitespaces
     hi extrawhitespace ctermbg=lightgray
-
-    " Change bg color mod mode area on status line, based on current mode is
-    " 'INSERT' or not
-    hi clear statusline
-    hi statusline ctermbg=yellow ctermfg=black cterm=none
-
-    au InsertEnter * hi statusline ctermbg=lightblue ctermfg=black cterm=none
-    au InsertLeave * hi statusline ctermbg=yellow ctermfg=black cterm=none
-    " CmdlineEnter/Leave do not work well with auto-completion plugins.
-    "au CmdlineEnter * hi statusline ctermbg=yellow ctermfg=black cterm=none|redraw
-    "au CmdlineLeave * hi statusline ctermbg=green ctermfg=black cterm=none|redraw
 endif
 
 " White space settings -------------------------------------------------------
