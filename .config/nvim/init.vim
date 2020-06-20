@@ -16,8 +16,6 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'tpope/vim-fugitive'
 " Auto-completion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" File explorer
-Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
 " Fuzzy find
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -122,17 +120,21 @@ syntax enable
 
 " Highlight keywords in comments
 " from: https://stackoverflow.com/a/30552423/13482274
-augroup Comment_Keyword_Highlight
+augroup CommentKeywordHighlight
     au!
     au Syntax * syn match ComHi
-        \ /\v\c<(FIXME|NOTE|TODO|SHOULD|MUST|ONLY|WARNING)/
+        \ /\v\c<(fixme|note|todo|should|must|only|warning)/
+        \ containedin=.*Comment.*,vimCommentTitle
+        \ contained
+    au Syntax * syn match ComHiNegative
+        \ /\v\c<(should(( ?no|n'?))t|must(( ?no|n'?))t|do(( ?no|n'?))t|can(( ?no|'?))t)/
         \ containedin=.*Comment.*,vimCommentTitle
         \ contained
 augroup END
+hi def link ComHiNegative ComHi
 hi def link ComHi Todo
 
-" Status line settings
-set cursorline
+set nocursorline
 if exists('+termguicolors')
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
@@ -140,7 +142,8 @@ if exists('+termguicolors')
     colorscheme minimalist
     hi pmenu        guibg=#27304a gui=none
     hi CocHighlightText guibg=#27304a
-    hi cursorline   guibg=#0c0c0c gui=none
+    " Cursorline is disabled.
+    " hi cursorline   guibg=#0c0c0c gui=none
     hi colorcolumn  guibg=#262626
     hi visual       guibg=#4e4a44
 
@@ -148,13 +151,13 @@ if exists('+termguicolors')
     hi extrawhitespace guibg=#3a3a3a
 elseif &t_Co == 256
     colorscheme minimalist
-    hi cursorline    ctermbg=234 cterm=none
+    " Cursorline is disabled.
+    " hi cursorline    ctermbg=234 cterm=none
     hi colorcolumn   ctermbg=235
 
     " trailing whitespaces
     hi extrawhitespace ctermbg=237 guibg=237
 else
-    set nocursorline
     highlight colorcolumn   ctermbg=darkgray
 
     " trailing whitespaces
@@ -171,7 +174,5 @@ source $HOME/.config/nvim/statusline.vim
 " ----------------------------------------------------------------------------
 " Configuration for 'coc'
 source $HOME/.config/nvim/coc.init.vim
-" Configuration for 'Defx'
-source $HOME/.config/nvim/defx.init.vim
 " Configuration for 'fzf'
 source $HOME/.config/nvim/fzf.init.vim
