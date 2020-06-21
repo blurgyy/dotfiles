@@ -3,7 +3,7 @@ set nocompatible
 filetype off
 
 if empty(glob("~/.local/share/nvim/site/autoload/plug.vim"))
-    silent !curl -fLo $HOME/.local/share/nvim/site/autoload/plug.vim
+    silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim
         \ --create-dirs
         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     autocmd VimEnter * PlugInstall --sync
@@ -72,6 +72,19 @@ autocmd BufReadPost *
 
 " Custom settings begin ======================================================
 
+" Enable undo file and directory
+if !isdirectory($HOME.'/.config/nvim/undotree')
+    call mkdir($HOME.'/.config/nvim/undotree', 'p', 0700)
+endif
+set undodir=~/.config/nvim/undotree
+set undofile
+
+" Use <space> as mapleader
+let mapleader = ' '
+" Leader key bindings
+nnoremap <leader>w :w<CR>
+nnoremap <leader>x :wq<CR>
+
 nnoremap <M-d> <C-e>
 nnoremap <M-u> <C-y>
 
@@ -98,8 +111,6 @@ set softtabstop=-1
 set nottimeout
 " Set map timeout to 1000ms
 set timeoutlen=1000
-" Use <space> as mapleader
-let mapleader = ' '
 
 set formatoptions=tcroqlm2
 " Use 78 as textwidth according to RFC2822
@@ -112,6 +123,9 @@ au filetype gitcommit  setlocal tabstop=2 shiftwidth=2
 au filetype markdown   setlocal tabstop=2 shiftwidth=2
 au filetype sshconfig  setlocal tabstop=2 shiftwidth=2
 au filetype yaml       setlocal tabstop=2 shiftwidth=2
+au VimEnter * if expand('%:t') == 'CMakeLists.txt'
+    \ | set filetype=cmake
+    \ | endif
 
 
 " Color settings -------------------------------------------------------------
@@ -170,9 +184,9 @@ match extrawhitespace /\s\+$/
 nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 
 " Status line settings -------------------------------------------------------
-source $HOME/.config/nvim/statusline.vim
+source ~/.config/nvim/statusline.vim
 " ----------------------------------------------------------------------------
 " Configuration for 'coc'
-source $HOME/.config/nvim/coc.init.vim
+source ~/.config/nvim/coc.init.vim
 " Configuration for 'fzf'
-source $HOME/.config/nvim/fzf.init.vim
+source ~/.config/nvim/fzf.init.vim
