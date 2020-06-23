@@ -83,8 +83,11 @@ set undofile
 let mapleader = ' '
 " Leader key bindings
 nnoremap <leader>jk :w<CR>
+nnoremap <leader>hl :q<CR>
 nnoremap <leader>kj :wq<CR>
-nnoremap <leader>ll :wqa<CR>
+nnoremap <leader>lh :wqa<CR>
+" Set leader key timeout to 500ms
+set timeoutlen=500
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
@@ -108,8 +111,6 @@ set softtabstop=-1
 
 " Disable <ESC> wait time
 set nottimeout
-" Set map timeout to 1000ms
-set timeoutlen=1000
 
 set formatoptions=tcroqlm2
 " Use 78 as textwidth according to RFC2822
