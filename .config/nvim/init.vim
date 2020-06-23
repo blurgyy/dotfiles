@@ -82,11 +82,9 @@ set undofile
 " Use <space> as mapleader
 let mapleader = ' '
 " Leader key bindings
-nnoremap <leader>w :w<CR>
-nnoremap <leader>x :wq<CR>
-
-nnoremap <M-d> <C-e>
-nnoremap <M-u> <C-y>
+nnoremap <leader>jk :w<CR>
+nnoremap <leader>kj :wq<CR>
+nnoremap <leader>ll :wqa<CR>
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
@@ -95,7 +93,8 @@ set updatetime=100
 " Global settings ------------------------------------------------------------
 " '512: Marks will be rememberd for the last 512 edited files
 " <1024: Limits the numbr of lines saved for each register to 1024 lines, if a
-"       register containes mor than 1024 lines, only the first 1024 lies are saved.
+"       register containes more than 1024 lines, only the first 1024 lines are
+"       saved.
 " s512: Registers with more than 512 kB of text are skipped
 " h: Disables search highlighting when Vim starts
 set viminfo='512,<1024,s512,h
@@ -118,15 +117,18 @@ set textwidth=78
 set colorcolumn=79
 
 " Filetype-specific settings -------------------------------------------------
+au VimEnter * if expand('%:t') == 'CMakeLists.txt'
+    \ | set filetype=cmake
+    \ | endif
+au VimEnter * let fileext = expand('%:e')
+    \ | if fileext == 'service' || fileext == 'nspawn' || fileext == 'slice'
+    \ | set filetype=systemd
+    \ | endif
 au filetype gitcommit  setlocal tabstop=2 shiftwidth=2
     \ textwidth=72 colorcolumn=73
 au filetype markdown   setlocal tabstop=2 shiftwidth=2
 au filetype sshconfig  setlocal tabstop=2 shiftwidth=2
 au filetype yaml       setlocal tabstop=2 shiftwidth=2
-au VimEnter * if expand('%:t') == 'CMakeLists.txt'
-    \ | set filetype=cmake
-    \ | endif
-
 
 " Color settings -------------------------------------------------------------
 " Turn on syntax highlighting.
