@@ -2,6 +2,7 @@
 set nocompatible
 filetype off
 
+" Auto download vim-plug if current home doesn't seem to have one installed.
 if empty(glob("~/.local/share/nvim/site/autoload/plug.vim"))
     silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim
         \ --create-dirs
@@ -67,10 +68,13 @@ autocmd BufReadPost *
     \ if line("'\"") > 1 && line("'\"") <= line("$") |
     \   if match(&filetype, "gitcommit") != 0 |
     \       exe "normal! g`\"" |
+    \       call feedkeys('zz') |
     \   endif |
     \ endif
 
 " Custom settings begin ======================================================
+" Auto change directory
+set autochdir
 
 " Enable undo file and directory
 if !isdirectory($HOME.'/.config/nvim/undotree')
@@ -81,11 +85,19 @@ set undofile
 
 " Use <space> as mapleader
 let mapleader = ' '
-" Leader key bindings
-nnoremap <leader>jk :w<CR>
-nnoremap <leader>hl :q<CR>
-nnoremap <leader>kj :wq<CR>
-nnoremap <leader>lh :wqa<CR>
+" Mapleader key bindings -----------------------------------------------------
+" (Use autocmd VimEnter * <cmd> to override any plugin-defined mappings)
+autocmd VimEnter * nnoremap <leader>jk :w<CR>
+autocmd VimEnter * nnoremap <leader>hl :q<CR>
+autocmd VimEnter * nnoremap <leader>kj :wq<CR>
+autocmd VimEnter * nnoremap <leader>lh :wqa<CR>
+
+" Keybindings ----------------------------------------------------------------
+autocmd VimEnter * nnoremap % v%
+" Remove all trailing whitespace by pressing F5
+autocmd VimEnter *
+    \ nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let@/=_s<Bar><CR>
+
 " Set leader key timeout to 500ms
 set timeoutlen=500
 
@@ -113,7 +125,7 @@ set softtabstop=-1
 set nottimeout
 
 set formatoptions=tcroqlm2
-" Use 78 as textwidth according to RFC2822
+" Use 78 as textwidth, according to RFC2822
 set textwidth=78
 set colorcolumn=79
 
@@ -151,7 +163,7 @@ augroup END
 hi def link ComHiNegative ComHi
 hi def link ComHi Todo
 
-set nocursorline
+set cursorline
 if exists('+termguicolors')
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
@@ -159,8 +171,8 @@ if exists('+termguicolors')
     colorscheme minimalist
     hi pmenu        guibg=#27304a gui=none
     hi CocHighlightText guibg=#27304a
-    " Cursorline is disabled.
-    " hi cursorline   guibg=#0c0c0c gui=none
+    " NOTE: Cursorline is disabled.
+    hi cursorline   guibg=#352020 gui=none
     hi colorcolumn  guibg=#262626
     hi visual       guibg=#4e4a44
 
@@ -168,13 +180,14 @@ if exists('+termguicolors')
     hi extrawhitespace guibg=#3a3a3a
 elseif &t_Co == 256
     colorscheme minimalist
-    " Cursorline is disabled.
-    " hi cursorline    ctermbg=234 cterm=none
+    " NOTE: Cursorline is disabled.
+    hi cursorline    ctermbg=234 cterm=none
     hi colorcolumn   ctermbg=235
 
     " trailing whitespaces
     hi extrawhitespace ctermbg=237 guibg=237
 else
+    set nocursorline
     highlight colorcolumn   ctermbg=darkgray
 
     " trailing whitespaces
@@ -183,13 +196,9 @@ endif
 
 " White space settings -------------------------------------------------------
 match extrawhitespace /\s\+$/
-" Remove all trailing whitespace by pressing F5
-nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
-
 " Status line settings -------------------------------------------------------
 source ~/.config/nvim/statusline.vim
-" ----------------------------------------------------------------------------
-" Configuration for 'coc'
+" Configuration for 'coc' ----------------------------------------------------
 source ~/.config/nvim/coc.init.vim
-" Configuration for 'fzf'
+" Configuration for 'fzf' ----------------------------------------------------
 source ~/.config/nvim/fzf.init.vim
