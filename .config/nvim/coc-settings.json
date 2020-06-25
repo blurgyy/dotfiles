@@ -8,6 +8,25 @@
                 ".vim/"
             ],
             "filetypes": ["go"]
+        },
+        "cpp": {
+            "command": "clangd",
+            "args": [
+                "--background-index",
+                "--compile-commands-dir=build"
+            ],
+            "rootPatterns": [
+                "build/",
+                ".git/"
+            ],
+            "filetypes": [
+                "c",
+                "cpp",
+                "cc",
+                "c++",
+                "objc",
+                "objcpp"
+            ]
         }
     }
 }
