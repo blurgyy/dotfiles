@@ -73,7 +73,7 @@ autocmd BufReadPost *
     \ endif
 
 " Custom settings begin ======================================================
-" Auto change directory
+" Auto change directory when opening files in different directory
 set autochdir
 
 " Enable undo file and directory
@@ -83,20 +83,28 @@ endif
 set undodir=~/.config/nvim/undotree
 set undofile
 
-" Use <space> as mapleader
-let mapleader = ' '
-" Mapleader key bindings -----------------------------------------------------
-" (Use autocmd VimEnter * <cmd> to override any plugin-defined mappings)
-autocmd VimEnter * nnoremap <leader>jk :w<CR>
-autocmd VimEnter * nnoremap <leader>hl :q<CR>
-autocmd VimEnter * nnoremap <leader>kj :wq<CR>
-autocmd VimEnter * nnoremap <leader>lh :wqa<CR>
-
 " Keybindings ----------------------------------------------------------------
 autocmd VimEnter * nnoremap % v%
 " Remove all trailing whitespace by pressing F5
 autocmd VimEnter *
     \ nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let@/=_s<Bar><CR>
+" Center search results
+autocmd VimEnter * nnoremap <silent> n nzz
+autocmd VimEnter * nnoremap <silent> N Nzz
+autocmd VimEnter * nnoremap <silent> * *zz
+autocmd VimEnter * nnoremap <silent> # #zz
+autocmd VimEnter * nnoremap <silent> g* g*zz
+autocmd VimEnter * nnoremap <C-o> <C-o>zz
+autocmd VimEnter * nnoremap <C-i> <C-i>zz
+
+" Use <space> as mapleader
+let mapleader = ' '
+" Mapleader key bindings -----------------------------------------------------
+" (Use autocmd VimEnter * <cmd> to override any plugin-defined mappings)
+autocmd VimEnter * nnoremap <leader>jk :w<CR>
+autocmd VimEnter * nnoremap <leader>kj :q<CR>
+autocmd VimEnter * nnoremap <leader>hl :wq<CR>
+autocmd VimEnter * nnoremap <leader>lh :wqa<CR>
 
 " Set leader key timeout to 500ms
 set timeoutlen=500
