@@ -76,6 +76,13 @@ autocmd BufReadPost *
 " Auto change directory when opening files in different directory
 set autochdir
 
+" Use system clipboard, need 'xclip' to be installed.
+" See: ':h clipboard'
+set clipboard+=unnamed,unnamedplus
+
+" Show substitute effects as you type
+set inccommand=split
+
 " Enable undo file and directory
 if !isdirectory($HOME.'/.config/nvim/undotree')
     call mkdir($HOME.'/.config/nvim/undotree', 'p', 0700)
@@ -85,9 +92,6 @@ set undofile
 
 " Keybindings ----------------------------------------------------------------
 autocmd VimEnter * nnoremap % v%
-" Remove all trailing whitespace by pressing F5
-autocmd VimEnter *
-    \ nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let@/=_s<Bar><CR>
 " Center search results
 autocmd VimEnter * nnoremap <silent> n nzz
 autocmd VimEnter * nnoremap <silent> N Nzz
@@ -105,6 +109,11 @@ autocmd VimEnter * nnoremap <leader>jk :w<CR>
 autocmd VimEnter * nnoremap <leader>kj :q<CR>
 autocmd VimEnter * nnoremap <leader>hl :wq<CR>
 autocmd VimEnter * nnoremap <leader>lh :wqa<CR>
+autocmd VimEnter * nnoremap <leader>-  :sp<CR>
+autocmd VimEnter * nnoremap <leader>\|  :vsp<CR>
+" Remove all trailing whitespace by pressing F5
+autocmd VimEnter *
+    \ nnoremap <leader>, :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let@/=_s<Bar><CR>
 
 " Set leader key timeout to 500ms
 set timeoutlen=500
@@ -179,7 +188,6 @@ if exists('+termguicolors')
     colorscheme minimalist
     hi pmenu        guibg=#27304a gui=none
     hi CocHighlightText guibg=#27304a
-    " NOTE: Cursorline is disabled.
     hi cursorline   guibg=#352020 gui=none
     hi colorcolumn  guibg=#262626
     hi visual       guibg=#4e4a44
@@ -188,7 +196,6 @@ if exists('+termguicolors')
     hi extrawhitespace guibg=#3a3a3a
 elseif &t_Co == 256
     colorscheme minimalist
-    " NOTE: Cursorline is disabled.
     hi cursorline    ctermbg=234 cterm=none
     hi colorcolumn   ctermbg=235
 
