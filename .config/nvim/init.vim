@@ -110,8 +110,10 @@ autocmd VimEnter * nnoremap <leader>kj :q<CR>
 autocmd VimEnter * nnoremap <leader>hl :wq<CR>
 autocmd VimEnter * nnoremap <leader>lh :wqa<CR>
 autocmd VimEnter * nnoremap <leader>-  :sp<CR>
-autocmd VimEnter * nnoremap <leader>\|  :vsp<CR>
-" Remove all trailing whitespace by pressing F5
+autocmd VimEnter * nnoremap <leader>\| :vsp<CR>
+" Format python code with yapf
+autocmd FileType python nnoremap <leader>y :0,$!yapf<Cr>
+" Remove all trailing whitespace
 autocmd VimEnter *
     \ nnoremap <leader>, :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let@/=_s<Bar><CR>
 
@@ -169,7 +171,7 @@ syntax enable
 augroup CommentKeywordHighlight
     au!
     au Syntax * syn match ComHi
-        \ /\v\c<(fixme|note|todo|should|must|only|warning)/
+        \ /\v\c<(fixme|must|note|only|recall|should|todo|warning)/
         \ containedin=.*Comment.*,vimCommentTitle
         \ contained
     au Syntax * syn match ComHiNegative
