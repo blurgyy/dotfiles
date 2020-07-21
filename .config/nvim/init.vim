@@ -24,6 +24,9 @@ Plug 'junegunn/fzf.vim'
 " Golang
 Plug 'fatih/vim-go'
 
+" ayu theme for vim
+Plug 'ayu-theme/ayu-vim'
+
 call plug#end()
 
 filetype plugin indent on
@@ -111,8 +114,11 @@ autocmd VimEnter * nnoremap <leader>hl :wq<CR>
 autocmd VimEnter * nnoremap <leader>lh :wqa<CR>
 autocmd VimEnter * nnoremap <leader>-  :sp<CR>
 autocmd VimEnter * nnoremap <leader>\| :vsp<CR>
+autocmd VimEnter * nnoremap <leader>n  :n<CR>
+autocmd VimEnter * nnoremap <leader>N  :N<CR>
 " Format python code with yapf
-autocmd FileType python nnoremap <leader>y :0,$!yapf<Cr>
+autocmd FileType python
+    \ nnoremap <leader>y mY<Bar>:0,$!yapf<CR><Bar>'Ykzz<CR>
 " Remove all trailing whitespace
 autocmd VimEnter *
     \ nnoremap <leader>, :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let@/=_s<Bar><CR>
@@ -187,7 +193,10 @@ if exists('+termguicolors')
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
     set termguicolors
-    colorscheme minimalist
+    " let ayucolor="light"  " for light version of theme
+    " let ayucolor="mirage" " for mirage version of theme
+    let ayucolor="dark"   " for dark version of theme
+    colorscheme ayu
     hi pmenu        guibg=#27304a gui=none
     hi CocHighlightText guibg=#27304a
     hi cursorline   guibg=#352020 gui=none
