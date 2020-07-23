@@ -13,7 +13,8 @@
             "command": "clangd",
             "args": [
                 "--background-index",
-                "--compile-commands-dir=build"
+                "--compile-commands-dir=build",
+                "--header-insertion=never"
             ],
             "rootPatterns": [
                 "build/",

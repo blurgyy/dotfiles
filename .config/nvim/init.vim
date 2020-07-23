@@ -76,6 +76,86 @@ autocmd BufReadPost *
     \ endif
 
 " Custom settings begin ======================================================
+" Variables ------------------------------------------------------------------
+let s:ft_comment = {
+\     '#': [
+\         'php',
+\         'ruby',
+\         'sh',
+\         'make',
+\         'cmake',
+\         'perl',
+\         'python',
+\         'yaml',
+\         'conf',
+\         'dosini'
+\     ],
+\     '//': [
+\         'cpp',
+\         'c',
+\         'php',
+\         'go',
+\         'javascript',
+\         'java',
+\         'scala'
+\     ],
+\     '%': [
+\         'tex',
+\         'matlab'
+\     ],
+\     '>': [
+\         'markdown'
+\     ],
+\     '"': [
+\         'vim'
+\     ]
+\ }
+" Functions ------------------------------------------------------------------
+function CurrentChar()
+    return getline('.')[col('.')-1]
+endfunction
+function NextChar()
+    return getline('.')[col('.')]
+endfunction
+function InsideBrace()
+    " 1 for true, 0 for false
+    if CurrentChar() == '(' && NextChar() == ')'
+        return 1
+    elseif CurrentChar() == '[' && NextChar() == ']'
+        return 1
+    elseif CurrentChar() == '{' && NextChar() == '}'
+        return 1
+    else
+        return 0
+    endif
+endfunction
+function Comment()
+    let s:ft = &filetype
+    for comch in ['#', '//', '%', '>', '"']
+        if index(s:ft_comment[comch], s:ft) != -1
+            exec "silent s:^:" . comch . " :g"
+        endif
+    endfor
+    unlet s:ft
+endfunction
+function Uncomment()
+    let s:ft = &filetype
+    for comch in ['#', '//', '%', '>', '"']
+        if index(s:ft_comment[comch], s:ft) != -1
+            exec "silent s:^ . comch . " *::g"
+        endif
+    endfor
+    unlet s:ft
+endfunction
+function AppendSignature()
+    exec "normal! mt"
+    call append(line('$'), "")
+    call append(line('$'), "Author: Blurgy")
+    call append(line('$'), "Date:   ".strftime("%b %d %Y"))
+    exec "$-1,$ call Comment()"
+    exec "normal! 't"
+endfunction
+
 " Auto change directory when opening files in different directory
 set autochdir
 
@@ -101,8 +181,29 @@ autocmd VimEnter * nnoremap <silent> N Nzz
 autocmd VimEnter * nnoremap <silent> * *zz
 autocmd VimEnter * nnoremap <silent> # #zz
 autocmd VimEnter * nnoremap <silent> g* g*zz
+autocmd VimEnter * nnoremap <silent> gd gdzz
 autocmd VimEnter * nnoremap <C-o> <C-o>zz
 autocmd VimEnter * nnoremap <C-i> <C-i>zz
+" Move single line down/up with ctrl+shift+{j,k}
+" From: https://vim.fandom.com/wiki/Moving_lines_up_or_down
+autocmd VimEnter * nnoremap <silent> <C-J> :m .+1<CR>==
+autocmd VimEnter * nnoremap <silent> <C-K> :m .-2<CR>==
+autocmd VimEnter * inoremap <silent> <C-J> <Esc>:m .+1<CR>==gi
+autocmd VimEnter * inoremap <silent> <C-K> <Esc>:m .-2<CR>==gi
+autocmd VimEnter * vnoremap <silent> <C-J> :m '>+1<CR>gv=gv
+autocmd VimEnter * vnoremap <silent> <C-K> :m '<-2<CR>gv=gv
+""" This is deprecated (or not)
+" " Auto expand brace
+" autocmd VimEnter * inoremap ( ()<Esc>i
+" autocmd VimEnter * inoremap [ []<Esc>i
+" autocmd VimEnter * inoremap { {}<Esc>i
+" " Exit braces just by hitting the closing brace
+" autocmd VimEnter * inoremap ) <Esc>:if NextChar() == ")"<Bar>exec "normal! la"<Bar>elseif NextChar() == ""<Bar>exec "normal! a)"<Bar>else<Bar>exec "normal! li)"<Bar>endif<CR>a
+" autocmd VimEnter * inoremap ] <Esc>:if NextChar() == "]"<Bar>exec "normal! la"<Bar>elseif NextChar() == ""<Bar>exec "normal! a]"<Bar>else<Bar>exec "normal! li]"<Bar>endif<CR>a
+" autocmd VimEnter * inoremap } <Esc>:if NextChar() == "}"<Bar>exec "normal! la"<Bar>elseif NextChar() == ""<Bar>exec "normal! a}"<Bar>else<Bar>exec "normal! li}"<Bar>endif<CR>a
+" Deprecated: Auto indent when pressing <Enter> inside braces
+" autocmd VimEnter * inoremap <CR> <CR><Esc>:if InsideBrace()<Bar>exec "normal! ko"<Bar>endif<CR>
+" Deprecated: TODO: Auto delete closing brace when cursor is inside ()/[]/{}
 
 " Use <space> as mapleader
 let mapleader = ' '
@@ -118,10 +219,20 @@ autocmd VimEnter * nnoremap <leader>n  :n<CR>
 autocmd VimEnter * nnoremap <leader>N  :N<CR>
 " Format python code with yapf
 autocmd FileType python
-    \ nnoremap <leader>y mY<Bar>:0,$!yapf<CR><Bar>'Ykzz<CR>
+    \ nnoremap <leader>y mY<Bar>:%!yapf<CR><Bar>'Ykzz
+" Format c/cpp code with clang-format
+autocmd FileType c,cpp,javascript,java,cs
+    \ nnoremap <leader>y mY<Bar>:%!clang-format<CR><Bar>'Ykzz
 " Remove all trailing whitespace
 autocmd VimEnter *
-    \ nnoremap <leader>, :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let@/=_s<Bar><CR>
+    \ silent! nnoremap <leader>, :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let@/=_s<CR>
+
+" Add custom header
+nnoremap <silent> <leader>t :call AppendSignature()<CR>
+
+" Comment/Uncomment
+nnoremap <silent> <leader>C :call Comment()<CR>
+nnoremap <silent> <leader>U :call Uncomment()<CR>
 
 " Set leader key timeout to 500ms
 set timeoutlen=500
