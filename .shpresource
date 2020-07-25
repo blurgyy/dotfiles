@@ -1,0 +1,19 @@
+# Pre-source script
+export LC_ALL="en_US.UTF-8"
+
+# `/bin` may not be in PATH when using chroot
+export PATH=$PATH:/bin
+
+# Mark current shell interpreter
+export currentshellinterpreter=$(ps -q $$ -o comm=)
+
+# tmux related functions and aliases
+if [[ -f ~/.shtmux ]]; then
+    . ~/.shtmux
+fi
+
+# Syntax highlighting
+# vim: set filetype=sh:
+
+# Author: Blurgy
+# Date:   Jul 24 2020

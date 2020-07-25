@@ -1,0 +1,66 @@
+# Show message and exit with code 169
+function die(){
+    echo "$@"
+    exit 169
+}
+
+# Colored man page
+function man() {
+    LESS_TERMCAP_md=$'\e[01;31m' \
+    LESS_TERMCAP_me=$'\e[0m' \
+    LESS_TERMCAP_se=$'\e[0m' \
+    LESS_TERMCAP_so=$'\e[01;44;33m' \
+    LESS_TERMCAP_ue=$'\e[0m' \
+    LESS_TERMCAP_us=$'\e[01;32m' \
+    command man "$@"
+}
+
+# Show neovim help for $1
+function vh() {
+    nvim -R -c ':h '$@'' -c ':wincmd j' -c ':wincmd c'
+}
+
+# Display the 256 color palette
+function colourpalette() {
+    for i in {0..255}; do
+        printf "\x1b[38;5;${i}mcolour${i}\x1b[0m\n"
+    done
+}
+
+# Go to nearest git repository root above current directory.
+function cg(){
+    local _cur
+    _cur=$(pwd)
+    while [[ $(pwd) != '/' ]]; do
+        [[ -d ./.git ]] && _cur=$(pwd) && break
+        cd ..
+    done
+    cd $_cur
+}
+
+# Get git commit count for revision $1, default revision is HEAD
+function gcnt(){
+    local _revision _count
+    _revision=${1:-HEAD}
+    if git status >/dev/null 2>&1; then
+        if _count=$(git rev-list --count "$_revision" 2>/dev/null); then
+            if [[ $_count -le 1 ]]; then
+                echo "Revision <$_revision>: $_count commit"
+            else
+                echo "Revision <$_revision>: $_count commits"
+            fi
+        else
+            echo "Revision <$_revision>: not exist"
+            return 2
+        fi
+    else
+        echo "Not under a git repository"
+        return 1
+    fi
+}
+
+# Syntax highlighting
+# vim: set filetype=sh:
+
+# Author: Blurgy
+# Date:   Jul 24 2020

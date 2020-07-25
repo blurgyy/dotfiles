@@ -1,0 +1,43 @@
+# Post-source script
+
+# Find all local files with prefix ".shaliases" in their name and source them
+for i in ~/.shaliases*; do
+    . $i
+done
+# And do the same for those with prefix ".shexports"
+for i in ~/.shexports*; do
+    . $i
+done
+
+# source custom functions
+if [[ -f ~/.shfns ]]; then
+    . ~/.shfns
+fi
+
+# Source fzf keybindings if it is installed
+homefzf="$HOME/.fzf"
+fzfcomp="/usr/share/fzf/completion"
+fzfkeybinding="/usr/share/fzf/key-bindings"
+[[ "$currentshellinterpreter" =~ 'zsh' ]] && {
+    homefzf+=".zsh"
+    fzfcomp+=".zsh"
+    fzfkeybinding+=".zsh"
+}
+[[ "$currentshellinterpreter" =~ 'bash' ]] && {
+    homefzf+=".bash"
+    fzfcomp+=".bash"
+    fzfkeybinding+=".bash"
+}
+
+[[ -f $fzfcomp ]] && . $fzfcomp
+[[ -f $fzfkeybinding ]] && . $fzfkeybinding
+[[ -f $homefzf ]] && . $homefzf
+
+# Unset variables.
+unset fzfcomp fzfkeybinding
+
+# Syntax highlighting
+# vim: set filetype=sh:
+
+# Author: Blurgy
+# Date:   Jul 24 2020
