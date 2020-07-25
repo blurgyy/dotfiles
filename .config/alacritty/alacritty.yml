@@ -19,7 +19,7 @@ font:
   bold_italic:
     family: fira code
     style: Bold Italic
-  size: 12
+  size: 10
 
 colors:
   primary:
@@ -52,3 +52,6 @@ colors:
     magenta:  '#80638e'
     cyan:     '#497e7a'
     white:    '#9a9a9a'
+
+# Author: Blurgy
+# Date:   Jul 24 2020

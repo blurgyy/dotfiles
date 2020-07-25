@@ -140,3 +140,6 @@ set stl+=\ \|\ %{ThisFileType()}
 set stl+=\ %#percarea#\ %3p%%\ %#stlbg#
 " Current position in buffer.
 set stl+=\ %4l:%-3c
+
+" Author: Blurgy
+" Date:   Jul 24 2020

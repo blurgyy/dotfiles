@@ -88,7 +88,15 @@ let s:ft_comment = {
 \         'python',
 \         'yaml',
 \         'conf',
-\         'dosini'
+\         'dosini',
+\         'gdb',
+\         'readline',
+\         'tmux',
+\         'zsh',
+\         'systemd',
+\         'gitignore',
+\         'gitrebase',
+\         ''
 \     ],
 \     '//': [
 \         'cpp',
@@ -97,6 +105,7 @@ let s:ft_comment = {
 \         'go',
 \         'javascript',
 \         'java',
+\         'json',
 \         'scala'
 \     ],
 \     '%': [
@@ -134,6 +143,7 @@ function Comment()
     for comch in ['#', '//', '%', '>', '"']
         if index(s:ft_comment[comch], s:ft) != -1
             exec "silent s:^:" . comch . " :g"
+            break
         endif
     endfor
     unlet s:ft
@@ -143,6 +153,7 @@ function Uncomment()
     for comch in ['#', '//', '%', '>', '"']
         if index(s:ft_comment[comch], s:ft) != -1
             exec "silent s:^ . comch . " *::g"
+            break
         endif
     endfor
     unlet s:ft
@@ -219,10 +230,10 @@ autocmd VimEnter * nnoremap <leader>n  :n<CR>
 autocmd VimEnter * nnoremap <leader>N  :N<CR>
 " Format python code with yapf
 autocmd FileType python
-    \ nnoremap <leader>y mY<Bar>:%!yapf<CR><Bar>'Ykzz
+    \ nnoremap <leader>y mY<Bar>:%!yapf<CR><Bar>'Yzz
 " Format c/cpp code with clang-format
 autocmd FileType c,cpp,javascript,java,cs
-    \ nnoremap <leader>y mY<Bar>:%!clang-format<CR><Bar>'Ykzz
+    \ nnoremap <leader>y mY<Bar>:%!clang-format<CR><Bar>'Yzz
 " Remove all trailing whitespace
 autocmd VimEnter *
     \ silent! nnoremap <leader>, :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let@/=_s<CR>
@@ -339,3 +350,6 @@ source ~/.config/nvim/statusline.vim
 source ~/.config/nvim/coc.init.vim
 " Configuration for 'fzf' ----------------------------------------------------
 source ~/.config/nvim/fzf.init.vim
+
+" Author: Blurgy
+" Date:   Jul 24 2020

@@ -12,7 +12,8 @@
         "cpp": {
             "command": "clangd",
             "args": [
-                "--background-index",
+                "-j=3",
+                "--background-index=true",
                 "--compile-commands-dir=build",
                 "--header-insertion=never"
             ],
@@ -31,3 +32,6 @@
         }
     }
 }
+
+// Author: Blurgy
+// Date:   Jul 24 2020
