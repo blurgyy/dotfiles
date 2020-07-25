@@ -1,0 +1,5 @@
+[MESSAGES CONTROL]
+disable = C,
+          attribute-defined-outside-init,
+          redefined-outer-name,
+          unused-import,

@@ -1,0 +1,5 @@
+# Use vi key bindings for python shell
+set editing-mode vi
+
+# Author: Blurgy
+# Date:   Jul 24 2020
