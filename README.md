@@ -4,6 +4,23 @@ A collection of configuration files for mostly used tools.
 
 ## Currently covered
 
-- [Alacritty](./.config/alacritty)
-- [neovim](./.config/nvim)
+- [alacritty](./.config/alacritty/alacritty.yml)
+- [neovim](./.config/nvim/init.vim)
+- shell:
+  - [pre-run commands](./.shrc)
+  - [presource script](./.shpresource)
+  - [postsource script](./.shpostsource)
+  - [tmux](./.shtmux)
+  - [functions](./.shfns)
+  - [aliases](./.shaliases)
+  - [zsh theme](./.zsh-theme):
+    Install [OMZ](https://github.com/ohmyzsh/ohmyzsh) to enable.
 - [tmux](./.tmux.conf)
+- Miscellaneous:
+  - [clang-format](./.clang-format)
+  - [pdfpc](./.config/pdfpc/pdfpcrc)
+  - [pylint](./.pylintrc)
+  - [gdbinit](./.gdbinit)
+  - autostarts:
+    - [fcitx5](./.config/autostart/fcitx5.desktop)
+    - [flameshot](./.config/autostart/Flameshot.desktop)
