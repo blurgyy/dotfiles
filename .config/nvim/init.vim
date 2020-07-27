@@ -17,12 +17,16 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'tpope/vim-fugitive'
 " Auto-completion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" File explorer
+Plug 'preservim/nerdtree'
 " Fuzzy find
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 " Golang
 Plug 'fatih/vim-go'
+" rust-lang
+Plug 'rust-lang/rust.vim'
 
 " ayu theme for vim
 Plug 'ayu-theme/ayu-vim'
@@ -77,6 +81,14 @@ autocmd BufReadPost *
 
 " Custom settings begin ======================================================
 " Variables ------------------------------------------------------------------
+let s:comchs = [
+\     '#',
+\     '//',
+\     '%',
+\     '>',
+\     '"',
+\     '--'
+\ ]
 let s:ft_comment = {
 \     '#': [
 \         'php',
@@ -96,6 +108,7 @@ let s:ft_comment = {
 \         'systemd',
 \         'gitignore',
 \         'gitrebase',
+\         'gitcommit',
 \         ''
 \     ],
 \     '//': [
@@ -117,7 +130,10 @@ let s:ft_comment = {
 \     ],
 \     '"': [
 \         'vim'
-\     ]
+\     ],
+\     '--': [
+\         'lua'
+\     ],
 \ }
 " Functions ------------------------------------------------------------------
 function CurrentChar()
@@ -140,7 +156,7 @@ function InsideBrace()
 endfunction
 function Comment()
     let s:ft = &filetype
-    for comch in ['#', '//', '%', '>', '"']
+    for comch in s:comchs
         if index(s:ft_comment[comch], s:ft) != -1
             exec "silent s:^:" . comch . " :g"
             break
@@ -150,9 +166,9 @@ function Comment()
 endfunction
 function Uncomment()
     let s:ft = &filetype
-    for comch in ['#', '//', '%', '>', '"']
+    for comch in s:comchs
         if index(s:ft_comment[comch], s:ft) != -1
-            exec "silent s:^ . comch . " *::g"
+            exec "silent s:^" . comch . " *::g"
             break
         endif
     endfor
@@ -185,7 +201,7 @@ set undodir=~/.config/nvim/undotree
 set undofile
 
 " Keybindings ----------------------------------------------------------------
-autocmd VimEnter * nnoremap % v%
+autocmd VimEnter * nnoremap <silent> % v%
 " Center search results
 autocmd VimEnter * nnoremap <silent> n nzz
 autocmd VimEnter * nnoremap <silent> N Nzz
@@ -193,8 +209,8 @@ autocmd VimEnter * nnoremap <silent> * *zz
 autocmd VimEnter * nnoremap <silent> # #zz
 autocmd VimEnter * nnoremap <silent> g* g*zz
 autocmd VimEnter * nnoremap <silent> gd gdzz
-autocmd VimEnter * nnoremap <C-o> <C-o>zz
-autocmd VimEnter * nnoremap <C-i> <C-i>zz
+autocmd VimEnter * nnoremap <silent> <C-o> <C-o>zz
+autocmd VimEnter * nnoremap <silent> <C-i> <C-i>zz
 " Move single line down/up with ctrl+shift+{j,k}
 " From: https://vim.fandom.com/wiki/Moving_lines_up_or_down
 autocmd VimEnter * nnoremap <silent> <C-J> :m .+1<CR>==
@@ -220,20 +236,32 @@ autocmd VimEnter * vnoremap <silent> <C-K> :m '<-2<CR>gv=gv
 let mapleader = ' '
 " Mapleader key bindings -----------------------------------------------------
 " (Use autocmd VimEnter * <cmd> to override any plugin-defined mappings)
-autocmd VimEnter * nnoremap <leader>jk :w<CR>
-autocmd VimEnter * nnoremap <leader>kj :q<CR>
-autocmd VimEnter * nnoremap <leader>hl :wq<CR>
-autocmd VimEnter * nnoremap <leader>lh :wqa<CR>
-autocmd VimEnter * nnoremap <leader>-  :sp<CR>
-autocmd VimEnter * nnoremap <leader>\| :vsp<CR>
-autocmd VimEnter * nnoremap <leader>n  :n<CR>
-autocmd VimEnter * nnoremap <leader>N  :N<CR>
+autocmd VimEnter * nnoremap <silent> <leader>jk :w<CR>
+autocmd VimEnter * nnoremap <silent> <leader>kj :q<CR>
+autocmd VimEnter * nnoremap <silent> <leader>hl :wq<CR>
+autocmd VimEnter * nnoremap <silent> <leader>lh :wqa<CR>
+autocmd VimEnter * nnoremap <silent> <leader>n  :n<CR>
+autocmd VimEnter * nnoremap <silent> <leader>N  :N<CR>
+" Append punctuation at eol
+autocmd VimEnter * nnoremap <silent> <leader>;  mYA;<ESC>`Y
+autocmd VimEnter * nnoremap <silent> <leader>,  mYA,<ESC>`Y
+" Split window
+autocmd VimEnter * nnoremap <silent> <leader>-  :sp<CR>
+autocmd VimEnter * nnoremap <silent> <leader>\| :vsp<CR>
+autocmd VimEnter * nnoremap <silent> <leader>n  :sp<CR>
+autocmd VimEnter * nnoremap <silent> <leader>v  :vsp<CR>
+" Change pane
+autocmd VimEnter * nnoremap <silent> <leader>wh :wincmd h<CR>
+autocmd VimEnter * nnoremap <silent> <leader>wj :wincmd j<CR>
+autocmd VimEnter * nnoremap <silent> <leader>wk :wincmd k<CR>
+autocmd VimEnter * nnoremap <silent> <leader>wl :wincmd l<CR>
+autocmd VimEnter * nnoremap <silent> <leader>wp :wincmd p<CR>
 " Format python code with yapf
 autocmd FileType python
-    \ nnoremap <leader>y mY<Bar>:%!yapf<CR><Bar>'Yzz
+    \ nnoremap <leader>y mY<Bar>:%!yapf<CR><Bar>`Yzz
 " Format c/cpp code with clang-format
 autocmd FileType c,cpp,javascript,java,cs
-    \ nnoremap <leader>y mY<Bar>:%!clang-format<CR><Bar>'Yzz
+    \ nnoremap <leader>y mY<Bar>:%!clang-format<CR><Bar>`Yzz
 " Remove all trailing whitespace
 autocmd VimEnter *
     \ silent! nnoremap <leader>, :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let@/=_s<CR>
@@ -350,6 +378,8 @@ source ~/.config/nvim/statusline.vim
 source ~/.config/nvim/coc.init.vim
 " Configuration for 'fzf' ----------------------------------------------------
 source ~/.config/nvim/fzf.init.vim
+" Configuration for 'nerdtree'
+source ~/.config/nvim/nerdtree.init.vim
 
 " Author: Blurgy
 " Date:   Jul 24 2020
