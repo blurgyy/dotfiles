@@ -21,6 +21,7 @@ A collection of configuration files for mostly used tools.
   - [pdfpc](./.config/pdfpc/pdfpcrc)
   - [pylint](./.pylintrc)
   - [gdbinit](./.gdbinit)
+  - [PAM environment](./.pam_environment)
   - autostarts:
     - [fcitx5](./.config/autostart/fcitx5.desktop)
     - [flameshot](./.config/autostart/Flameshot.desktop)
