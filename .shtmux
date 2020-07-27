@@ -77,7 +77,7 @@ function k(){
                 echo "Session killed"
         fi
     else
-        exit
+        exit "$@"
     fi
 }
 

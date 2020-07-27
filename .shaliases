@@ -14,6 +14,7 @@ alias v='nvim'
 alias im='nvim'
 alias vm='nvim'
 alias vom='nvim'
+alias ivm='nvim'
 
 alias rm='rm -v'
 alias mv='mv -v'
@@ -36,6 +37,7 @@ alias tree='exa -T --color=automatic'
 
 # Shorthand
 alias g='git'
+alias ga='git add'
 alias gc='git commit -sv'
 alias gca='git commit -sv --amend'
 alias gcan='git commit -sv --amend --no-edit'
@@ -52,7 +54,14 @@ alias sus='systemctl --user'
 alias j='journalctl --user'
 alias sj='sudo journalctl'
 
+# View mode, open neovim with 'modifiable' disabled and 'read-only' enabled
 alias view='nvim -RM'
+
+# Do not use system exit/logout, use function `k()` defined in ~/.shtmux
+if [[ -f ~/.shtmux ]]; then
+    alias exit='k'
+    alias logout='k'
+fi
 
 # termbin.com
 alias tb='nc termbin.com 9999 -N'
