@@ -90,7 +90,7 @@ if [[ "$currentshellinterpreter" =~ 'zsh' ]]; then
     # plugins=(git)
 
     # update fpath to include custom auto-completion script
-    fpath=($HOME/.gy/bak/conf/compdef $fpath)
+    fpath=($HOME/.config/compdef $fpath)
 
     source $ZSH/oh-my-zsh.sh
 
