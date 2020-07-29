@@ -1,5 +1,5 @@
-" Use <TAB> to toggle NERDTree
-autocmd VimEnter * nnoremap <silent> <TAB> :if exists('b:NERDTree') <BAR>
+" Use <leader>f to toggle NERDTree
+autocmd VimEnter * nnoremap <silent> <leader>f :if exists('b:NERDTree') <BAR>
             \ NERDTreeToggle <BAR> else <BAR> NERDTreeCWD <BAR> endif <CR>
 " Use <leader><TAB> to focus on current file in NERDTree
 autocmd VimEnter * nnoremap <silent> <leader><TAB> :NERDTreeFind<CR>
@@ -12,3 +12,6 @@ autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") &&
 let g:NERDTreeShowHidden = 1
 " Ignored
 let g:NERDTreeIgnore = ['.git']
+
+" Author: Blurgy
+" Date:   Jul 29 2020

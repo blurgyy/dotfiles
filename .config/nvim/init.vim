@@ -180,7 +180,7 @@ function AppendSignature()
     call append(line('$'), "Author: Blurgy")
     call append(line('$'), "Date:   ".strftime("%b %d %Y"))
     exec "$-1,$ call Comment()"
-    exec "normal! 't"
+    exec "normal! `t"
 endfunction
 
 " Auto change directory when opening files in different directory
@@ -244,7 +244,6 @@ autocmd VimEnter * nnoremap <silent> <leader>n  :n<CR>
 autocmd VimEnter * nnoremap <silent> <leader>N  :N<CR>
 " Append punctuation at eol
 autocmd VimEnter * nnoremap <silent> <leader>;  mYA;<ESC>`Y
-autocmd VimEnter * nnoremap <silent> <leader>,  mYA,<ESC>`Y
 " Split window
 autocmd VimEnter * nnoremap <silent> <leader>-  :sp<CR>
 autocmd VimEnter * nnoremap <silent> <leader>\| :vsp<CR>
@@ -264,7 +263,7 @@ autocmd FileType c,cpp,javascript,java,cs
     \ nnoremap <leader>y mY<Bar>:%!clang-format<CR><Bar>`Yzz
 " Remove all trailing whitespace
 autocmd VimEnter *
-    \ silent! nnoremap <leader>, :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let@/=_s<CR>
+    \ silent! nnoremap <leader>, mY:let _s=@/<Bar>:%s/\s\+$//e<Bar>:let@/=_s<CR>`Y
 
 " Add custom header
 nnoremap <silent> <leader>t :call AppendSignature()<CR>
