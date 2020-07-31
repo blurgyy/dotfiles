@@ -1,3 +1,13 @@
+" Installed coc plugins:
+" - coc-highlight
+" - coc-diagnostic
+" - coc-sh
+" - coc-python
+" - coc-rls
+" - coc-json
+" - coc-html
+" - coc-cmake
+" - coc-texlab " The texlab executable should be installed manualy
 " Example configuration for coc.
 " From: https://github.com/neoclide/coc.nvim#example-vim-configuration
 
