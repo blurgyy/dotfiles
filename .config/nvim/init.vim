@@ -2,6 +2,7 @@
 set nocompatible
 filetype off
 
+" Plugins ====================================================================
 " Auto download vim-plug if current home doesn't seem to have one installed.
 if empty(glob("~/.local/share/nvim/site/autoload/plug.vim"))
     silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim
@@ -11,30 +12,11 @@ if empty(glob("~/.local/share/nvim/site/autoload/plug.vim"))
         \ | source $MYVIMRC
 endif
 
-call plug#begin('~/.config/nvim/plugged')
-
-" Git plugin, also required by statusline
-Plug 'tpope/vim-fugitive'
-" Auto-completion
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" File explorer
-Plug 'preservim/nerdtree'
-" Fuzzy find
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-
-" Golang
-Plug 'fatih/vim-go'
-" rust-lang
-Plug 'rust-lang/rust.vim'
-
-" ayu theme for vim
-Plug 'ayu-theme/ayu-vim'
-
-call plug#end()
+source ~/.config/nvim/plugins.init.vim
 
 filetype plugin indent on
 
+" Plugins end ----------------------------------------------------------------
 " Configurations from https://missing.csail.mit.edu/2020/editors/ ------------
 
 " Disable default startup message.
@@ -158,7 +140,10 @@ function Comment()
     let s:ft = &filetype
     for comch in s:comchs
         if index(s:ft_comment[comch], s:ft) != -1
+            exec "normal! mC"
+            exec "silent s:^[ \n]*::"
             exec "silent s:^:" . comch . " :g"
+            exec "normal! ==`C"
             break
         endif
     endfor
@@ -168,11 +153,27 @@ function Uncomment()
     let s:ft = &filetype
     for comch in s:comchs
         if index(s:ft_comment[comch], s:ft) != -1
-            exec "silent s:^" . comch . " *::g"
+            exec "normal! mC"
+            exec "silent s:^[ \n]*" . comch . "[ \n]*::g"
+            exec "normal! ==`C"
             break
         endif
     endfor
     unlet s:ft
+endfunction
+function CommentToggle()
+    let s:cft = &filetype
+    for comch in s:comchs
+        if index(s:ft_comment[comch], s:cft) != -1
+            " If current line is started with whitespaces + commentChar
+            if match(getline('.'), "[ \n]*" . comch . "[ \n]*") == 0
+                call Uncomment()
+            else
+                call Comment()
+            endif
+        endif
+    endfor
+    unlet s:cft
 endfunction
 function AppendSignature()
     exec "normal! mt"
@@ -180,7 +181,7 @@ function AppendSignature()
     call append(line('$'), "Author: Blurgy")
     call append(line('$'), "Date:   ".strftime("%b %d %Y"))
     exec "$-1,$ call Comment()"
-    exec "normal! `t"
+    exec "normal! `tzz"
 endfunction
 
 " Auto change directory when opening files in different directory
@@ -243,7 +244,7 @@ autocmd VimEnter * nnoremap <silent> <leader>lh :wqa<CR>
 autocmd VimEnter * nnoremap <silent> <leader>n  :n<CR>
 autocmd VimEnter * nnoremap <silent> <leader>N  :N<CR>
 " Append punctuation at eol
-autocmd VimEnter * nnoremap <silent> <leader>;  mYA;<ESC>`Y
+autocmd VimEnter * nnoremap <silent> <leader>;  mYA;<ESC>`Yzz
 " Split window
 autocmd VimEnter * nnoremap <silent> <leader>-  :sp<CR>
 autocmd VimEnter * nnoremap <silent> <leader>\| :vsp<CR>
@@ -263,14 +264,18 @@ autocmd FileType c,cpp,javascript,java,cs
     \ nnoremap <leader>y mY<Bar>:%!clang-format<CR><Bar>`Yzz
 " Remove all trailing whitespace
 autocmd VimEnter *
-    \ silent! nnoremap <leader>, mY:let _s=@/<Bar>:%s/\s\+$//e<Bar>:let@/=_s<CR>`Y
+    \ silent! nnoremap <leader>, mY:let _s=@/<Bar>:%s/\s\+$//e<Bar>:let@/=_s<CR>`Yzz
 
 " Add custom header
 nnoremap <silent> <leader>t :call AppendSignature()<CR>
 
 " Comment/Uncomment
-nnoremap <silent> <leader>C :call Comment()<CR>
-nnoremap <silent> <leader>U :call Uncomment()<CR>
+" nnoremap <silent> <leader>cc :call Comment()<CR>
+" nnoremap <silent> <leader>cu :call Uncomment()<CR>
+" nnoremap <silent> <C-_> :call Comment()<CR>
+" nnoremap <silent> <leader>/ :call Uncomment()<CR>
+nnoremap <silent> <C-_> :call CommentToggle()<CR>
+vnoremap <silent> <C-_> :call CommentToggle()<CR>
 
 " Set leader key timeout to 500ms
 set timeoutlen=500
@@ -373,12 +378,6 @@ endif
 match extrawhitespace /\s\+$/
 " Status line settings -------------------------------------------------------
 source ~/.config/nvim/statusline.vim
-" Configuration for 'coc' ----------------------------------------------------
-source ~/.config/nvim/coc.init.vim
-" Configuration for 'fzf' ----------------------------------------------------
-source ~/.config/nvim/fzf.init.vim
-" Configuration for 'nerdtree'
-source ~/.config/nvim/nerdtree.init.vim
 
 " Author: Blurgy
 " Date:   Jul 24 2020
