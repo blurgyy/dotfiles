@@ -203,6 +203,7 @@ set undofile
 
 " Keybindings ----------------------------------------------------------------
 autocmd VimEnter * nnoremap <silent> % v%
+autocmd VimEnter * nnoremap <silent> Y y$
 " Center search results
 autocmd VimEnter * nnoremap <silent> n nzz
 autocmd VimEnter * nnoremap <silent> N Nzz
