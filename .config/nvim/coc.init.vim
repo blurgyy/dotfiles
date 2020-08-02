@@ -1,12 +1,13 @@
 " Installed coc plugins:
-" - coc-highlight
+" - coc-cmake
 " - coc-diagnostic
-" - coc-sh
+" - coc-explorer
+" - coc-highlight
+" - coc-html
+" - coc-json
 " - coc-python
 " - coc-rls
-" - coc-json
-" - coc-html
-" - coc-cmake
+" - coc-sh
 " - coc-texlab " The texlab executable should be installed manualy
 " Example configuration for coc.
 " From: https://github.com/neoclide/coc.nvim#example-vim-configuration
@@ -109,7 +110,7 @@ nmap <leader>a  <Plug>(coc-codeaction-selected)
 " Remap keys for applying codeAction to the current buffer.
 nmap <leader>ac  <Plug>(coc-codeaction)
 " Apply AutoFix to problem on the current line.
-nmap <leader>qf  <Plug>(coc-fix-current)
+autocmd VimEnter * nmap <leader>qf  <Plug>(coc-fix-current)
 
 " Map function and class text objects
 " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
