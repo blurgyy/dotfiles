@@ -71,7 +71,7 @@ let s:comchs = [
 \     '"',
 \     '--'
 \ ]
-let s:ft_comment = {
+let s:comment_ft = {
 \     '#': [
 \         'php',
 \         'ruby',
@@ -117,14 +117,47 @@ let s:ft_comment = {
 \         'lua'
 \     ],
 \ }
+let s:ft_comment = {
+\   'php': '#',
+\   'ruby': '#',
+\   'sh': '#',
+\   'make': '#',
+\   'cmake': '#',
+\   'perl': '#',
+\   'python': '#',
+\   'yaml': '#',
+\   'conf': '#',
+\   'dosini': '#',
+\   'gdb': '#',
+\   'readline': '#',
+\   'tmux': '#',
+\   'zsh': '#',
+\   'systemd': '#',
+\   'gitignore': '#',
+\   'gitrebase': '#',
+\   'gitcommit': '#',
+\   '': '#',
+\   'cpp': '//',
+\   'c': '//',
+\   'go': '//',
+\   'javascript': '//',
+\   'java': '//',
+\   'json': '//',
+\   'scala': '//',
+\   'tex': '%',
+\   'matlab': '%',
+\   'markdown': '>',
+\   'vim': '"',
+\   'lua': '--'
+\ }
 " Functions ------------------------------------------------------------------
-function CurrentChar()
+function! CurrentChar()
     return getline('.')[col('.')-1]
 endfunction
-function NextChar()
+function! NextChar()
     return getline('.')[col('.')]
 endfunction
-function InsideBrace()
+function! InsideBrace()
     " 1 for true, 0 for false
     if CurrentChar() == '(' && NextChar() == ')'
         return 1
@@ -136,56 +169,74 @@ function InsideBrace()
         return 0
     endif
 endfunction
-function Comment()
+function! Comment()
+    " Skip when current line only consists of whitespaces
+    if match(getline(line('.')), "^[ \t\n]*$") == 0
+        return
+    endif
     let s:ft = &filetype
-    for comch in s:comchs
-        if index(s:ft_comment[comch], s:ft) != -1
-            exec "normal! mC"
-            exec "silent s:^[ \n]*::"
-            exec "silent s:^:" . comch . " :g"
-            exec "normal! ==`C"
-            break
-        endif
-    endfor
-    unlet s:ft
+    let s:comch = s:ft_comment[s:ft]
+    exec "normal! mC"
+    exec "silent s:^[ \t\n]*::"
+    exec "silent s:^:" . s:comch . " :g"
+    exec "normal! ==`C"
+    unlet s:ft s:comch
 endfunction
-function Uncomment()
+function! Uncomment()
     let s:ft = &filetype
-    for comch in s:comchs
-        if index(s:ft_comment[comch], s:ft) != -1
-            exec "normal! mC"
-            exec "silent s:^[ \n]*" . comch . "[ \n]*::g"
-            exec "normal! ==`C"
-            break
-        endif
-    endfor
-    unlet s:ft
+    let s:comch = s:ft_comment[s:ft]
+    " Only execute function when current line starts with comment char
+    if match(getline(line('.')), "^[ \t\n]*[(".s:comch.")]\\+[ \t\n]*") == 0
+        exec "normal! mC"
+        exec "silent s:^[ \t\n]*" . s:comch . "[ \t\n]*::g"
+        exec "normal! ==`C"
+    endif
+    unlet s:ft s:comch
 endfunction
-function CommentToggle()
-    let s:cft = &filetype
-    for comch in s:comchs
-        if index(s:ft_comment[comch], s:cft) != -1
-            " If current line is started with whitespaces + commentChar
-            if match(getline('.'), "[ \n]*" . comch . "[ \n]*") == 0
-                call Uncomment()
-            else
-                call Comment()
-            endif
-        endif
-    endfor
-    unlet s:cft
+function! CommentToggle()
+    let s:tft = &filetype
+    let s:tcomch = s:ft_comment[s:tft]
+    " If current line starts with whitespaces + commentChar
+    if match(getline('.'), "^[ \t\n]*" . s:tcomch . "[ \t\n]*") == 0
+        call Uncomment()
+    else
+        call Comment()
+    endif
+    unlet s:tft s:tcomch
 endfunction
-function AppendSignature()
-    exec "normal! mt"
+function! CheckSigned()
+    let s:ft = &filetype
+    if getline(line('$')-2) == ''
+        \ && getline(line('$')-1) == s:ft_comment[s:ft] . ' Author: Blurgy'
+        if match(getline(line('$')), 'Date:   '.strftime("%b %d %Y")) != -1
+            return 1 " Signature is up to date
+        elseif match(getline(line('$')), s:ft_comment[s:ft] . ' Date:') == 0
+            return -1 " Signature is outdated
+        endif
+    endif
+    return 0 " Signature does not exist yet
+endfunction
+function! AppendSignature()
+    let l:signstatus = CheckSigned()
+    if l:signstatus == -1
+        " Delete outdated signature
+        call deletebufline(bufname('%'), line('$')-2, line('$'))
+    elseif l:signstatus == 1
+        " Do nothing if signature is up to date
+        return 1
+    else
+    endif
+    exec "normal! mS"
     call append(line('$'), "")
     call append(line('$'), "Author: Blurgy")
     call append(line('$'), "Date:   ".strftime("%b %d %Y"))
     exec "$-1,$ call Comment()"
-    exec "normal! `tzz"
+    exec "normal! `Szz"
 endfunction
 
 " Auto change directory when opening files in different directory
-set autochdir
+" NOTE: autochdir is disabled, as it causes problems for some plugins
+" set autochdir
 
 " Use system clipboard, need 'xclip' to be installed.
 " See: ':h clipboard'
@@ -215,12 +266,15 @@ autocmd VimEnter * nnoremap <silent> <C-o> <C-o>zz
 autocmd VimEnter * nnoremap <silent> <C-i> <C-i>zz
 " Move single line down/up with ctrl+shift+{j,k}
 " From: https://vim.fandom.com/wiki/Moving_lines_up_or_down
-autocmd VimEnter * nnoremap <silent> <C-J> :m .+1<CR>==
-autocmd VimEnter * nnoremap <silent> <C-K> :m .-2<CR>==
-autocmd VimEnter * inoremap <silent> <C-J> <Esc>:m .+1<CR>==gi
-autocmd VimEnter * inoremap <silent> <C-K> <Esc>:m .-2<CR>==gi
-autocmd VimEnter * vnoremap <silent> <C-J> :m '>+1<CR>gv=gv
-autocmd VimEnter * vnoremap <silent> <C-K> :m '<-2<CR>gv=gv
+autocmd VimEnter * nnoremap <silent> <C-j> :m .+1<CR>=kj
+autocmd VimEnter * nnoremap <silent> <C-k> :m .-2<CR>=j
+autocmd VimEnter * inoremap <silent> <C-j> <Esc>:m .+1<CR>=kgi
+autocmd VimEnter * inoremap <silent> <C-k> <Esc>:m .-2<CR>=jgi
+autocmd VimEnter * vnoremap <silent> <C-j> :m '>+1<CR>gv=gv
+autocmd VimEnter * vnoremap <silent> <C-k> :m '<-2<CR>gv=gv
+" Faster scrolling
+autocmd VimEnter * nnoremap <silent> <C-e> 3<C-e>
+autocmd VimEnter * nnoremap <silent> <C-y> 3<C-y>
 """ This is deprecated (or not)
 " " Auto expand brace
 " autocmd VimEnter * inoremap ( ()<Esc>i
@@ -240,17 +294,28 @@ let mapleader = ' '
 " (Use autocmd VimEnter * <cmd> to override any plugin-defined mappings)
 autocmd VimEnter * nnoremap <silent> <leader>jk :w<CR>
 autocmd VimEnter * nnoremap <silent> <leader>kj :q<CR>
-autocmd VimEnter * nnoremap <silent> <leader>hl :wq<CR>
+autocmd VimEnter * nnoremap <silent> <leader>lj :qa<CR>
+autocmd VimEnter * nnoremap <silent> <leader>jl :wq<CR>
 autocmd VimEnter * nnoremap <silent> <leader>lh :wqa<CR>
 autocmd VimEnter * nnoremap <silent> <leader>n  :n<CR>
 autocmd VimEnter * nnoremap <silent> <leader>N  :N<CR>
 " Append punctuation at eol
-autocmd VimEnter * nnoremap <silent> <leader>;  mYA;<ESC>`Yzz
-" Split window
-autocmd VimEnter * nnoremap <silent> <leader>-  :sp<CR>
-autocmd VimEnter * nnoremap <silent> <leader>\| :vsp<CR>
-autocmd VimEnter * nnoremap <silent> <leader>n  :sp<CR>
-autocmd VimEnter * nnoremap <silent> <leader>v  :vsp<CR>
+autocmd VimEnter * nnoremap <silent> <leader>;  mPA;<ESC>`P
+autocmd VimEnter * nnoremap <silent> <leader>,  mPA,<ESC>`P
+autocmd VimEnter * nnoremap <silent> <leader>.  mPA.<ESC>`P
+" New buffer(tab)
+autocmd VimEnter * nnoremap <silent> <leader>tn :tabnew<CR>
+" Close current buffer(tab)
+autocmd VimEnter * nnoremap <silent> <leader>tc :tabclose<CR>
+" Change buffer(tab)
+autocmd VimEnter * nnoremap <silent> <leader>tl :tabnext<CR>
+autocmd VimEnter * nnoremap <silent> <leader>th :tabprevious<CR>
+" Move tab
+autocmd VimEnter * nnoremap <silent> <leader>tj :tabmove +<CR>
+autocmd VimEnter * nnoremap <silent> <leader>tk :tabmove -<CR>
+" Split buffer
+autocmd VimEnter * nnoremap <silent> <leader>wn :sp<CR>
+autocmd VimEnter * nnoremap <silent> <leader>wv :vsp<CR>
 " Change pane
 autocmd VimEnter * nnoremap <silent> <leader>wh :wincmd h<CR>
 autocmd VimEnter * nnoremap <silent> <leader>wj :wincmd j<CR>
@@ -265,16 +330,19 @@ autocmd FileType c,cpp,javascript,java,cs
     \ nnoremap <leader>y mY<Bar>:%!clang-format<CR><Bar>`Yzz
 " Remove all trailing whitespace
 autocmd VimEnter *
-    \ silent! nnoremap <leader>, mY:let _s=@/<Bar>:%s/\s\+$//e<Bar>:let@/=_s<CR>`Yzz
+    \ nnoremap <silent> <leader>i
+    \ mY:let _s=@/<Bar>:%s/\s\+$//e<Bar>:let@/=_s<CR>`Yzz
 
 " Add custom header
-nnoremap <silent> <leader>t :call AppendSignature()<CR>
+nnoremap <silent> <leader>s :call AppendSignature()<CR>
 
 " Comment/Uncomment
-" nnoremap <silent> <leader>cc :call Comment()<CR>
-" nnoremap <silent> <leader>cu :call Uncomment()<CR>
-" nnoremap <silent> <C-_> :call Comment()<CR>
-" nnoremap <silent> <leader>/ :call Uncomment()<CR>
+nnoremap <silent> <leader>cc :call Comment()<CR>
+vnoremap <silent> <leader>cc :call Comment()<CR>
+nnoremap <silent> <leader>cu :call Uncomment()<CR>
+vnoremap <silent> <leader>cu :call Uncomment()<CR>
+nnoremap <silent> <leader>ct :call CommentToggle()<CR>
+vnoremap <silent> <leader>ct :call CommentToggle()<CR>
 nnoremap <silent> <C-_> :call CommentToggle()<CR>
 vnoremap <silent> <C-_> :call CommentToggle()<CR>
 
@@ -310,11 +378,11 @@ set textwidth=78
 set colorcolumn=79
 
 " Filetype-specific settings -------------------------------------------------
-au VimEnter * if expand('%:t') == 'CMakeLists.txt'
+au BufEnter * if expand('%:t') == 'CMakeLists.txt'
     \ | set filetype=cmake
     \ | endif
-au VimEnter * let fileext = expand('%:e')
-    \ | if fileext == 'service' || fileext == 'nspawn' || fileext == 'slice'
+au BufEnter * let fext = expand('%:e')
+    \ | if fext=='service' || fext=='nspawn' || fext=='slice' || fext=='timer'
     \ | set filetype=systemd
     \ | endif
 au filetype gitcommit  setlocal tabstop=2 shiftwidth=2
@@ -323,62 +391,24 @@ au filetype markdown   setlocal tabstop=2 shiftwidth=2
 au filetype sshconfig  setlocal tabstop=2 shiftwidth=2
 au filetype yaml       setlocal tabstop=2 shiftwidth=2
 
-" Color settings -------------------------------------------------------------
-" Turn on syntax highlighting.
-syntax enable
-
-" Highlight keywords in comments
+" Highlight keywords in comments ---------------------------------------------
 " from: https://stackoverflow.com/a/30552423/13482274
 augroup CommentKeywordHighlight
     au!
     au Syntax * syn match ComHi
-        \ /\v\c<(fixme|must|note|only|recall|should|todo|warning)/
-        \ containedin=.*Comment.*,vimCommentTitle
-        \ contained
+                \ /\v\c<(fixme|must|note|only|recall|should|todo|warning)/
+                \ containedin=.*Comment.*,vimCommentTitle
+                \ contained
     au Syntax * syn match ComHiNegative
-        \ /\v\c<(should(( ?no|n'?))t|must(( ?no|n'?))t|do(( ?no|n'?))t|can(( ?no|'?))t)/
-        \ containedin=.*Comment.*,vimCommentTitle
-        \ contained
+                \ /\v\c<(should(( ?no|n'?))t|must(( ?no|n'?))t|do(( ?no|n'?))t|can(( ?no|'?))t)/
+                \ containedin=.*Comment.*,vimCommentTitle
+                \ contained
 augroup END
 hi def link ComHiNegative ComHi
 hi def link ComHi Todo
 
-set cursorline
-if exists('+termguicolors')
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-    set termguicolors
-    " let ayucolor="light"  " for light version of theme
-    " let ayucolor="mirage" " for mirage version of theme
-    let ayucolor="dark"   " for dark version of theme
-    colorscheme ayu
-    hi pmenu        guibg=#27304a gui=none
-    hi CocHighlightText guibg=#27304a
-    hi cursorline   guibg=#352020 gui=none
-    hi colorcolumn  guibg=#262626
-    hi visual       guibg=#4e4a44
-
-    " trailing whitespaces
-    hi extrawhitespace guibg=#3a3a3a
-elseif &t_Co == 256
-    colorscheme minimalist
-    hi cursorline    ctermbg=234 cterm=none
-    hi colorcolumn   ctermbg=235
-
-    " trailing whitespaces
-    hi extrawhitespace ctermbg=237 guibg=237
-else
-    set nocursorline
-    highlight colorcolumn   ctermbg=darkgray
-
-    " trailing whitespaces
-    hi extrawhitespace ctermbg=lightgray
-endif
-
-" White space settings -------------------------------------------------------
-match extrawhitespace /\s\+$/
-" Status line settings -------------------------------------------------------
-source ~/.config/nvim/statusline.vim
+" " Status line settings -------------------------------------------------------
+" source ~/.config/nvim/statusline.vim
 
 " Author: Blurgy
 " Date:   Jul 24 2020
