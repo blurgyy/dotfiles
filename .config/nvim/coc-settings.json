@@ -1,4 +1,6 @@
 {
+    "coc.source.around.firstMatch": false,
+    "coc.source.buffer.firstMatch": false,
     "languageserver": {
         "golang": {
             "command": "~/go/bin/gopls",
