@@ -15,6 +15,8 @@ alias im='nvim'
 alias vm='nvim'
 alias vom='nvim'
 alias ivm='nvim'
+alias bim='nvim'
+alias vivm='nvim'
 
 alias rm='rm -v'
 alias mv='mv -v'
@@ -35,6 +37,8 @@ alias tree='exa -T --color=automatic'
 # alias la='ls -A'
 # alias l='ls -CF'
 
+alias cat='bat'
+
 # Shorthand
 alias g='git'
 alias ga='git add'
@@ -53,6 +57,7 @@ alias sys='sudo systemctl --system'
 alias sus='systemctl --user'
 alias j='journalctl --user'
 alias sj='sudo journalctl'
+alias hibernate='systemctl hibernate'
 
 # View mode, open neovim with 'modifiable' disabled and 'read-only' enabled
 alias view='nvim -RM'
