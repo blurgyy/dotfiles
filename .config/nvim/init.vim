@@ -56,8 +56,7 @@ set mouse+=a
 autocmd BufReadPost *
     \ if line("'\"") > 1 && line("'\"") <= line("$") |
     \   if match(&filetype, "gitcommit") != 0 |
-    \       exe "normal! g`\"" |
-    \       call feedkeys('zz') |
+    \       exe "normal! g`\"zz" |
     \   endif |
     \ endif
 
@@ -313,15 +312,8 @@ autocmd VimEnter * nnoremap <silent> <leader>th :tabprevious<CR>
 " Move tab
 autocmd VimEnter * nnoremap <silent> <leader>tj :tabmove +<CR>
 autocmd VimEnter * nnoremap <silent> <leader>tk :tabmove -<CR>
-" Split buffer
-autocmd VimEnter * nnoremap <silent> <leader>wn :sp<CR>
-autocmd VimEnter * nnoremap <silent> <leader>wv :vsp<CR>
-" Change pane
-autocmd VimEnter * nnoremap <silent> <leader>wh :wincmd h<CR>
-autocmd VimEnter * nnoremap <silent> <leader>wj :wincmd j<CR>
-autocmd VimEnter * nnoremap <silent> <leader>wk :wincmd k<CR>
-autocmd VimEnter * nnoremap <silent> <leader>wl :wincmd l<CR>
-autocmd VimEnter * nnoremap <silent> <leader>wp :wincmd p<CR>
+" Remap <leader>w to <C-w> to perform buffer actions
+autocmd VimEnter * nnoremap <silent> <leader>w <C-w>
 " Format python code with yapf
 autocmd FileType python
     \ nnoremap <leader>y mY<Bar>:%!yapf<CR><Bar>`Yzz
@@ -396,7 +388,7 @@ au filetype yaml       setlocal tabstop=2 shiftwidth=2
 augroup CommentKeywordHighlight
     au!
     au Syntax * syn match ComHi
-                \ /\v\c<(fixme|must|note|only|recall|should|todo|warning)/
+                \ /\v\c<(fixme|must|note|only|recall|should|todo|warn((ing))?)/
                 \ containedin=.*Comment.*,vimCommentTitle
                 \ contained
     au Syntax * syn match ComHiNegative
