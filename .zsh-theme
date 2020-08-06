@@ -21,9 +21,9 @@ __COLOR(){
 
 __ISTHISROOT(){
     echo -en "$(__COLOR boldgreen)"
-    [[ 0 -eq $(id -u) ]] && \
-        echo -en "$(__COLOR boldred)#" || \
-        echo -en "$"
+    [[ 0 -eq $(id -u) ]] \
+        && echo -en "$(__COLOR boldred)#" \
+        || echo -en "$"
 }
 __GITDIRTY(){
     local STATUS
@@ -51,9 +51,9 @@ __GITDIRTY(){
 __GITPROMPT(){
     GIT_PROMPT_PREFIX=" $(__COLOR white)("
     GIT_PROMPT_SUFFIX=")$(__COLOR reset)"
-    ref=$(command git symbolic-ref HEAD 2> /dev/null) || \
-        ref=$(command git rev-parse --short HEAD 2> /dev/null) || \
-        return 0
+    ref=$(command git symbolic-ref HEAD 2> /dev/null) \
+        || ref=$(command git rev-parse --short HEAD 2> /dev/null) \
+        || return 0
     echo "${GIT_PROMPT_PREFIX}${ref#refs/heads/}$(__GITDIRTY)${GIT_PROMPT_SUFFIX}"
 }
 
