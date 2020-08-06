@@ -1,38 +1,62 @@
 # tmux-related shell functions and aliases
 #
 # Functions ==================================================================
+# If tmux is not running, behave like `exit`;
+# If tmux is running, attempt to kill current window and detach from session.
+# If there is only one window in current session, directly detach from current
+# session.
+function k(){
+    if [[ -n $TMUX ]]; then
+        if [[ $(tmux display-message -p '#{session_windows}') -gt 1 ]]; then
+            tmux kill-window \; kill-session \
+                && echo "Window and session killed"
+        else
+            tmux kill-session \
+                && echo "Session killed"
+        fi
+    else
+        exit "$@"
+    fi
+}
 # Kill current tmux session
 function ks() {
-    [[ -n $TMUX ]] && \
-        tmux kill-session && \
-        echo "Session killed"
+    if [[ -n $TMUX ]]; then
+        [[ -z "$1" ]] \
+            && tmux kill-session \
+            && echo "Session killed"
+        [[ -n "$1" ]] \
+            && tmux kill-session -t "$1" \
+            && echo "Session '$1' killed"
+    else
+        echo "No session to kill (tmux is not running)"
+    fi
 }
 
 # Manipulating tmux windows
 # Create new window
 function nw() {
     if [[ -n $TMUX ]]; then
-        [[ -z "$1" ]] && \
-            tmux new-window && \
-            echo "Create new window"
-        [[ -n "$1" ]] && \
-            tmux new-window -n "$1" && \
-            echo "Created new window '$1'"
+        [[ -z "$1" ]] \
+            && tmux new-window \
+            && echo "Create new window"
+        [[ -n "$1" ]] \
+            && tmux new-window -n "$1" \
+            && echo "Created new window '$1'"
     fi
 }
 # Kill window
 function kw() {
     if [[ -n $TMUX ]]; then
         if [[ $(tmux display-message -p '#{session_windows}') -gt 1 ]]; then
-            [[ -z "$1" ]] && \
-                tmux kill-window && \
-                echo "Window killed"
-            [[ -n "$1" ]] && \
-                tmux kill-window -t "$1" && \
-                echo "Window '$1' killed"
+            [[ -z "$1" ]] \
+                && tmux kill-window \
+                && echo "Window killed"
+            [[ -n "$1" ]] \
+                && tmux kill-window -t "$1" \
+                && echo "Window '$1' killed"
         else
-            tmux kill-session && \
-                echo "Session killed"
+            tmux kill-session \
+                && echo "Session killed"
         fi
     else
         echo "No window to kill (tmux is not running)."
@@ -40,47 +64,48 @@ function kw() {
 }
 # Rename current window
 function rew() {
-    [[ -n $TMUX ]] && [[ -n "$1" ]] && \
-        tmux rename-window "$1" && \
-        echo "Renamed current window to '$1'"
+    [[ -n $TMUX ]] && [[ -n "$1" ]] \
+        && tmux rename-window "$1" \
+        && echo "Renamed current window to '$1'"
 }
 # Goto window on the left
 function hw() {
-    [[ -n $TMUX ]] && \
-        tmux previous-window && \
-        echo "Switched to previous window"
+    [[ -n $TMUX ]] \
+        && tmux previous-window \
+        && echo "Switched to previous window"
 }
 # Goto window on the right
 function lw() {
-    [[ -n $TMUX ]] && \
-        tmux next-window && \
-        echo "Switched to next window"
+    [[ -n $TMUX ]] \
+        && tmux next-window \
+        && echo "Switched to next window"
 }
 # Goto window specified by $1
 function gw() {
     if [[ -n $TMUX ]]; then
-        [[ -z "$1" ]] && \
-            echo "Must specify window name or id" >&2
-        [[ -n "$1" ]] && \
-            tmux select-window -t "$1" && \
-            echo "Switched to window '$1'"
+        [[ -z "$1" ]] \
+            && echo "Must specify window name or id" >&2
+        [[ -n "$1" ]] \
+            && tmux select-window -t "$1" \
+            && echo "Switched to window '$1'"
     fi
 }
 
-function k(){
+# Manipulating panes ========================================================
+function kp(){
     if [[ -n $TMUX ]]; then
-        if [[ $(tmux display-message -p '#{session_windows}') -gt 1 ]]; then
-            tmux kill-window \; kill-session && \
-                echo "Window and session killed"
+        if [[ $(tmux display-message -p '#{window_panes}') -gt 1 ]]; then
+            tmux kill-pane && echo "Pane killed"
         else
-            tmux kill-session && \
-                echo "Session killed"
+            echo "Only one pane in current window. Use \`kw\` to kill window"
+            return 1
         fi
     else
-        exit "$@"
+        echo "No pane to kill (tmux is not running)"
     fi
 }
 
+# Kill current tmux server if tmux is running.
 function KK(){
     [[ -n $TMUX ]] && {
         tmux kill-server
@@ -91,6 +116,7 @@ function KK(){
 alias lscli='tmux list-clients'
 alias lss='tmux list-sessions'
 alias lsw='tmux list-windows'
+alias lsp='tmux list-panes'
 
 # Automatically run tmux on session start
 tsess='main'
@@ -110,8 +136,8 @@ if command -v tmux > /dev/null; then
         fi
         tmux new-session -t $tsess \; \
             new-window -n $wname \; \
-            select-window -t $wname && \
-            exit $?
+            select-window -t $wname \
+            && exit $?
             # Exit ONLY after exiting from tmux session
             # Command `tmux kill-server` will return 127, in this way terminal
             # will not automatically exit.
