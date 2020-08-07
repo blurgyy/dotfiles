@@ -59,7 +59,7 @@ __GITPROMPT(){
 
 # Must use %{...%} to quote colors.
 # From: http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html#Visual-effects
-PS1=' $(__COLOR cyan)%D{[%I:%M:%S]} $(__COLOR boldcyan)%~$(__GITPROMPT)
+PS1=' $(__COLOR cyan)[%D{%T}] $(__COLOR boldcyan)%~$(__GITPROMPT)
 $(__COLOR boldgreen)%n$(__COLOR cyan)@$(__COLOR blue)%M$(__ISTHISROOT)$(__COLOR reset) '
 
 
