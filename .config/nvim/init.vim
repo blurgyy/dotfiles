@@ -254,12 +254,17 @@ set undofile
 " Keybindings ----------------------------------------------------------------
 autocmd VimEnter * nnoremap <silent> % v%
 autocmd VimEnter * nnoremap <silent> Y y$
+" Use friendlier command editing interface
+autocmd VimEnter * nnoremap <silent> : :<C-f>i
+autocmd VimEnter * nnoremap <silent> / /<C-f>i
+autocmd VimEnter * nnoremap <silent> ? ?<C-f>i
 " Center search results
 autocmd VimEnter * nnoremap <silent> n nzz
 autocmd VimEnter * nnoremap <silent> N Nzz
 autocmd VimEnter * nnoremap <silent> * *zz
 autocmd VimEnter * nnoremap <silent> # #zz
 autocmd VimEnter * nnoremap <silent> g* g*zz
+autocmd VimEnter * nmap     <silent> gd gdzz
 autocmd VimEnter * nnoremap <silent> <C-o> <C-o>zz
 autocmd VimEnter * nnoremap <silent> <C-i> <C-i>zz
 " Move single line down/up with ctrl+shift+{j,k}
@@ -371,6 +376,9 @@ set colorcolumn=79
 " Filetype-specific settings -------------------------------------------------
 au BufEnter * if expand('%:t') == 'CMakeLists.txt'
     \ | set filetype=cmake
+    \ | endif
+au BufEnter * if expand('%:e') == 'tags'
+    \ | set filetype=tags
     \ | endif
 au BufEnter * let fext = expand('%:e')
     \ | if fext=='service' || fext=='nspawn' || fext=='slice' || fext=='timer'
