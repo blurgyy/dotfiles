@@ -260,7 +260,6 @@ autocmd VimEnter * nnoremap <silent> N Nzz
 autocmd VimEnter * nnoremap <silent> * *zz
 autocmd VimEnter * nnoremap <silent> # #zz
 autocmd VimEnter * nnoremap <silent> g* g*zz
-autocmd VimEnter * nnoremap <silent> gd gdzz
 autocmd VimEnter * nnoremap <silent> <C-o> <C-o>zz
 autocmd VimEnter * nnoremap <silent> <C-i> <C-i>zz
 " Move single line down/up with ctrl+shift+{j,k}
