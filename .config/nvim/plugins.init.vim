@@ -16,6 +16,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Fuzzy find
 Plug 'junegunn/fzf.vim'                             " Fuzzy find
 
 " Language-specific plugins ==================================================
+Plug 'ludovicchabant/vim-gutentags'                 " Cpp
 Plug 'fatih/vim-go'                                 " Golang
 Plug 'rust-lang/rust.vim'                           " rust-lang
 Plug 'cespare/vim-toml'                             " TOML
@@ -32,3 +33,5 @@ source ~/.config/nvim/fzf.init.vim
 source ~/.config/nvim/navi.init.vim
 " Configuration for 'lightline' ----------------------------------------------
 source ~/.config/nvim/lightline.init.vim
+" Configuration for 'gutentags' ----------------------------------------------
+source ~/.config/nvim/gutentags.init.vim
