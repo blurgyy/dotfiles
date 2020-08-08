@@ -5,8 +5,8 @@ Plug 'ayu-theme/ayu-vim'                            " 'ayu' theme for vim
 Plug 'itchyny/lightline.vim'                        " Lightline
 
 " Better coding experience ===================================================
-" Plug 'dense-analysis/ale'                           " Linting engine
-" Plug 'maximbaz/lightline-ale'                       " Lightline + ALE
+Plug 'dense-analysis/ale'                           " Linting engine
+Plug 'maximbaz/lightline-ale'                       " Lightline + ALE
 Plug 'neoclide/coc.nvim', {'branch': 'release'}     " Auto-completion
 Plug 'tpope/vim-fugitive'                           " Git plugin
 " Plug 'preservim/nerdtree'                           " File explorer
