@@ -264,7 +264,6 @@ autocmd VimEnter * nnoremap <silent> N Nzz
 autocmd VimEnter * nnoremap <silent> * *zz
 autocmd VimEnter * nnoremap <silent> # #zz
 autocmd VimEnter * nnoremap <silent> g* g*zz
-autocmd VimEnter * nmap     <silent> gd gdzz
 autocmd VimEnter * nnoremap <silent> <C-o> <C-o>zz
 autocmd VimEnter * nnoremap <silent> <C-i> <C-i>zz
 " Move single line down/up with ctrl+shift+{j,k}
@@ -275,6 +274,9 @@ autocmd VimEnter * inoremap <silent> <C-j> <Esc>:m .+1<CR>=kgi
 autocmd VimEnter * inoremap <silent> <C-k> <Esc>:m .-2<CR>=jgi
 autocmd VimEnter * vnoremap <silent> <C-j> :m '>+1<CR>gv=gv
 autocmd VimEnter * vnoremap <silent> <C-k> :m '<-2<CR>gv=gv
+" Preserve selection after indentation actions
+autocmd VimEnter * vnoremap <silent> < <gv
+autocmd VimEnter * vnoremap <silent> > >gv
 " Faster scrolling
 autocmd VimEnter * nnoremap <silent> <C-e> 3<C-e>
 autocmd VimEnter * nnoremap <silent> <C-y> 3<C-y>
@@ -324,6 +326,9 @@ autocmd FileType python
 " Format c/cpp code with clang-format
 autocmd FileType c,cpp,javascript,java,cs
     \ nnoremap <leader>y mY<Bar>:%!clang-format<CR><Bar>`Yzz
+" Format rust with rustfmt
+autocmd FileType rust
+    \ nnoremap <leader>y mY<Bar>:%!rustfmt<CR><Bar>`Yzz
 " Remove all trailing whitespace
 autocmd VimEnter *
     \ nnoremap <silent> <leader>i
@@ -334,13 +339,13 @@ nnoremap <silent> <leader>s :call AppendSignature()<CR>
 
 " Comment/Uncomment
 nnoremap <silent> <leader>cc :call Comment()<CR>
-vnoremap <silent> <leader>cc :call Comment()<CR>
+vnoremap <silent> <leader>cc :call Comment()<CR>gv
 nnoremap <silent> <leader>cu :call Uncomment()<CR>
-vnoremap <silent> <leader>cu :call Uncomment()<CR>
+vnoremap <silent> <leader>cu :call Uncomment()<CR>gv
 nnoremap <silent> <leader>ct :call CommentToggle()<CR>
-vnoremap <silent> <leader>ct :call CommentToggle()<CR>
+vnoremap <silent> <leader>ct :call CommentToggle()<CR>gv
 nnoremap <silent> <C-_> :call CommentToggle()<CR>
-vnoremap <silent> <C-_> :call CommentToggle()<CR>
+vnoremap <silent> <C-_> :call CommentToggle()<CR>gv
 
 " Set leader key timeout to 500ms
 set timeoutlen=500
