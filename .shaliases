@@ -72,6 +72,9 @@ fi
 # termbin.com
 alias tb='nc termbin.com 9999 -N'
 
+# Use longer timeout for telegram-send
+alias telegram-send='telegram-send --timeout 3600.0'
+
 # Pass aliases to sudo
 alias sudo='sudo '
 
