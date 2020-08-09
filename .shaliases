@@ -1,23 +1,48 @@
 # Typo-proof
-alias clera='clear'
-alias claer='clear'
-alias clare='clear'
-alias clrea='clear'
-alias clrae='clear'
-alias gi='git'
-alias it='git'
-alias gt='git'
-alias ccd='cd'
-alias c='cd'
-alias sl='ls'
-alias lls='ls'
-alias v='nvim'
-alias im='nvim'
-alias vm='nvim'
-alias vom='nvim'
-alias ivm='nvim'
-alias bim='nvim'
-alias vivm='nvim'
+_clear_typo=(
+    claer
+    clare
+    clera
+    clrae
+    clrea
+)
+_git_typo=(
+    gi
+    gi
+    it
+)
+_cd_typo=(
+    c
+    ccd
+)
+_ls_typo=(
+    lll
+    lls
+    sl
+)
+_nvim_typo=(
+    bim
+    im
+    ivm
+    v
+    vikm
+    vimk
+    vimm
+    vivm
+    vkim
+    vkm
+    vkmm
+    vm
+    vmi
+    vmk
+    vom
+)
+for _typo in ${_clear_typo[@]}; do eval "alias $_typo='clear'"; done
+for _typo in ${_git_typo[@]}; do eval "alias $_typo='git'"; done
+for _typo in ${_cd_typo[@]}; do eval "alias $_typo='cd'"; done
+for _typo in ${_ls_typo[@]}; do eval "alias $_typo='ls'"; done
+for _typo in ${_nvim_typo[@]}; do eval "alias $_typo='nvim'"; done
+unset _typo _clear_typo _git_typo _cd_typo _ls_typo _nvim_typo
 
 alias rm='rm -v'
 alias mv='mv -v'
@@ -30,9 +55,9 @@ alias ll='exa -alhg --git --color=automatic'
 alias la='exa -a --color=automatic'
 alias l='exa --color=automatic'
 alias tree='exa -T --color=automatic'
-# When in problem with `ls` command, install `exa` via package manager or
-# build from source (https://github.com/ogham/exa).
-# Or use below aliases to substitute above aliases.
+# When in trouble with `ls` command, install `exa` via package manager or
+# build from source (https://github.com/ogham/exa).  Or use below aliases to
+# substitute above aliases.
 # alias ls='ls --color=tty'
 # alias ll='ll --alhF'
 # alias la='ls -A'
@@ -41,6 +66,7 @@ alias tree='exa -T --color=automatic'
 alias cat='bat'
 
 # Shorthand
+alias duh='du -h --max-depth'
 alias g='git'
 alias ga='git add'
 alias gc='git commit -sv'
@@ -51,17 +77,17 @@ alias gdc='git diff --cached'
 alias gf='git fetch'
 alias gll='git pull'
 alias gp='git push'
+alias hibernate='systemctl hibernate'
+alias j='journalctl --user'
+alias open='xdg-open'
 alias p='python3 -u'
+alias sj='sudo journalctl'
+alias sus='systemctl --user'
+alias sys='sudo systemctl --system'
+alias ts='telegram-send'
 alias vi='nvim'
 alias vim='nvim'
-alias open='xdg-open'
 alias wget.k='wget --no-check-certificate'
-alias duh='du -h --max-depth'
-alias sys='sudo systemctl --system'
-alias sus='systemctl --user'
-alias j='journalctl --user'
-alias sj='sudo journalctl'
-alias hibernate='systemctl hibernate'
 
 # View mode, open neovim with 'modifiable' disabled and 'read-only' enabled
 alias view='nvim -RM'
