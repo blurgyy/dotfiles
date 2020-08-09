@@ -12,13 +12,12 @@ autocmd VimEnter * nnoremap <silent> <c-p> :ProjectFiles<CR>
 autocmd VimEnter * nnoremap <silent> <c-l> :Lines<CR>
 " Find buffers
 autocmd VimEnter * nnoremap <silent> <c-b> :Buffers<CR>
-" Find marks. The reason that here is <leader>m instead of <C-m> is that in
-" the command history buffer, I want to directly call the command under cursor
-" in normal mode when <CR> is hit.  If I map <C-m> to call :Marks<CR>, given
-" that <CR> actually gives a keycode of '^M' (see this by hitting <C-v><C-m>
-" in insert mode in vim), the desired behaviour would not happen when I hit
-" <CR> in the command history buffer with normal mode.
-autocmd VimEnter * nnoremap <silent> <leader>m :Marks<CR>
+" Find marks. When in command-line window, pressing <C-m> (or <CR>) in normal
+" mode should execute the command currently under cursor, it can be achieved
+" by using `autocmd CmdwinEnter * unmap <C-m>` and `autocmd CmdwinLeave *
+" nnoremap <silent> <C-m> :Marks<CR>`. the to configurations has been added to
+" ~/.config/nvim/init.vim.
+autocmd VimEnter * nnoremap <silent> <C-m> :Marks<CR>
 
 " Open fzf in a floating window
 " From: https://github.com/neovim/neovim/issues/9718#issuecomment-559573308
