@@ -349,6 +349,7 @@ vnoremap <silent> <C-_> :call CommentToggle()<CR>gv
 " Keybindings for command-line window ----------------------------------------
 autocmd CmdwinEnter * nnoremap <silent> <ESC> :q<CR>
 autocmd CmdwinEnter * unmap <C-m>
+autocmd CmdwinLeave * unmap <ESC>
 autocmd CmdwinLeave * nnoremap <silent> <C-m> :Marks<CR>
 
 " Set leader key timeout to 500ms
