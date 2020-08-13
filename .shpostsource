@@ -8,6 +8,7 @@ done
 for i in ~/.shexports*; do
     . $i
 done
+unset i
 
 # source custom functions
 if [[ -f ~/.shfns ]]; then
