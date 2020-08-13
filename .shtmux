@@ -133,6 +133,7 @@ alias lscli='tmux list-clients'
 alias lss='tmux list-sessions'
 alias lsw='tmux list-windows'
 alias lsp='tmux list-panes'
+alias sw='tmux swap-window -dt'
 
 # Automatically run tmux on session start
 tsess='main'
