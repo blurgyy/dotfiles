@@ -72,39 +72,40 @@ let s:comchs = [
 \ ]
 let s:comment_ft = {
 \     '#': [
-\         'php',
-\         'ruby',
-\         'sh',
-\         'make',
+\         '',
 \         'cmake',
-\         'perl',
-\         'python',
-\         'yaml',
 \         'conf',
 \         'dosini',
 \         'gdb',
-\         'readline',
-\         'tmux',
-\         'zsh',
-\         'systemd',
+\         'gitcommit',
 \         'gitignore',
 \         'gitrebase',
-\         'gitcommit',
-\         ''
+\         'make',
+\         'map',
+\         'perl',
+\         'php',
+\         'python',
+\         'readline',
+\         'ruby',
+\         'sh',
+\         'systemd',
+\         'tmux',
+\         'yaml',
+\         'zsh'
 \     ],
 \     '//': [
-\         'cpp',
 \         'c',
-\         'php',
+\         'cpp',
 \         'go',
-\         'javascript',
 \         'java',
+\         'javascript',
 \         'json',
+\         'php',
 \         'scala'
 \     ],
 \     '%': [
-\         'tex',
-\         'matlab'
+\         'matlab',
+\         'tex'
 \     ],
 \     '>': [
 \         'markdown'
@@ -117,34 +118,35 @@ let s:comment_ft = {
 \     ],
 \ }
 let s:ft_comment = {
-\   'php': '#',
-\   'ruby': '#',
-\   'sh': '#',
-\   'make': '#',
+\   '': '#',
 \   'cmake': '#',
-\   'perl': '#',
-\   'python': '#',
-\   'yaml': '#',
 \   'conf': '#',
 \   'dosini': '#',
 \   'gdb': '#',
-\   'readline': '#',
-\   'tmux': '#',
-\   'zsh': '#',
-\   'systemd': '#',
+\   'gitcommit': '#',
 \   'gitignore': '#',
 \   'gitrebase': '#',
-\   'gitcommit': '#',
-\   '': '#',
-\   'cpp': '//',
+\   'make': '#',
+\   'map': '#',
+\   'perl': '#',
+\   'php': '#',
+\   'python': '#',
+\   'readline': '#',
+\   'ruby': '#',
+\   'sh': '#',
+\   'systemd': '#',
+\   'tmux': '#',
+\   'yaml': '#',
+\   'zsh': '#',
 \   'c': '//',
+\   'cpp': '//',
 \   'go': '//',
-\   'javascript': '//',
 \   'java': '//',
+\   'javascript': '//',
 \   'json': '//',
 \   'scala': '//',
-\   'tex': '%',
 \   'matlab': '%',
+\   'tex': '%',
 \   'markdown': '>',
 \   'vim': '"',
 \   'lua': '--'
@@ -230,7 +232,29 @@ function! AppendSignature()
     call append(line('$'), "Author: Blurgy")
     call append(line('$'), "Date:   ".strftime("%b %d %Y"))
     exec "$-1,$ call Comment()"
+    exec "$-1,$ s:^[ \\n\\t]*::"
     exec "normal! `Szz"
+endfunction
+function! SetMovementByDisplayLines()
+    noremap <buffer> <silent> <expr> k v:count ? 'k' : 'gk'
+    noremap <buffer> <silent> <expr> j v:count ? 'j' : 'gj'
+    noremap <buffer> <silent> 0 g0
+    noremap <buffer> <silent> $ g$
+endfunction
+function! ToggleMovementByDisplayLines()
+    if !exists('b:movement_by_display_lines')
+        let b:movement_by_display_lines = 0
+    endif
+    if b:movement_by_display_lines == 0
+        call SetMovementByDisplayLines()
+        let b:movement_by_display_lines = 1
+    else
+        silent! nunmap <buffer> k
+        silent! nunmap <buffer> j
+        silent! nunmap <buffer> 0
+        silent! nunmap <buffer> $
+        let b:movement_by_display_lines = 0
+    endif
 endfunction
 
 " Auto change directory when opening files in different directory
@@ -304,6 +328,9 @@ autocmd VimEnter * nnoremap <silent> <leader>jl :wq<CR>
 autocmd VimEnter * nnoremap <silent> <leader>lh :wqa<CR>
 autocmd VimEnter * nnoremap <silent> <leader>n  :n<CR>
 autocmd VimEnter * nnoremap <silent> <leader>N  :N<CR>
+" Toggle movement by displayed lines
+autocmd VimEnter *
+    \ nnoremap <silent> <leader>g :call ToggleMovementByDisplayLines()<CR>
 " Append punctuation at eol
 autocmd VimEnter * nnoremap <silent> <leader>;  mPA;<ESC>`P
 autocmd VimEnter * nnoremap <silent> <leader>,  mPA,<ESC>`P
@@ -348,8 +375,8 @@ nnoremap <silent> <C-_> :call CommentToggle()<CR>
 vnoremap <silent> <C-_> :call CommentToggle()<CR>gv
 " Keybindings for command-line window ----------------------------------------
 autocmd CmdwinEnter * nnoremap <silent> <ESC> :q<CR>
-autocmd CmdwinEnter * unmap <C-m>
-autocmd CmdwinLeave * unmap <ESC>
+autocmd CmdwinEnter * nunmap <C-m>
+autocmd CmdwinLeave * nunmap <ESC>
 autocmd CmdwinLeave * nnoremap <silent> <C-m> :Marks<CR>
 
 " Set leader key timeout to 500ms
@@ -377,6 +404,9 @@ set softtabstop=-1
 
 " Disable <ESC> wait time
 set nottimeout
+
+" Show tabline even when there's only 1 tab open
+set showtabline=2
 
 set formatoptions=tcroqlm2
 " Use 78 as textwidth, according to RFC2822
