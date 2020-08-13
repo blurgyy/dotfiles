@@ -14,6 +14,7 @@ _git_typo=(
 _cd_typo=(
     c
     ccd
+    lcd
 )
 _ls_typo=(
     lll
@@ -84,7 +85,7 @@ alias p='python3 -u'
 alias sj='sudo journalctl'
 alias sus='systemctl --user'
 alias sys='sudo systemctl --system'
-alias ts='telegram-send'
+alias ts='telegram-send --timeout 86400'
 alias vi='nvim'
 alias vim='nvim'
 alias wget.k='wget --no-check-certificate'
@@ -110,8 +111,8 @@ alias sudo='sudo '
 # Get colored output from pacman
 alias pacman='pacman --color=auto'
 
-# proxy environment
-alias px='env http_proxy=http://127.0.0.1:9990 https_proxy=http://127.0.0.1:9990 npm_config_proxy=http://127.0.0.1:9990'
+# proxy environment, append a space to preserve aliases
+alias px='env http_proxy=http://127.0.0.1:9990 https_proxy=http://127.0.0.1:9990 npm_config_proxy=http://127.0.0.1:9990 '
 
 # Export compile_commands.json to build directory by default
 # see commit 03bcd601cf3aa14a7f869b0e147d1b854e09075a
