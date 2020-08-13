@@ -1,12 +1,13 @@
 call plug#begin('~/.config/nvim/plugged')
 
 " Prettifying vim ============================================================
-Plug 'ayu-theme/ayu-vim'                            " 'ayu' theme for vim
+" Plug 'ayu-theme/ayu-vim'                            " 'ayu' theme for vim
+Plug 'morhetz/gruvbox'                              " The gruvbox colorscheme
 Plug 'itchyny/lightline.vim'                        " Lightline
 
 " Better coding experience ===================================================
-Plug 'dense-analysis/ale'                           " Linting engine
-Plug 'maximbaz/lightline-ale'                       " Lightline + ALE
+Plug 'dense-analysis/ale', {'for': 'rust'}          " Linting engine
+Plug 'maximbaz/lightline-ale', {'for': 'rust'}      " Lightline + ALE
 Plug 'neoclide/coc.nvim', {'branch': 'release'}     " Auto-completion
 Plug 'tpope/vim-fugitive'                           " Git plugin
 " Plug 'preservim/nerdtree'                           " File explorer

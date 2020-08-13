@@ -13,7 +13,7 @@ set noshowmode
 function! CurrentBranch()
     let l:branch = FugitiveHead()
     if strlen(l:branch) > 0
-        let l:message = "[branch:" . l:branch . "]"
+        let l:message = "[" . l:branch . "]"
     else
         let l:message = ""
     endif
@@ -27,10 +27,10 @@ let g:lightline#ale#indicator_checking = "..."
 " let g:lightline#ale#indicator_ok = "\uf00c"
 
 let g:lightline = {
-\ 'colorscheme': ayucolor=='light'||ayucolor=='mirage'?'ayu_'.ayucolor:'powerline',
+\ 'colorscheme': 'gruvbox',
 \ 'active': {
-\   'left': [ [ 'mode', 'paste', 'cocstatus' ],
-\             [ 'filename', 'gitbranch', 'linter_checking', 'linter_errors',
+\   'left': [ [ 'mode', 'gitbranch', 'paste', 'cocstatus' ],
+\             [ 'filename', 'linter_checking', 'linter_errors',
 \               'linter_warnings', 'linter_infos', 'readonly', 'modified' ] ]
 \   },
 \ 'component_function': {
