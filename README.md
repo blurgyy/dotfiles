@@ -15,7 +15,7 @@ A collection of configuration files for mostly used tools.
   - [aliases](./.shaliases)
   - [zsh theme](./.zsh-theme):
     Install [OMZ](https://github.com/ohmyzsh/ohmyzsh) to enable.
-- [tmux](./.tmux.conf)
+- [tmux](./.config/tmux/tmux.conf)
 - Miscellaneous:
   - [clang-format](./.clang-format)
   - [pdfpc](./.config/pdfpc/pdfpcrc)
