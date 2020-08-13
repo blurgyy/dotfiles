@@ -10,7 +10,7 @@ function k(){
         if [[ $(tmux display-message -p '#{window_panes}') -gt 1 ]] \
             && [[ $1 != '-f' ]]; then
             echo "Not leaving session (multiple panes in current window)"
-            echo "Use '$0 -f' to kill anyway"
+            echo "Use \`$0 -f\` to kill anyway"
             echo
             echo "* Panes in current window:"
             tmux list-panes
@@ -58,7 +58,7 @@ function kw() {
         if [[ $(tmux display-message -p '#{window_panes}') -gt 1 ]] \
             && [[ $1 != "-f" ]] ; then
             echo "Window not killed (multiple panes in current window)"
-            echo "Use '$0 -f' to kill anyway"
+            echo "Use \`$0 -f\` to kill anyway"
             echo
             echo "* Panes in current window:"
             tmux list-panes
