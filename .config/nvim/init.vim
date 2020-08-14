@@ -90,8 +90,9 @@ let s:comment_ft = {
 \         'sh',
 \         'systemd',
 \         'tmux',
+\         'toml',
 \         'yaml',
-\         'zsh'
+\         'zsh',
 \     ],
 \     '//': [
 \         'c',
@@ -101,17 +102,17 @@ let s:comment_ft = {
 \         'javascript',
 \         'json',
 \         'php',
-\         'scala'
+\         'scala',
 \     ],
 \     '%': [
 \         'matlab',
-\         'tex'
+\         'tex',
 \     ],
 \     '>': [
-\         'markdown'
+\         'markdown',
 \     ],
 \     '"': [
-\         'vim'
+\         'vim',
 \     ],
 \     '--': [
 \         'lua'
@@ -147,9 +148,10 @@ let s:ft_comment = {
 \   'scala': '//',
 \   'matlab': '%',
 \   'tex': '%',
+\   'toml': '#',
 \   'markdown': '>',
 \   'vim': '"',
-\   'lua': '--'
+\   'lua': '--',
 \ }
 " Functions ------------------------------------------------------------------
 function! CurrentChar()
