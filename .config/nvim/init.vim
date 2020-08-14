@@ -441,7 +441,7 @@ augroup CommentKeywordHighlight
                 \ containedin=.*Comment.*,vimCommentTitle
                 \ contained
     au Syntax * syn match ComHiNegative
-                \ /\v\c<(should(( ?no|n'?))t|must(( ?no|n'?))t|do(( ?no|n'?))t|can(( ?no|'?))t)/
+                \ /\v\c<(should(( ?no|n'?))t|must(( ?no|n'?))t|do(( ?no|n'?))t|can(( ?no|'?))t)>/
                 \ containedin=.*Comment.*,vimCommentTitle
                 \ contained
 augroup END
