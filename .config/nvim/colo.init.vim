@@ -1,8 +1,11 @@
-colorscheme gruvbox
-
 " Use 'hard' contrast value for gruvbox, possible values are:
 " soft/medium/hard, default value is 'medium'
 let g:gruvbox_contrast_dark = 'hard'
+
+colorscheme gruvbox
+
+" Use dark theme for gruvbox
+set bg=dark
 
 " Turn on syntax highlighting.
 syntax enable
