@@ -17,33 +17,47 @@ _cd_typo=(
     lcd
 )
 _ls_typo=(
-    lll
     lls
     sl
 )
-_nvim_typo=(
+_ll_typo=(
+    lll
+)
+_vim_typo=(
     bim
     im
     ivm
     v
+    vijm
     vikm
+    vimj
     vimk
     vimm
     vivm
+    vjim
+    vjm
+    vjmm
     vkim
     vkm
     vkmm
     vm
     vmi
     vmk
+    vmj
     vom
 )
+# Use Neovim if it's installed, else use Vim
+command -v nvim >/dev/null 2>&1 \
+    && _vim_exexutable="nvim" \
+    || _vim_exexutable="vim"
 for _typo in ${_clear_typo[@]}; do eval "alias $_typo='clear'"; done
 for _typo in ${_git_typo[@]}; do eval "alias $_typo='git'"; done
 for _typo in ${_cd_typo[@]}; do eval "alias $_typo='cd'"; done
 for _typo in ${_ls_typo[@]}; do eval "alias $_typo='ls'"; done
-for _typo in ${_nvim_typo[@]}; do eval "alias $_typo='nvim'"; done
-unset _typo _clear_typo _git_typo _cd_typo _ls_typo _nvim_typo
+for _typo in ${_ll_typo[@]}; do eval "alias $_typo='ll'"; done
+for _typo in ${_vim_typo[@]}; do eval "alias $_typo=$_vim_exexutable"; done
+# Don't unset variable _vim_exexutable because it is used later in this script
+unset _typo _clear_typo _git_typo _cd_typo _ls_typo _vim_typo
 
 alias rm='rm -v'
 alias mv='mv -v'
@@ -76,6 +90,8 @@ alias gcan='git commit -sv --amend --no-edit'
 alias gd='git diff'
 alias gdc='git diff --cached'
 alias gf='git fetch'
+alias gl='git log --all --graph --decorate --oneline'
+alias gla='git log --all --graph --decorate --format=fuller'
 alias gll='git pull'
 alias gp='git push'
 alias hibernate='systemctl hibernate'
@@ -86,12 +102,14 @@ alias sj='sudo journalctl'
 alias sus='systemctl --user'
 alias sys='sudo systemctl --system'
 alias ts='telegram-send --timeout 86400'
-alias vi='nvim'
-alias vim='nvim'
+# alias vi='nvim'
+# alias vim='nvim'
+alias vi="$_vim_exexutable"
+alias vim="$_vim_exexutable"
 alias wget.k='wget --no-check-certificate'
 
-# View mode, open neovim with 'modifiable' disabled and 'read-only' enabled
-alias view='nvim -RM'
+# View mode, open Neovim/Vim with 'modifiable' on and 'read-only' off
+alias view=''$_vim_exexutable' -RM'
 
 # Do not use system exit/logout, use function `k()` defined in ~/.shtmux
 if [[ -f ~/.shtmux ]]; then
