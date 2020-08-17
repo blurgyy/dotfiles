@@ -422,6 +422,7 @@ set expandtab
 set softtabstop=-1
 
 " Disable <ESC> wait time
+set ttimeoutlen=0
 set nottimeout
 
 " Show tabline even when there's only 1 tab open
@@ -454,11 +455,11 @@ au filetype yaml       setlocal tabstop=2 shiftwidth=2
 augroup CommentKeywordHighlight
     au!
     au Syntax * syn match ComHi
-                \ /\v\c<(fixme|must|note|only|recall|should|todo|warn((ing))?)/
+                \ /\v\c<(fixme|must|note|only|recall|should|todo|warn((ing))?)>/
                 \ containedin=.*Comment.*,vimCommentTitle
                 \ contained
     au Syntax * syn match ComHiNegative
-                \ /\v\c<(should(( ?no|n'?))t|must(( ?no|n'?))t|do(( ?no|n'?))t|can(( ?no|'?))t)>/
+                \ /\v\c<(should(( ?no|n'?))t|must(( ?no|n'?))t|do(( ?no|n'?))t|can(( ?no|'?))t|deprecated)>/
                 \ containedin=.*Comment.*,vimCommentTitle
                 \ contained
 augroup END
