@@ -455,11 +455,11 @@ au filetype yaml       setlocal tabstop=2 shiftwidth=2
 augroup CommentKeywordHighlight
     au!
     au Syntax * syn match ComHi
-                \ /\v\c<(fixme|must|note|only|recall|should|todo|warn((ing))?)>/
+                \ /\v\c<(fixme|must|note|only|recall|should|todo|warn((ing))?|caveat|deprecated):?>/
                 \ containedin=.*Comment.*,vimCommentTitle
                 \ contained
     au Syntax * syn match ComHiNegative
-                \ /\v\c<(should(( ?no|n'?))t|must(( ?no|n'?))t|do(( ?no|n'?))t|can(( ?no|'?))t|deprecated)>/
+                \ /\v\c<(should(( ?no|n'?))t|must(( ?no|n'?))t|do(( ?no|n'?))t|can(( ?no|'?))t)>/
                 \ containedin=.*Comment.*,vimCommentTitle
                 \ contained
 augroup END
