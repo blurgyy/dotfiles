@@ -252,12 +252,14 @@ function! ToggleMovementByDisplayLines()
     if b:movement_by_display_lines == 0
         call SetMovementByDisplayLines()
         let b:movement_by_display_lines = 1
+        echom "Movement is now by displayed lines"
     else
         silent! nunmap <buffer> k
         silent! nunmap <buffer> j
         silent! nunmap <buffer> 0
         silent! nunmap <buffer> $
         let b:movement_by_display_lines = 0
+        echom "Movement is now by actual line numbers"
     endif
 endfunction
 
