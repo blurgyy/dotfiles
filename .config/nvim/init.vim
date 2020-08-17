@@ -210,7 +210,9 @@ endfunction
 function! CheckSigned()
     let s:ft = &filetype
     if getline(line('$')-2) == ''
-        \ && getline(line('$')-1) == s:ft_comment[s:ft] . ' Author: Blurgy'
+        \ && getline(line('$')-1) =~
+            \ '^' . s:ft_comment[s:ft] .
+            \ ' Author: Blurgy\(\( <gy@blurgy.xyz>\)\)\?$'
         if match(getline(line('$')), 'Date:   '.strftime("%b %d %Y")) != -1
             return 1 " Signature is up to date
         elseif match(getline(line('$')), s:ft_comment[s:ft] . ' Date:') == 0
@@ -231,7 +233,7 @@ function! AppendSignature()
     endif
     exec "normal! mS"
     call append(line('$'), "")
-    call append(line('$'), "Author: Blurgy")
+    call append(line('$'), "Author: Blurgy <gy@blurgy.xyz>")
     call append(line('$'), "Date:   ".strftime("%b %d %Y"))
     exec "$-1,$ call Comment()"
     exec "$-1,$ s:^[ \\n\\t]*::"
