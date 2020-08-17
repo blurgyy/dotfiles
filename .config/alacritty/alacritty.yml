@@ -24,7 +24,7 @@ font:
 colors:
   primary:
     background: '#0F1419'
-    foreground: '#eaeaea'
+    foreground: '#ebdbb2'
   normal:
     black:    '#262626'
     red:      '#d54e53'
