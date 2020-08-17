@@ -272,7 +272,9 @@ endfunction
 set clipboard+=unnamed,unnamedplus
 
 " Show substitute effects as you type
-set inccommand=split
+if has('nvim')
+    set inccommand=split
+endif
 
 " Enable undo file and directory
 if !isdirectory($HOME.'/.config/nvim/undotree')
