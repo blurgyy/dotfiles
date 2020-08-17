@@ -312,6 +312,8 @@ autocmd VimEnter * vnoremap <silent> > >gv
 " Faster scrolling
 autocmd VimEnter * nnoremap <silent> <C-e> 3<C-e>
 autocmd VimEnter * nnoremap <silent> <C-y> 3<C-y>
+autocmd VimEnter * vnoremap <silent> <C-e> 3<C-e>
+autocmd VimEnter * vnoremap <silent> <C-y> 3<C-y>
 """ This is deprecated (or not)
 " " Auto expand brace
 " autocmd VimEnter * inoremap ( ()<Esc>i
@@ -336,6 +338,15 @@ autocmd VimEnter * nnoremap <silent> <leader>jl :wq<CR>
 autocmd VimEnter * nnoremap <silent> <leader>lh :wqa<CR>
 autocmd VimEnter * nnoremap <silent> <leader>n  :n<CR>
 autocmd VimEnter * nnoremap <silent> <leader>N  :N<CR>
+autocmd VimEnter * nnoremap <silent> <leader>h  :set hlsearch!<CR>
+" Same for visual mode
+autocmd VimEnter * vnoremap <silent> <leader>jk <ESC>:w<CR>gv
+autocmd VimEnter * vnoremap <silent> <leader>kj <ESC>:q<CR>
+autocmd VimEnter * vnoremap <silent> <leader>lj <ESC>:qa<CR>
+autocmd VimEnter * vnoremap <silent> <leader>jl <ESC>:wq<CR>
+autocmd VimEnter * vnoremap <silent> <leader>lh <ESC>:wqa<CR>
+autocmd VimEnter * vnoremap <silent> <leader>n  :n<CR>
+autocmd VimEnter * vnoremap <silent> <leader>N  :N<CR>
 " Toggle movement by displayed lines
 autocmd VimEnter *
     \ nnoremap <silent> <leader>g :call ToggleMovementByDisplayLines()<CR>
