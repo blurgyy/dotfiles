@@ -6,13 +6,19 @@ function die(){
 
 # Colorful man page
 function man() {
+    # md/bold: start bold
+    # me/sgr0: turn off bold, blink, underline
+    # so/smso: start standout (reverse video)
+    # se/rmso: stop standout
+    # us/smul: start underline
+    # ue/rmul: stop underline
     LESS_TERMCAP_md=$'\e[01;31m' \
-    LESS_TERMCAP_me=$'\e[0m' \
-    LESS_TERMCAP_se=$'\e[0m' \
-    LESS_TERMCAP_so=$'\e[01;44;33m' \
-    LESS_TERMCAP_ue=$'\e[0m' \
-    LESS_TERMCAP_us=$'\e[01;32m' \
-    command man "$@"
+        LESS_TERMCAP_me=$'\e[00;00m' \
+        LESS_TERMCAP_so=$'\e[01;44;33m' \
+        LESS_TERMCAP_se=$'\e[00;00;00m' \
+        LESS_TERMCAP_us=$'\e[01;32m' \
+        LESS_TERMCAP_ue=$'\e[00;00m' \
+        command man "$@"
 }
 
 # Show neovim help for $1
