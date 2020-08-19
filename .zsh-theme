@@ -19,13 +19,15 @@ __COLOR(){
     eval "echo -en %{\$reset%}%{\$$1%}"
 }
 
-__ISTHISROOT(){
-    echo -en "$(__COLOR boldgreen)"
+__ISTHISROOT(){ echo -en "$(__COLOR boldgreen)"
     [[ 0 -eq $(id -u) ]] \
         && echo -en "$(__COLOR boldred)#" \
         || echo -en "$"
 }
 __GITDIRTY(){
+    if ! command git status >/dev/null 2>&1; then
+        return 0
+    fi
     local STATUS
     local -a FLAGS
     local GIT_PROMPT_DIRTY="*"
@@ -49,6 +51,9 @@ __GITDIRTY(){
     fi
 }
 __GITPROMPT(){
+    if ! command git status >/dev/null 2>&1; then
+        return 0
+    fi
     GIT_PROMPT_PREFIX=" $(__COLOR white)("
     GIT_PROMPT_SUFFIX=")$(__COLOR reset)"
     ref=$(command git symbolic-ref HEAD 2> /dev/null) \
