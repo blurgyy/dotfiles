@@ -56,8 +56,6 @@ for _typo in ${_cd_typo[@]}; do eval "alias $_typo='cd'"; done
 for _typo in ${_ls_typo[@]}; do eval "alias $_typo='ls'"; done
 for _typo in ${_ll_typo[@]}; do eval "alias $_typo='ll'"; done
 for _typo in ${_vim_typo[@]}; do eval "alias $_typo=$_vim_exexutable"; done
-# Don't unset variable _vim_exexutable because it is used later in this script
-unset _typo _clear_typo _git_typo _cd_typo _ls_typo _vim_typo
 
 alias rm='rm -v'
 alias mv='mv -v'
@@ -135,6 +133,9 @@ alias px='env http_proxy=http://127.0.0.1:9990 https_proxy=http://127.0.0.1:9990
 # Export compile_commands.json to build directory by default
 # see commit 03bcd601cf3aa14a7f869b0e147d1b854e09075a
 alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1'
+
+# Unset local variables
+unset _typo _clear_typo _git_typo _cd_typo _ls_typo _vim_typo _vim_exexutable
 
 # Syntax highlighting
 # vim: set filetype=sh:
