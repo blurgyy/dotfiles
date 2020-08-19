@@ -18,8 +18,8 @@ syntax enable
 " elseif ayucolor == 'dark'
 " hi! extrawhitespace guibg=#3a3a3a
 " endif
-hi! extrawhitespace guibg=#5c5856
-match extrawhitespace /\s\+$/
+autocmd BufEnter * hi! extrawhitespace guibg=#5c5856
+autocmd BufEnter * match extrawhitespace /\s\+$/
 
 set cursorline
 if exists('+termguicolors')
