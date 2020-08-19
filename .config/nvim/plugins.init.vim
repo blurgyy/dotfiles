@@ -15,6 +15,7 @@ Plug 'tpope/vim-fugitive'                           " Git plugin
 " Plug 'kristijanhusak/vim-dirvish-git'               " Git plugin for dirvish
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Fuzzy find
 Plug 'junegunn/fzf.vim'                             " Fuzzy find
+Plug 'sheerun/vim-polyglot'                         " Semantic highlighting
 
 " Language-specific plugins ==================================================
 Plug 'ludovicchabant/vim-gutentags'                 " Cpp
@@ -24,7 +25,7 @@ Plug 'cespare/vim-toml'                             " TOML
 
 call plug#end()
 
-" Configuration for 'ayu' ----------------------------------------------------
+" Configuration for colorscheme ----------------------------------------------
 source ~/.config/nvim/colo.init.vim
 " Configuration for 'coc' ----------------------------------------------------
 source ~/.config/nvim/coc.init.vim

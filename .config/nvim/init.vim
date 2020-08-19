@@ -466,8 +466,5 @@ augroup END
 hi def link ComHiNegative ComHi
 hi def link ComHi Todo
 
-" " Status line settings -------------------------------------------------------
-" source ~/.config/nvim/statusline.vim
-
 " Author: Blurgy
 " Date:   Jul 24 2020
