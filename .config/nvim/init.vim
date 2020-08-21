@@ -280,7 +280,7 @@ endif
 if !isdirectory($HOME.'/.config/nvim/undotree')
     call mkdir($HOME.'/.config/nvim/undotree', 'p', 0700)
 endif
-set undodir=~/.config/nvim/undotree
+set undodir=~/.cache/nvim/undotree
 set undofile
 
 " Keybindings ----------------------------------------------------------------
@@ -390,6 +390,7 @@ nnoremap <silent> <leader>cu :call Uncomment()<CR>
 vnoremap <silent> <leader>cu :call Uncomment()<CR>gv
 nnoremap <silent> <leader>ct :call CommentToggle()<CR>
 vnoremap <silent> <leader>ct :call CommentToggle()<CR>gv
+inoremap <silent> <C-_> <ESC>:call CommentToggle()<CR>
 nnoremap <silent> <C-_> :call CommentToggle()<CR>
 vnoremap <silent> <C-_> :call CommentToggle()<CR>gv
 " Keybindings for command-line window ----------------------------------------
