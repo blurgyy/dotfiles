@@ -18,6 +18,7 @@ Plug 'junegunn/fzf.vim'                             " Fuzzy find
 Plug 'sheerun/vim-polyglot'                         " Semantic highlighting
 
 " Language-specific plugins ==================================================
+Plug 'lilydjwg/fcitx.vim'                           " Chinese
 Plug 'ludovicchabant/vim-gutentags'                 " Cpp
 Plug 'fatih/vim-go'                                 " Golang
 Plug 'rust-lang/rust.vim'                           " rust-lang
