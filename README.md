@@ -6,6 +6,7 @@ A collection of configuration files for mostly used tools.
 
 - [alacritty](./.config/alacritty/alacritty.yml)
 - [neovim](./.config/nvim/init.vim)
+- [vim](./.vimrc)
 - shell:
   - [pre-run commands](./.shrc)
   - [presource script](./.shpresource)
@@ -21,6 +22,7 @@ A collection of configuration files for mostly used tools.
   - [pdfpc](./.config/pdfpc/pdfpcrc)
   - [pylint](./.pylintrc)
   - [gdbinit](./.gdbinit)
+  - [lldbinit](./.lldbinit)
   - [PAM environment](./.config/pam/env.conf)
   - autostarts:
     - [fcitx5](./.config/autostart/fcitx5.desktop)
