@@ -17,6 +17,7 @@ _cd_typo=(
     lcd
 )
 _ls_typo=(
+    lks
     lls
     sl
 )
@@ -76,7 +77,9 @@ alias tree='exa -T --color=automatic'
 # alias la='ls -A'
 # alias l='ls -CF'
 
-alias cat='bat'
+if command -v bat >/dev/null 2>&1; then
+    alias cat='bat'
+fi
 
 # Shorthand
 alias duh='du -h --max-depth'
