@@ -309,6 +309,7 @@ autocmd VimEnter * vnoremap <silent> <C-k> :m '<-2<CR>gv=gv
 " Preserve selection after indentation actions
 autocmd VimEnter * vnoremap <silent> < <gv
 autocmd VimEnter * vnoremap <silent> > >gv
+autocmd VimEnter * vnoremap <silent> = =gv
 " Faster scrolling
 autocmd VimEnter * nnoremap <silent> <C-e> 3<C-e>
 autocmd VimEnter * nnoremap <silent> <C-y> 3<C-y>
