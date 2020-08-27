@@ -11,9 +11,18 @@ _git_typo=(
     gi
     it
 )
+_gpp_typo=(
+    g+
+    g+=
+    g=+
+    g_
+    g__
+)
 _cd_typo=(
     c
     ccd
+    cdc
+    cdd
     lcd
 )
 _ls_typo=(
@@ -54,6 +63,7 @@ command -v nvim >/dev/null 2>&1 \
     || _vim_exexutable="vim"
 for _typo in ${_clear_typo[@]}; do eval "alias $_typo='clear'"; done
 for _typo in ${_git_typo[@]}; do eval "alias $_typo='git'"; done
+for _typo in ${_gpp_typo[@]}; do eval "alias $_typo='g++'"; done
 for _typo in ${_cd_typo[@]}; do eval "alias $_typo='cd'"; done
 for _typo in ${_ls_typo[@]}; do eval "alias $_typo='ls'"; done
 for _typo in ${_ll_typo[@]}; do eval "alias $_typo='ll'"; done
@@ -108,6 +118,7 @@ alias ts='telegram-send --timeout 86400'
 # alias vim='nvim'
 alias vi="$_vim_exexutable"
 alias vim="$_vim_exexutable"
+alias vimcmake="$_vim_exexutable CMakeLists.txt"
 alias wget.k='wget --no-check-certificate'
 
 # View mode, open Neovim/Vim with 'modifiable' on and 'read-only' off
