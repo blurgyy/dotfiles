@@ -1,11 +1,13 @@
 # Post-source script
 
-# Find all local files with prefix ".shaliases" in their name and source them
-for i in ~/.shaliases*; do
+# Find all local files with prefix ".shexports" in their name and source them.
+# Source shexports first to update PATH variable, because there are related
+# if-else checks in shaliases.
+for i in ~/.shexports*; do
     . $i
 done
-# And do the same for those with prefix ".shexports"
-for i in ~/.shexports*; do
+# And do the same for those with prefix ".shaliases"
+for i in ~/.shaliases*; do
     . $i
 done
 unset i
