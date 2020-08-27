@@ -15,6 +15,8 @@ Plug 'tpope/vim-fugitive'                           " Git plugin
 " Plug 'kristijanhusak/vim-dirvish-git'               " Git plugin for dirvish
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " Fuzzy find
 Plug 'junegunn/fzf.vim'                             " Fuzzy find
+Plug 'antoinemadec/coc-fzf', {'branch': 'release'}  " Fuzzy find integration
+                                                    "   for coc
 Plug 'sheerun/vim-polyglot'                         " Semantic highlighting
 
 " Language-specific plugins ==================================================
