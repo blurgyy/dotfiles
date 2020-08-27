@@ -97,6 +97,7 @@ let s:comment_ft = {
 \     '//': [
 \         'c',
 \         'cpp',
+\         'glsl',
 \         'go',
 \         'java',
 \         'javascript',
@@ -141,6 +142,7 @@ let s:ft_comment = {
 \   'zsh': '#',
 \   'c': '//',
 \   'cpp': '//',
+\   'glsl': '//',
 \   'go': '//',
 \   'java': '//',
 \   'javascript': '//',
@@ -296,6 +298,9 @@ autocmd VimEnter * nnoremap <silent> N Nzz
 autocmd VimEnter * nnoremap <silent> * *zz
 autocmd VimEnter * nnoremap <silent> # #zz
 autocmd VimEnter * nnoremap <silent> g* g*zz
+autocmd VimEnter * nmap <silent> * *N
+autocmd VimEnter * nmap <silent> # #N
+autocmd VimEnter * nmap <silent> g* g*N
 autocmd VimEnter * nnoremap <silent> <C-o> <C-o>zz
 autocmd VimEnter * nnoremap <silent> <C-i> <C-i>zz
 " Move single line down/up with ctrl+shift+{j,k}
@@ -310,6 +315,9 @@ autocmd VimEnter * vnoremap <silent> <C-k> :m '<-2<CR>gv=gv
 autocmd VimEnter * vnoremap <silent> < <gv
 autocmd VimEnter * vnoremap <silent> > >gv
 autocmd VimEnter * vnoremap <silent> = =gv
+" Preserve selection after add/minus in visual mode
+autocmd VimEnter * vnoremap <silent> <C-a> <C-a>gv
+autocmd VimEnter * vnoremap <silent> <C-x> <C-x>gv
 " Faster scrolling
 autocmd VimEnter * nnoremap <silent> <C-e> 3<C-e>
 autocmd VimEnter * nnoremap <silent> <C-y> 3<C-y>
@@ -325,7 +333,7 @@ autocmd VimEnter * vnoremap <silent> <C-y> 3<C-y>
 " autocmd VimEnter * inoremap ] <Esc>:if NextChar() == "]"<Bar>exec "normal! la"<Bar>elseif NextChar() == ""<Bar>exec "normal! a]"<Bar>else<Bar>exec "normal! li]"<Bar>endif<CR>a
 " autocmd VimEnter * inoremap } <Esc>:if NextChar() == "}"<Bar>exec "normal! la"<Bar>elseif NextChar() == ""<Bar>exec "normal! a}"<Bar>else<Bar>exec "normal! li}"<Bar>endif<CR>a
 " Deprecated: Auto indent when pressing <Enter> inside braces
-" autocmd VimEnter * inoremap <CR> <CR><Esc>:if InsideBrace()<Bar>exec "normal! ko"<Bar>endif<CR>
+" autocmd VimEnter * inoremap <CR> <CR><Esc>:if InsideBrace()<Bar>exec "normal! O"<Bar>endif<CR>
 " Deprecated: TODO: Auto delete closing brace when cursor is inside ()/[]/{}
 
 " Use <space> as mapleader
@@ -370,8 +378,8 @@ autocmd VimEnter * nnoremap <silent> <leader>w <C-w>
 " Format python code with yapf
 autocmd FileType python
     \ nnoremap <leader>y mY<Bar>:%!yapf<CR><Bar>`Yzz
-" Format c/cpp code with clang-format
-autocmd FileType c,cpp,javascript,java,cs
+" Format c-like code with clang-format
+autocmd FileType c,cpp,cs,glsl,java,javascript
     \ nnoremap <leader>y mY<Bar>:%!clang-format<CR><Bar>`Yzz
 " Format rust with rustfmt
 autocmd FileType rust
