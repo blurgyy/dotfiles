@@ -19,6 +19,8 @@ Plug 'sheerun/vim-polyglot'                         " Semantic highlighting
 
 " Language-specific plugins ==================================================
 Plug 'lilydjwg/fcitx.vim'                           " Chinese
+" Seriously, language-specific plugins =======================================
+Plug 'gabrielelana/vim-markdown'                    " Markdown
 Plug 'ludovicchabant/vim-gutentags'                 " Cpp
 Plug 'fatih/vim-go'                                 " Golang
 Plug 'rust-lang/rust.vim'                           " rust-lang
