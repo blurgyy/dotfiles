@@ -454,9 +454,37 @@ set nottimeout
 " Show tabline even when there's only 1 tab open
 set showtabline=2
 
-set formatoptions=tcroqlm2
-" Use 78 as textwidth, according to RFC2822
-set textwidth=78
+" Format options, see :help 'formatoptions' and :help 'fo-table' for more
+" info.  Here are the descriptions of the flags currently enabled:
+"
+" t: Auto-wrap text using textwidth
+" c: Auto-wrap comments using textwidth, inserting the current comment
+"    leader automatically.
+" r: Automatically insert the current comment leader after hitting
+"    <Enter> in Insert mode.
+" o: Automatically insert the current comment leader after hitting 'o' or
+"    'O' in Normal mode.
+" q: Allow formatting of comments with "gq".
+"    Note that formatting will not change blank lines or lines containing
+"    only the comment leader.  A new paragraph starts after such a line,
+"    or when the comment leader changes.
+" n: When formatting text, recognize numbered lists.
+" 2: When formatting text, use the indent of the second line of a paragraph
+"    for the rest of the paragraph, instead of the indent of the first
+"    line.
+" l: Long lines are not broken in insert mode: When a line was longer than
+"    'textwidth' when the insert command started, Vim does not
+"    automatically format it.
+" m: Also break at a multi-byte character above 255.  This is useful for
+"    Asian text where every character is a word on its own.
+" B: When joining lines, don't insert a space between two multi-byte
+"    characters.  Overruled by the 'M' flag.
+" set formatoptions=tcroqlm2B
+" Force setting formatoptions to custom value
+autocmd VimEnter * set formatoptions=tcroqnlm2B
+" Use 78 as textwidth, according to RFC2822 (forcibly, as some plugins messes
+" this up)
+autocmd VimEnter * set textwidth=78
 set colorcolumn=79
 
 " Filetype-specific settings -------------------------------------------------
