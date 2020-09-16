@@ -52,10 +52,11 @@ set mouse+=a
 " (happens when dropping a file on gvim).
 " Also don't do it when the mark is in the first line, that is the default
 " position when opening a file.
-" Also, do not restore last edit position when file type is 'gitcommit'
+" Also, do not restore last edit position when file type is 'gitcommit' or
+" 'gitrebase'
 autocmd BufReadPost *
     \ if line("'\"") > 1 && line("'\"") <= line("$") |
-    \   if match(&filetype, "gitcommit") != 0 |
+    \   if &filetype != "gitcommit" && &filetype != "gitrebase" |
     \       exe "normal! g`\"zz" |
     \   endif |
     \ endif
