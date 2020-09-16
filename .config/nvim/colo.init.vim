@@ -1,6 +1,10 @@
 " Use 'hard' contrast value for gruvbox, possible values are:
 " soft/medium/hard, default value is 'medium'
 let g:gruvbox_contrast_dark = 'hard'
+let g:gruvbox_contrast_light = 'hard'
+let g:gruvbox_improved_strings = 1
+let g:gruvbox_italic = 1
+let g:gruvbox_italicize_strings = 1
 
 colorscheme gruvbox
 
