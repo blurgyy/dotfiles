@@ -5,10 +5,12 @@
 " - coc-highlight
 " - coc-html
 " - coc-json
+" - coc-markdownlint
 " - coc-python
 " - coc-rls
 " - coc-sh
 " - coc-texlab " The texlab executable should be installed manualy
+" - coc-yaml
 " Example configuration for coc.
 " From: https://github.com/neoclide/coc.nvim#example-vim-configuration
 
