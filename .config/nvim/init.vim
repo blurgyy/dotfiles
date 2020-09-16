@@ -160,6 +160,16 @@ let s:ft_comment = {
 \   'vim': '"',
 \   'lua': '--',
 \ }
+let s:formatters = {
+\     'python': 'yapf',
+\     'c': 'clang-format',
+\     'cpp': 'clang-format',
+\     'cs': 'clang-format',
+\     'glsl': 'clang-format',
+\     'java': 'clang-format',
+\     'javascript': 'clang-format',
+\     'rust': 'rustfmt',
+\ }
 " Functions ------------------------------------------------------------------
 function! CurrentChar()
     return getline('.')[col('.')-1]
@@ -269,6 +279,14 @@ function! ToggleMovementByDisplayLines()
         silent! nunmap <buffer> $
         let b:movement_by_display_lines = 0
         echom "Movement is now by actual line numbers"
+    endif
+endfunction
+function FormatCode()
+    let b:formatter = get(s:formatters, &ft, "cat")
+    if b:formatter == 'cat'
+        echom "No formatter is specified for filetype '".&ft."'"
+    else
+        execute ":%!".b:formatter
     endif
 endfunction
 
@@ -382,15 +400,9 @@ autocmd VimEnter * nnoremap <silent> <leader>tj :tabmove +<CR>
 autocmd VimEnter * nnoremap <silent> <leader>tk :tabmove -<CR>
 " Remap <leader>w to <C-w> to perform buffer actions
 autocmd VimEnter * nnoremap <silent> <leader>w <C-w>
-" Format python code with yapf
-autocmd FileType python
-    \ nnoremap <leader>y mY<Bar>:%!yapf<CR><Bar>`Yzz
-" Format c-like code with clang-format
-autocmd FileType c,cpp,cs,glsl,java,javascript
-    \ nnoremap <leader>y mY<Bar>:%!clang-format<CR><Bar>`Yzz
-" Format rust with rustfmt
-autocmd FileType rust
-    \ nnoremap <leader>y mY<Bar>:%!rustfmt<CR><Bar>`Yzz
+" Format code
+autocmd VimEnter * nnoremap <silent>
+    \ <leader>y mY<Bar>:call FormatCode()<CR><Bar>`Yzz
 " Remove all trailing whitespace
 autocmd VimEnter *
     \ nnoremap <silent> <leader>i
