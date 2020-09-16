@@ -1,6 +1,7 @@
 {
     "coc.source.around.firstMatch": false,
     "coc.source.buffer.firstMatch": false,
+    "diagnostic.virtualText": true,
     "languageserver": {
         "golang": {
             "command": "~/go/bin/gopls",
@@ -34,6 +35,3 @@
         }
     }
 }
-
-// Author: Blurgy
-// Date:   Jul 24 2020
