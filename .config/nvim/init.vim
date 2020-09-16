@@ -367,25 +367,20 @@ autocmd VimEnter * noremap <silent> <leader>: :<C-f>i
 autocmd VimEnter * noremap <silent> <leader>/ /<C-f>i
 autocmd VimEnter * noremap <silent> <leader>? ?<C-f>i
 " (Use autocmd VimEnter * <cmd> to override any plugin-defined mappings)
-autocmd VimEnter * nnoremap <silent> <leader>jk :w<CR>
-autocmd VimEnter * nnoremap <silent> <leader>kj :q<CR>
-autocmd VimEnter * nnoremap <silent> <leader>lj :qa<CR>
-autocmd VimEnter * nnoremap <silent> <leader>jl :wq<CR>
-autocmd VimEnter * nnoremap <silent> <leader>lh :wqa<CR>
-autocmd VimEnter * nnoremap <silent> <leader>n  :n<CR>
-autocmd VimEnter * nnoremap <silent> <leader>N  :N<CR>
-autocmd VimEnter * nnoremap <silent> <leader>h  :set hlsearch!<CR>
-" Same for visual mode
-autocmd VimEnter * vnoremap <silent> <leader>jk <ESC>:w<CR>gv
-autocmd VimEnter * vnoremap <silent> <leader>kj <ESC>:q<CR>
-autocmd VimEnter * vnoremap <silent> <leader>lj <ESC>:qa<CR>
-autocmd VimEnter * vnoremap <silent> <leader>jl <ESC>:wq<CR>
-autocmd VimEnter * vnoremap <silent> <leader>lh <ESC>:wqa<CR>
-autocmd VimEnter * vnoremap <silent> <leader>n  :n<CR>
-autocmd VimEnter * vnoremap <silent> <leader>N  :N<CR>
+autocmd VimEnter * noremap <silent> <leader>jk :w<CR>
+autocmd VimEnter * noremap <silent> <leader>kj :q<CR>
+autocmd VimEnter * noremap <silent> <leader>lj :qa<CR>
+autocmd VimEnter * noremap <silent> <leader>jl :wq<CR>
+autocmd VimEnter * noremap <silent> <leader>lh :wqa<CR>
+autocmd VimEnter * noremap <silent> <leader>n  :n<CR>
+autocmd VimEnter * noremap <silent> <leader>N  :N<CR>
+" Clear screen and redraw
+autocmd VimEnter * noremap <silent> <leader>m :mode<CR>
+" Toggle hlsearch
+autocmd VimEnter * noremap <silent> <leader>h :set hlsearch!<CR>
 " Toggle movement by displayed lines
 autocmd VimEnter *
-    \ nnoremap <silent> <leader>g :call ToggleMovementByDisplayLines()<CR>
+    \ noremap <silent> <leader>g :call ToggleMovementByDisplayLines()<CR>
 " Append punctuation at eol
 autocmd VimEnter * nnoremap <silent> <leader>;  mPA;<ESC>`P
 autocmd VimEnter * nnoremap <silent> <leader>,  mPA,<ESC>`P
