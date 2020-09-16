@@ -14,10 +14,10 @@ font:
     family: fira code
     style: Bold
   italic:
-    family: fira code
+    family: jetbrains mono
     style: Italic
   bold_italic:
-    family: fira code
+    family: jetbrains mono
     style: Bold Italic
   size: 10
 
