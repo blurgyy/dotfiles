@@ -24,6 +24,7 @@ _cd_typo=(
     cdc
     cdd
     lcd
+    vcd
 )
 _ls_typo=(
     lks
@@ -44,6 +45,7 @@ _vim_typo=(
     vimj
     vimk
     vimm
+    viom
     vivm
     vjim
     vjm
@@ -57,6 +59,10 @@ _vim_typo=(
     vmj
     vom
 )
+_sudo_typo=(
+    sudi
+    suddo
+)
 # Use Neovim if it's installed, else use Vim
 command -v nvim >/dev/null 2>&1 \
     && _vim_exexutable="nvim" \
@@ -68,28 +74,32 @@ for _typo in ${_cd_typo[@]}; do eval "alias $_typo='cd'"; done
 for _typo in ${_ls_typo[@]}; do eval "alias $_typo='ls'"; done
 for _typo in ${_ll_typo[@]}; do eval "alias $_typo='ll'"; done
 for _typo in ${_vim_typo[@]}; do eval "alias $_typo=$_vim_exexutable"; done
+for _typo in ${_sudo_typo[@]}; do eval "alias $_typo='sudo'"; done
 
 alias rm='rm -v'
 alias mv='mv -v'
 alias cp='cp -v'
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
-alias exa='exa -F'
-alias ls='exa --color=automatic'
-alias ll='exa -alhg --git --color=automatic'
-alias la='exa -a --color=automatic'
-alias l='exa --color=automatic'
-alias tree='exa -T --color=automatic'
-# When in trouble with `ls` command, install `exa` via package manager or
-# build from source (https://github.com/ogham/exa).  Or use below aliases to
-# substitute above aliases.
-# alias ls='ls --color=tty'
-# alias ll='ll --alhF'
-# alias la='ls -A'
-# alias l='ls -CF'
+if command -v exa >/dev/null 2>&1; then
+    alias exa='exa -F'
+    alias ls='exa --color=automatic'
+    alias ll='exa -alhg --git --color=automatic'
+    alias la='exa -a --color=automatic'
+    alias l='exa --color=automatic'
+    alias tree='exa -T --color=automatic'
+else
+    alias ls='ls --color=tty'
+    alias ll='ls --alhF'
+    alias la='ls -A'
+    alias l='ls -CF'
+fi
 
 if command -v bat >/dev/null 2>&1; then
     alias cat='bat'
+    alias dmesg='dmesg -TL=always | bat -n'
+else
+    alias dmesg='dmesg -T'
 fi
 
 # Shorthand
@@ -108,6 +118,7 @@ alias gll='git pull'
 alias gp='git push'
 alias hibernate='systemctl hibernate'
 alias j='journalctl --user'
+alias mtrn='mtr -n'
 alias open='xdg-open'
 alias p='python3 -u'
 alias sj='sudo journalctl'
@@ -148,6 +159,12 @@ alias px='env http_proxy=http://127.0.0.1:9990 https_proxy=http://127.0.0.1:9990
 # Export compile_commands.json to build directory by default
 # see commit 03bcd601cf3aa14a7f869b0e147d1b854e09075a
 alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1'
+
+# Preserve aliases when using xargs
+alias xargs='xargs '
+
+# Preserve aliases when using strace
+alias strace='strace '
 
 # Unset local variables
 unset _typo _clear_typo _git_typo _cd_typo _ls_typo _vim_typo _vim_exexutable
