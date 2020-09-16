@@ -36,7 +36,7 @@ function ks() {
             && tmux kill-session -t "$1" \
             && echo "Session '$1' killed"
     else
-        echo "No session to kill (tmux is not running)"
+        echo "No session to kill (tmux is not running, are you $(whoami)?)"
     fi
 }
 
@@ -57,7 +57,7 @@ function kw() {
     if [[ -n $TMUX ]]; then
         if [[ $(tmux display-message -p '#{window_panes}') -gt 1 ]] \
             && [[ $1 != "-f" ]] ; then
-            echo "Window not killed (multiple panes in current window)"
+            echo "Not killing window (multiple panes in current window)"
             echo "Use \`$0 -f\` to kill anyway"
             echo
             echo "* Panes in current window:"
@@ -75,7 +75,7 @@ function kw() {
                 && echo "Session killed"
         fi
     else
-        echo "No window to kill (tmux is not running)."
+        echo "No window to kill (tmux is not running, are you $(whoami)?)."
     fi
 }
 # Rename current window
@@ -117,7 +117,7 @@ function kp(){
             return 1
         fi
     else
-        echo "No pane to kill (tmux is not running)"
+        echo "No pane to kill (tmux is not running, are you $(whoami)?)"
     fi
 }
 
