@@ -39,6 +39,14 @@ fzfkeybinding="/usr/share/fzf/key-bindings"
 # Unset variables.
 unset fzfcomp fzfkeybinding
 
+# Cleanup duplicate entries in envvar $PATH
+# Reference: Top comment in answer 'https://unix.stackexchange.com/a/14896'
+PATH=$(
+    echo "$PATH" | awk -v RS=':' -v ORS=":" '!a[$1]++ {
+        if (NR > 1) printf ORS; printf $a[$1]
+    }'
+)
+
 # Syntax highlighting
 # vim: set filetype=sh:
 
