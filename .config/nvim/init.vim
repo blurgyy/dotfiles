@@ -87,8 +87,10 @@ let s:comment_ft = {
 \         'php',
 \         'python',
 \         'readline',
+\         'resolv',
 \         'ruby',
 \         'sh',
+\         'sshconfig',
 \         'systemd',
 \         'tmux',
 \         'toml',
@@ -135,8 +137,10 @@ let s:ft_comment = {
 \   'php': '#',
 \   'python': '#',
 \   'readline': '#',
+\   'resolv': '#',
 \   'ruby': '#',
 \   'sh': '#',
+\   'sshconfig': '#',
 \   'systemd': '#',
 \   'tmux': '#',
 \   'yaml': '#',
@@ -181,7 +185,7 @@ function! Comment()
         return
     endif
     let s:ft = &filetype
-    let s:comch = s:ft_comment[s:ft]
+    let s:comch = get(s:ft_comment, s:ft, '#')
     exec "normal! mC"
     exec "silent s:^[ \t\n]*::"
     exec "silent s:^:" . s:comch . " :g"
@@ -190,7 +194,7 @@ function! Comment()
 endfunction
 function! Uncomment()
     let s:ft = &filetype
-    let s:comch = s:ft_comment[s:ft]
+    let s:comch = get(s:ft_comment, s:ft, '#')
     " Only execute function when current line starts with comment char
     if match(getline(line('.')), "^[ \t\n]*[(".s:comch.")]\\+[ \t\n]*") == 0
         exec "normal! mC"
@@ -201,7 +205,7 @@ function! Uncomment()
 endfunction
 function! CommentToggle()
     let s:tft = &filetype
-    let s:tcomch = s:ft_comment[s:tft]
+    let s:tcomch = get(s:ft_comment, s:tft, '#')
     " If current line starts with whitespaces + commentChar
     if match(getline('.'), "^[ \t\n]*" . s:tcomch . "[ \t\n]*") == 0
         call Uncomment()
@@ -212,16 +216,18 @@ function! CommentToggle()
 endfunction
 function! CheckSigned()
     let s:ft = &filetype
+    let s:comch = get(s:ft_comment, s:ft, '#')
     if getline(line('$')-2) == ''
         \ && getline(line('$')-1) =~
-            \ '^' . s:ft_comment[s:ft] .
+            \ '^' . s:comch .
             \ ' Author: Blurgy\(\( <gy@blurgy.xyz>\)\)\?$'
         if match(getline(line('$')), 'Date:   '.strftime("%b %d %Y")) != -1
             return 1 " Signature is up to date
-        elseif match(getline(line('$')), s:ft_comment[s:ft] . ' Date:') == 0
+        elseif match(getline(line('$')), s:comch . ' Date:') == 0
             return -1 " Signature is outdated
         endif
     endif
+    unlet s:ft s:comch
     return 0 " Signature does not exist yet
 endfunction
 function! AppendSignature()
