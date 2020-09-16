@@ -324,6 +324,8 @@ autocmd VimEnter * nmap <silent> # #N
 autocmd VimEnter * nmap <silent> g* g*N
 autocmd VimEnter * nnoremap <silent> <C-o> <C-o>zz
 autocmd VimEnter * nnoremap <silent> <C-i> <C-i>zz
+" Center last insert position when using gi
+autocmd VimEnter * nnoremap gi gi<ESC>zzgi
 " Move single line down/up with ctrl+shift+{j,k}
 " From: https://vim.fandom.com/wiki/Moving_lines_up_or_down
 autocmd VimEnter * nnoremap <silent> <C-j> :m .+1<CR>=kj
