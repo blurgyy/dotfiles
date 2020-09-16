@@ -313,10 +313,6 @@ set undofile
 " Keybindings ----------------------------------------------------------------
 autocmd VimEnter * nnoremap <silent> % v%
 autocmd VimEnter * nnoremap <silent> Y y$
-" Use friendlier command editing interface
-autocmd VimEnter * nnoremap <silent> : :<C-f>i
-autocmd VimEnter * nnoremap <silent> / /<C-f>i
-autocmd VimEnter * nnoremap <silent> ? ?<C-f>i
 " Center search results
 autocmd VimEnter * nnoremap <silent> n nzz
 autocmd VimEnter * nnoremap <silent> N Nzz
@@ -364,6 +360,10 @@ autocmd VimEnter * vnoremap <silent> <C-y> 3<C-y>
 " Use <space> as mapleader
 let mapleader = ' '
 " Mapleader key bindings -----------------------------------------------------
+" Use friendlier command editing interface
+autocmd VimEnter * noremap <silent> <leader>: :<C-f>i
+autocmd VimEnter * noremap <silent> <leader>/ /<C-f>i
+autocmd VimEnter * noremap <silent> <leader>? ?<C-f>i
 " (Use autocmd VimEnter * <cmd> to override any plugin-defined mappings)
 autocmd VimEnter * nnoremap <silent> <leader>jk :w<CR>
 autocmd VimEnter * nnoremap <silent> <leader>kj :q<CR>
