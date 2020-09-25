@@ -485,8 +485,11 @@ set showtabline=2
 autocmd VimEnter * set formatoptions=tcroqnlm2B
 " Use 78 as textwidth, according to RFC2822 (forcibly, as some plugins messes
 " this up)
-autocmd VimEnter * set textwidth=78
-autocmd FileType gitcommit set textwidth=72
+autocmd VimEnter * if &filetype=='gitcommit'
+            \ |     set textwidth=72
+            \ | else
+            \ |     set textwidth=78
+            \ | endif
 set colorcolumn=79
 
 " Filetype-specific settings -------------------------------------------------
