@@ -20,10 +20,11 @@ Plug 'antoinemadec/coc-fzf', {'branch': 'release'}  " Fuzzy find integration
 Plug 'sheerun/vim-polyglot'                         " Semantic highlighting
 
 " Language-specific plugins ==================================================
-Plug 'lilydjwg/fcitx.vim', {'for': 'markdown'}      " Chinese
+Plug 'lilydjwg/fcitx.vim', {'for': ['markdown','rst','gitcommit']}
+                                                    " Chinese
 " Seriously, language-specific plugins =======================================
 Plug 'gabrielelana/vim-markdown',{'for':'markdown'} " Markdown
-" Plug 'ludovicchabant/vim-gutentags'                 " Cpp
+Plug 'ludovicchabant/vim-gutentags'                 " Cpp
 Plug 'fatih/vim-go', {'for': 'go'}                  " Golang
 Plug 'rust-lang/rust.vim', {'for': 'rust'}          " rust-lang
 Plug 'cespare/vim-toml', {'for': 'toml'}            " TOML
