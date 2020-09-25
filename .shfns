@@ -1,7 +1,9 @@
 # Show message and exit with code 169
 function die(){
-    echo "$@"
-    exit 169
+    if [[ $# -gt 0 ]]; then
+        echo "$@"
+    fi
+    command exit 169
 }
 
 # Colorful man page
