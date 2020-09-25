@@ -5,7 +5,6 @@
 " - coc-highlight
 " - coc-html
 " - coc-json
-" - coc-markdownlint
 " - coc-python
 " - coc-rls
 " - coc-sh
