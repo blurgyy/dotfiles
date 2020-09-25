@@ -165,6 +165,7 @@ let s:formatters = {
 \     'c': 'clang-format',
 \     'cpp': 'clang-format',
 \     'cs': 'clang-format',
+\     'cuda': 'clang-format',
 \     'glsl': 'clang-format',
 \     'java': 'clang-format',
 \     'javascript': 'clang-format',
