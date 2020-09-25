@@ -46,7 +46,7 @@ function nw() {
     if [[ -n $TMUX ]]; then
         [[ -z "$1" ]] \
             && tmux new-window \
-            && echo "Create new window"
+            && echo "Created new window"
         [[ -n "$1" ]] \
             && tmux new-window -n "$1" \
             && echo "Created new window '$1'"
