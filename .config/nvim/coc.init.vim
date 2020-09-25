@@ -10,6 +10,11 @@
 " - coc-sh
 " - coc-texlab " The texlab executable should be installed manualy
 " - coc-yaml
+function CocPluginInstall()
+    CocInstall coc-cmake coc-diagnostic coc-explorer
+                \ coc-highlight coc-html coc-json coc-python
+                \ coc-rls coc-sh coc-texlab coc-yaml
+endfunction
 " Example configuration for coc.
 " From: https://github.com/neoclide/coc.nvim#example-vim-configuration
 
