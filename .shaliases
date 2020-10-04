@@ -58,6 +58,7 @@ _vim_typo=(
     vmk
     vmj
     vom
+    vuim
 )
 _sudo_typo=(
     sudi
@@ -90,7 +91,7 @@ if command -v exa >/dev/null 2>&1; then
     alias tree='exa -T --color=automatic'
 else
     alias ls='ls --color=tty'
-    alias ll='ls --alhF'
+    alias ll='ls -alhF'
     alias la='ls -A'
     alias l='ls -CF'
 fi
@@ -117,11 +118,14 @@ alias gla='git log --all --graph --decorate --format=fuller'
 alias gll='git pull'
 alias gp='git push'
 alias hibernate='systemctl hibernate'
-alias j='journalctl --user'
 alias mtrn='mtr -n'
 alias open='xdg-open'
 alias p='python3 -u'
-alias sj='sudo journalctl'
+alias p2='python2 -u'
+alias js='sudo journalctl --system'
+alias jsu='sudo journalctl --system -u'
+alias ju='journalctl --user'
+alias juu='journalctl --user -u'
 alias sus='systemctl --user'
 alias sys='sudo systemctl --system'
 alias ts='telegram-send --timeout 86400'
