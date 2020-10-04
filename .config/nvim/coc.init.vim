@@ -5,16 +5,28 @@
 " - coc-highlight
 " - coc-html
 " - coc-json
+" - coc-lua
 " - coc-python
 " - coc-rls
 " - coc-sh
 " - coc-texlab " The texlab executable should be installed manualy
 " - coc-yaml
-function CocPluginInstall()
-    CocInstall coc-cmake coc-diagnostic coc-explorer
-                \ coc-highlight coc-html coc-json coc-python
+function! CocPluginInstall()
+    CocInstall coc-cmake coc-diagnostic coc-explorer coc-highlight
+                \ coc-html coc-json coc-lua coc-python
                 \ coc-rls coc-sh coc-texlab coc-yaml
 endfunction
+let b:coc_enabled = 1
+function! CocToggle()
+    if b:coc_enabled
+        exec 'CocDisable'
+        let b:coc_enabled = 0
+    else
+        exec 'CocEnable'
+        let b:coc_enabled = 1
+    endif
+endfunction
+autocmd VimEnter * silent noremap <leader>cx :call CocToggle()<CR>
 " Example configuration for coc.
 " From: https://github.com/neoclide/coc.nvim#example-vim-configuration
 
@@ -154,16 +166,16 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " Show all diagnostics.
 nnoremap <silent> <space>a  :<C-u>CocFzfList diagnostics<cr>
 " Manage extensions.
-nnoremap <silent> <space>e  :<C-u>CocFzfList extensions<cr>
+nnoremap <silent> <space>e  :<C-u>CocFzfList -I extensions<cr>
 " Show commands.
 nnoremap <silent> <space>c  :<C-u>CocFzfList commands<cr>
 " Find symbol of current document.
 nnoremap <silent> <space>o  :<C-u>CocFzfList outline<cr>
-" Search workspace symbols.
-nnoremap <silent> <space>s  :<C-u>CocFzfList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" " Search workspace symbols.
+" nnoremap <silent> <space>s  :<C-u>CocFzfList -I symbols<cr>
+" " Do default action for next item.
+" nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" " Do default action for previous item.
+" nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent> <space>p  :<C-u>CocFzfListResume<CR>
