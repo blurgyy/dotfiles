@@ -165,8 +165,9 @@ alias sudo='sudo '
 # Get colored output from pacman
 alias pacman='pacman --color=auto'
 
-# proxy environment, append a space to preserve aliases
-alias px='env http_proxy=http://127.0.0.1:9990 https_proxy=http://127.0.0.1:9990 npm_config_proxy=http://127.0.0.1:9990 '
+# Disable proxy environment by perpending 'pxx' to command.
+# e.g: pxx curl baidu.com
+alias pxx='env http_proxy= https_proxy= npm_config_proxy='
 
 # Export compile_commands.json to build directory by default
 # see commit 03bcd601cf3aa14a7f869b0e147d1b854e09075a
