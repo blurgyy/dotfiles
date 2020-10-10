@@ -36,6 +36,7 @@ _ll_typo=(
 )
 _vim_typo=(
     bim
+    fvim
     im
     ivm
     ivim
