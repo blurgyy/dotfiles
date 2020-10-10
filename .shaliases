@@ -64,6 +64,9 @@ _sudo_typo=(
     sudi
     suddo
 )
+_make_typo=(
+    maek
+)
 # Use Neovim if it's installed, else use Vim
 command -v nvim >/dev/null 2>&1 \
     && _vim_exexutable="nvim" \
@@ -76,6 +79,7 @@ for _typo in ${_ls_typo[@]}; do eval "alias $_typo='ls'"; done
 for _typo in ${_ll_typo[@]}; do eval "alias $_typo='ll'"; done
 for _typo in ${_vim_typo[@]}; do eval "alias $_typo=$_vim_exexutable"; done
 for _typo in ${_sudo_typo[@]}; do eval "alias $_typo='sudo'"; done
+for _typo in ${_make_typo[@]}; do eval "alias $_typo='make'"; done
 
 alias rm='rm -v'
 alias mv='mv -v'
@@ -117,7 +121,10 @@ alias gl='git log --all --graph --decorate --oneline'
 alias gla='git log --all --graph --decorate --format=fuller'
 alias gll='git pull'
 alias gp='git push'
+alias gpf='git push --force'
 alias hibernate='systemctl hibernate'
+alias informant='px informant'
+alias lmk='latexmk'
 alias mtrn='mtr -n'
 alias open='xdg-open'
 alias p='python3 -u'
