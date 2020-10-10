@@ -20,7 +20,7 @@ Plug 'antoinemadec/coc-fzf', {'branch': 'release'}  " Fuzzy find integration
 Plug 'sheerun/vim-polyglot'                         " Semantic highlighting
 
 " Language-specific plugins ==================================================
-Plug 'lilydjwg/fcitx.vim', {'for': ['markdown','rst','gitcommit']}
+Plug 'lilydjwg/fcitx.vim', {'for': ['markdown','rst','gitcommit','tex']}
                                                     " Chinese
 " Seriously, language-specific plugins =======================================
 Plug 'gabrielelana/vim-markdown',{'for':'markdown'} " Markdown
