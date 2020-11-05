@@ -23,12 +23,15 @@ _cd_typo=(
     ccd
     cdc
     cdd
+    ce
     lcd
     vcd
 )
 _ls_typo=(
     lks
     lls
+    lsc
+    lsl
     sl
 )
 _ll_typo=(
@@ -41,6 +44,7 @@ _vim_typo=(
     ivm
     ivim
     v
+    viim
     vijm
     vikm
     vimj
@@ -62,11 +66,19 @@ _vim_typo=(
     vuim
 )
 _sudo_typo=(
-    sudi
     suddo
+    sudi
+    sudoo
 )
 _make_typo=(
+    amek
+    amke
     maek
+    mkae
+)
+_pacman_typo=(
+    pacma
+    pamcan
 )
 # Use Neovim if it's installed, else use Vim
 command -v nvim >/dev/null 2>&1 \
@@ -81,6 +93,7 @@ for _typo in ${_ll_typo[@]}; do eval "alias $_typo='ll'"; done
 for _typo in ${_vim_typo[@]}; do eval "alias $_typo=$_vim_exexutable"; done
 for _typo in ${_sudo_typo[@]}; do eval "alias $_typo='sudo'"; done
 for _typo in ${_make_typo[@]}; do eval "alias $_typo='make'"; done
+for _typo in ${_pacman_typo[@]}; do eval "alias $_typo='pacman'"; done
 
 alias rm='rm -v'
 alias mv='mv -v'
@@ -109,12 +122,16 @@ else
 fi
 
 # Shorthand
+alias cf='clang-format'
+alias dingtalk='systemctl --user start dingtalk.service'
 alias duh='du -h --max-depth'
 alias g='git'
 alias ga='git add'
+alias gb='git branch'
 alias gc='git commit -sv'
 alias gca='git commit -sv --amend'
 alias gcan='git commit -sv --amend --no-edit'
+alias gco='git checkout'
 alias gd='git diff'
 alias gdc='git diff --cached'
 alias gf='git fetch'
@@ -123,6 +140,9 @@ alias gla='git log --all --graph --decorate --format=fuller'
 alias gll='git pull'
 alias gp='git push'
 alias gpf='git push --force'
+alias gs='git status'
+alias gcc='gcc -Wall'
+alias g++='g++ -Wall'
 alias hibernate='systemctl hibernate'
 alias lmk='latexmk'
 alias mtrn='mtr -n'
@@ -141,6 +161,7 @@ alias ts='telegram-send --timeout 86400'
 alias vi="$_vim_exexutable"
 alias vim="$_vim_exexutable"
 alias vimcmake="$_vim_exexutable CMakeLists.txt"
+alias dvim="$_vim_exexutable -V10/tmp/vim-debug.log"
 alias wget.k='wget --no-check-certificate'
 
 # View mode, open Neovim/Vim with 'modifiable' on and 'read-only' off
@@ -158,6 +179,11 @@ alias tb='nc termbin.com 9999 -N'
 # Use longer timeout for telegram-send
 alias telegram-send='telegram-send --timeout 3600.0'
 
+# # Pass aliases to sudo, use -E option to also pass envvars
+# alias sudo='sudo -E '
+# This makes `sudo -i` not available, as -i and -E flags cannot be used
+# jointly.  See `.shfns` for the work around.
+
 # Pass aliases to sudo
 alias sudo='sudo '
 
@@ -166,7 +192,7 @@ alias pacman='pacman --color=auto'
 
 # Disable proxy environment by perpending 'pxx' to command.
 # e.g: pxx curl baidu.com
-alias pxx='env http_proxy= https_proxy= npm_config_proxy='
+alias pxx='env http_proxy= https_proxy= npm_config_proxy= '
 
 # Export compile_commands.json to build directory by default
 # see commit 03bcd601cf3aa14a7f869b0e147d1b854e09075a
