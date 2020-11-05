@@ -18,6 +18,7 @@ Plug 'junegunn/fzf.vim'                             " Fuzzy find
 Plug 'antoinemadec/coc-fzf', {'branch': 'release'}  " Fuzzy find integration
                                                     "   for coc
 Plug 'sheerun/vim-polyglot'                         " Semantic highlighting
+Plug 'liuchengxu/vista.vim'                         " Show LSP symbols
 
 " Language-specific plugins ==================================================
 Plug 'lilydjwg/fcitx.vim', {'for': ['markdown','rst','gitcommit','tex']}
