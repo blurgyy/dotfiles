@@ -61,10 +61,15 @@ __GITPROMPT(){
         || return 0
     echo "${GIT_PROMPT_PREFIX}${ref#refs/heads/}$(__GITDIRTY)${GIT_PROMPT_SUFFIX}"
 }
+__CONDAENV() {
+    if [[ -n $CONDA_PREFIX ]]; then
+        echo "$(__COLOR purple)(${CONDA_PREFIX##*/})$(__COLOR reset)"
+    fi
+}
 
 # Must use %{...%} to quote colors.
 # From: http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html#Visual-effects
-PS1=' $(__COLOR cyan)[%D{%T}] $(__COLOR boldcyan)%~$(__GITPROMPT)
+PS1=' $(__COLOR cyan)[%D{%T}] $(__COLOR boldcyan)%~$(__GITPROMPT) $(__CONDAENV)
 $(__COLOR boldgreen)%n$(__COLOR cyan)@$(__COLOR blue)%M$(__ISTHISROOT)$(__COLOR reset) '
 
 
