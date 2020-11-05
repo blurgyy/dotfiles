@@ -77,21 +77,20 @@ function sudo() {
 }
 
 function cinit() {
-    set -e
-    if [[ $currentshellinterpreter != 'zsh' ]]; then
-        echo "Only zsh is supported, use zsh instead." >&2
+    if [[ -z $_conda_root ]]; then
+        echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
+            >&2
         return 1
     fi
-    __conda_setup="$(
-        '/home/gy/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null
-    )"
-    if [ $? -eq 0 ]; then
+    if __conda_setup=$( \
+            ''$_conda_root'/bin/conda' 'shell.zsh' 'hook' 2> /dev/null \
+        ); then
         eval "$__conda_setup"
     else
-        if [ -f "/home/gy/anaconda3/etc/profile.d/conda.sh" ]; then
-            . "/home/gy/anaconda3/etc/profile.d/conda.sh"
+        if [ -f "$_conda_root/etc/profile.d/conda.sh" ]; then
+            . "$_conda_root/etc/profile.d/conda.sh"
         else
-            export PATH="/home/gy/anaconda3/bin:$PATH"
+            export PATH="$_conda_root/bin:$PATH"
         fi
     fi
     unset __conda_setup
@@ -99,23 +98,76 @@ function cinit() {
 }
 
 function ccreate() {
+    if [[ -z $_conda_root ]]; then
+        echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
+            >&2
+        return 1
+    fi
     cinit
     conda create "$@"
 }
 
 function cact() {
-    if [[ $# -eq 0 ]]; then
-        echo "Function $0 takes 1 positional argument <env>," \
-            "which is not provided" >&2
+    if [[ -z $_conda_root ]]; then
+        echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
+            >&2
         return 1
+    fi
+    if [[ $# -eq 0 ]]; then
+        echo "Function \`$0\` takes 1 positional argument <env>," \
+            "which is not provided" >&2
+        return 2
     fi
     cinit
     conda activate $1
 }
 
 function cdeact() {
+    if [[ -z $_conda_root ]]; then
+        echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
+            >&2
+        return 1
+    fi
     cinit
     conda deactivate $1
+    unset CONDA_EXE CONDA_INTERNAL_OLDPATH CONDA_PYTHON_EXE CONDA_SHLVL
+}
+
+function crm() {
+    if [[ -z $_conda_root ]]; then
+        echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
+            >&2
+        return 1
+    fi
+    if [[ $# -eq 0 ]]; then
+        echo "Function \`$0\` takes 1 positional argument <env>," \
+            "which is not provided" >&2
+        return 2
+    fi
+    cinit
+    conda env remove --name $1
+}
+
+function clist() {
+    if [[ -z $_conda_root ]]; then
+        echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
+            >&2
+        return 1
+    fi
+    _conda_envs_dir=~/.conda/envs
+    if [[ ! -d $_conda_envs_dir ]] || [[ -z $(command ls $_conda_envs_dir) ]];
+    then
+        echo "No envs found" >&2
+    fi
+    for _conda_env in $(command ls $_conda_envs_dir); do
+        if [[ ${CONDA_PREFIX##*/} == $_conda_env ]]; then
+            _env_enabled='->'
+        else
+            _env_enabled='  '
+        fi
+        echo " $_env_enabled $_conda_env"
+    done
+    unset _conda_envs_dir _conda_env _env_enabled
 }
 
 # Syntax highlighting
