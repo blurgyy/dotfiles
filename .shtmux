@@ -139,7 +139,12 @@ alias sw='tmux swap-window -dt'
 
 # Automatically run tmux on session start
 tsess='main'
-wname=$(date '+%b-%d,%H-%M-%S')
+defwname=default
+wname="$(date '+%b-%d,%H-%M-%S')"
+if [[ -n $SSH_CONNECTION ]]; then
+    wname+=" [ssh]"
+    defwname+=" [ssh]"
+fi
 if command -v tmux > /dev/null; then
     if [[ $(tty) =~ /dev/tty[0-9]* ]]; then
         # Do not autostart tmux in tty.
@@ -151,7 +156,7 @@ if command -v tmux > /dev/null; then
         # If session 'main' does not exist, create first
         if ! tmux has-session -t main 2> /dev/null; then
             tmux start-server
-            tmux select-window -t main:0 \; rename-window default
+            tmux select-window -t main:0 \; rename-window ${defwname}
         fi
         tmux new-session -t $tsess \; \
             new-window -n $wname \; \
