@@ -69,7 +69,8 @@ let s:comchs = [
 \     '%',
 \     '>',
 \     '"',
-\     '--'
+\     '--',
+\     '..',
 \ ]
 let s:comment_ft = {
 \     '#': [
@@ -121,6 +122,9 @@ let s:comment_ft = {
 \     '--': [
 \         'lua'
 \     ],
+\     '..': [
+\         'rst'
+\     ],
 \ }
 let s:ft_comment = {
 \   '': '#',
@@ -138,6 +142,7 @@ let s:ft_comment = {
 \   'python': '#',
 \   'readline': '#',
 \   'resolv': '#',
+\   'rst': '..',
 \   'ruby': '#',
 \   'sh': '#',
 \   'sshconfig': '#',
