@@ -43,6 +43,7 @@ function cg(){
         [[ -d ./.git ]] && _cur=$(pwd) && break
         cd ..
     done
+    echo $_cur
     cd $_cur
 }
 
@@ -64,6 +65,14 @@ function gcnt(){
     else
         echo "Not under a git repository"
         return 1
+    fi
+}
+
+function sudo() {
+    if [[ $1 != '-i' ]]; then
+        command sudo -E "$@"
+    else
+        command sudo -i
     fi
 }
 
