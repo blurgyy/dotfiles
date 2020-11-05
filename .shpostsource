@@ -6,16 +6,16 @@
 for i in ~/.shexports*; do
     . $i
 done
+# Do the same for those with prefix ".shfns"
+for i in ~/.shfns*; do
+    . $i
+done
 # And do the same for those with prefix ".shaliases"
 for i in ~/.shaliases*; do
     . $i
 done
+# unset iterator i
 unset i
-
-# source custom functions
-if [[ -f ~/.shfns ]]; then
-    . ~/.shfns
-fi
 
 # Source fzf keybindings if it is installed
 if command -v fzf >/dev/null 2>&1; then
