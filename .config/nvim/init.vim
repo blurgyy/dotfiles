@@ -249,20 +249,28 @@ endfunction
 function! AppendSignature()
     let l:signstatus = CheckSigned()
     if l:signstatus == -1
-        " Delete outdated signature
-        call deletebufline(bufname('%'), line('$')-2, line('$'))
+        " " Delete outdated signature
+        " call deletebufline(bufname('%'), line('$')-2, line('$'))
+        " --------------------------------------------------------
+        " Preserve original date of signature
+        echom 'Signature is created previously.'
+            \ 'To update the signature, delete the last 2 lines manually,'
+            \ 'then append signature again.'
+        return 1
     elseif l:signstatus == 1
         " Do nothing if signature is up to date
+        echom 'Signature is created today, nothing needs to be done.'
         return 1
     else
     endif
     exec "normal! mS"
     call append(line('$'), "")
     call append(line('$'), "Author: Blurgy <gy@blurgy.xyz>")
-    call append(line('$'), "Date:   ".strftime("%b %d %Y"))
+    call append(line('$'), "Date:   ".strftime("%b %d %Y, %R [%Z]"))
     exec "$-1,$ call Comment()"
     exec "$-1,$ s:^[ \\n\\t]*::"
     exec "normal! `Szz"
+    echom 'Signature is created.'
 endfunction
 function! SetMovementByDisplayLines()
     noremap <buffer> <silent> <expr> k v:count ? 'k' : 'gk'
