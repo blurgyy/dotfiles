@@ -1,0 +1,14 @@
+#compdef _cact cact
+
+function _cact() {
+    local _conda_envs_dir _conda_envs
+    _conda_envs_dir=~/.conda/envs
+    if [[ -d $_conda_envs_dir ]]; then
+        _conda_envs=$(command ls $_conda_envs_dir)
+    fi
+    _arguments -C \
+        "1: :($_conda_envs)"
+}
+
+# Author: Blurgy <gy@blurgy.xyz>
+# Date:   Nov 03 2020, 14:35 [CST]
