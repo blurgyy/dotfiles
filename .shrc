@@ -120,11 +120,23 @@ if [[ "$currentshellinterpreter" =~ 'zsh' ]]; then
     # alias zshconfig="mate ~/.zshrc"
     # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-    # Custom script begins
+    # Custom script begins ---------------------------------------------------
+    # History
+    HISTFILE=~/.zsh_history
+    HISTSIZE=10000
+    SAVEHIST=10000
+    HIST_STAMPS="%b %d, %Y"
+    # Ignore duplicated entris in histfile
+    setopt hist_ignore_all_dups
+    # Do not add commands that start with whitespace to histfile
+    setopt hist_ignore_space
+    # Reduce blanks in history (?)
+    setopt hist_reduce_blanks
 
+    # Use vi keybindings
     bindkey -v
 
-    # escape timeout
+    # Disable escape timeout
     export KEYTIMEOUT=0
 
     # Better searching in command mode
