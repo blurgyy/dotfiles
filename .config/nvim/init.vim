@@ -394,8 +394,8 @@ autocmd VimEnter * noremap <silent> <leader>n  :n<CR>
 autocmd VimEnter * noremap <silent> <leader>N  :N<CR>
 " Clear screen and redraw
 autocmd VimEnter * noremap <silent> <leader>m :mode<CR>
-" Toggle hlsearch
-autocmd VimEnter * noremap <silent> <leader>h :set hlsearch!<CR>
+" Disable hlsearch until next search-related action is performed
+autocmd VimEnter * noremap <silent> <leader>h :nohlsearch<CR>
 " Toggle movement by displayed lines
 autocmd VimEnter *
     \ noremap <silent> <leader>g :call ToggleMovementByDisplayLines()<CR>
