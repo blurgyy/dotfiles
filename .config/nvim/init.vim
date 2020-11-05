@@ -357,6 +357,13 @@ autocmd VimEnter * nnoremap <silent> <C-e> 3<C-e>
 autocmd VimEnter * nnoremap <silent> <C-y> 3<C-y>
 autocmd VimEnter * vnoremap <silent> <C-e> 3<C-e>
 autocmd VimEnter * vnoremap <silent> <C-y> 3<C-y>
+" Scroll pop up window if any pop up window is shown
+" Reference:
+" https://github.com/neoclide/coc.nvim/issues/2472#issuecomment-711117854
+nnoremap <nowait><expr> <c-d>
+            \ coc#float#has_scroll() ? coc#float#scroll(1) : "\<c-d>"
+nnoremap <nowait><expr> <c-u>
+            \ coc#float#has_scroll() ? coc#float#scroll(0) : "\<c-u>"
 """ This is deprecated (or not)
 " " Auto expand brace
 " autocmd VimEnter * inoremap ( ()<Esc>i
