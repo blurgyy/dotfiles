@@ -296,11 +296,29 @@ function! ToggleMovementByDisplayLines()
     endif
 endfunction
 function FormatCode()
-    let b:formatter = get(s:formatters, &ft, "cat")
-    if b:formatter == 'cat'
+    let l:formatter = get(s:formatters, &ft, "cat")
+    if l:formatter == 'cat'
         echom "No formatter is specified for filetype '".&ft."'"
     else
-        execute ":%!".b:formatter
+        let l:view = winsaveview()
+        let l:current_buffer = getline(1, '$')
+        let l:formatted_content = systemlist(l:formatter, l:current_buffer)
+        if v:shell_error
+            echo v:shell_error
+            echoe 'Error occured when attempting to format current buffer'
+                \ 'with `'.l:formatter.'`, contents in current buffer are'
+                \ 'unchanged.'
+        else
+            " Do not modify buffer if already formatted
+            if l:current_buffer !=# l:formatted_content
+                execute '1,$delete'
+                call setline(1, l:formatted_content)
+            else
+                echom 'Current buffer is already formatted with `'.l:formatter
+                            \ .'` contents in current buffer are unchanged.'
+            endif
+        endif
+        call winrestview(l:view)
     endif
 endfunction
 
