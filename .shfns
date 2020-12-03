@@ -76,6 +76,28 @@ function sudo() {
     fi
 }
 
+function vimcmake() {
+    local _cmakelists
+    _cmakelists=CMakeLists.txt
+    if [[ -e $_cmakelists ]]; then
+        $_vim_exexutable $_cmakelists
+    else
+        cp ~/.config/templates/_$_cmakelists $_cmakelists \
+            && $_vim_exexutable $_cmakelists +'call AppendSignature()'
+    fi
+}
+
+function vimake() {
+    local _makefile
+    _makefile=Makefile
+    if [[ -e $_makefile ]]; then
+        $_vim_exexutable $_makefile
+    else
+        cp ~/.config/templates/_$_makefile $_makefile \
+            && $_vim_exexutable $_makefile +'call AppendSignature()'
+    fi
+}
+
 function cinit() {
     if [[ -z $_conda_root ]]; then
         echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
@@ -114,12 +136,22 @@ function cact() {
         return 1
     fi
     if [[ $# -eq 0 ]]; then
-        echo "Function \`$0\` takes 1 positional argument <env>," \
-            "which is not provided" >&2
-        return 2
+        local _curgdir
+        _curgdir=$(cg)
+        _curgdir=${_curgdir##*/}
+        if grep -q "\b$_curgdir\b" <(clist); then
+            cinit
+            conda activate $_curgdir
+        else
+            echo "Current directory '$_curgdir' is not known as a conda" \
+                "environment, use \`$0 \$ENVNAME\` to activate an" \
+                "environment with name \$ENVNAME." >&2
+            return 2
+        fi
+    else
+        cinit
+        conda activate $1
     fi
-    cinit
-    conda activate $1
 }
 
 function cdeact() {

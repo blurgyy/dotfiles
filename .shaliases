@@ -23,6 +23,7 @@ _cd_typo=(
     ccd
     cdc
     cdd
+    cde
     ce
     lcd
     vcd
@@ -41,10 +42,11 @@ _vim_typo=(
     bim
     fvim
     im
-    ivm
     ivim
+    ivm
     v
     viim
+    vij
     vijm
     vikm
     vimj
@@ -60,30 +62,39 @@ _vim_typo=(
     vkmm
     vm
     vmi
-    vmk
     vmj
+    vmk
     vom
     vuim
+    vum
+    vun
 )
 _sudo_typo=(
     suddo
     sudi
     sudoo
+    suod
+    suudo
 )
 _make_typo=(
     amek
     amke
     maek
+    makje
     mkae
 )
 _pacman_typo=(
+    pacamn
     pacma
+    pacmana
+    pacmna
     pamcan
+    pamcna
 )
-# Use Neovim if it's installed, else use Vim
-command -v nvim >/dev/null 2>&1 \
-    && _vim_exexutable="nvim" \
-    || _vim_exexutable="vim"
+_cat_typo=(
+    caat
+    ccat
+)
 for _typo in ${_clear_typo[@]}; do eval "alias $_typo='clear'"; done
 for _typo in ${_git_typo[@]}; do eval "alias $_typo='git'"; done
 for _typo in ${_gpp_typo[@]}; do eval "alias $_typo='g++'"; done
@@ -94,6 +105,7 @@ for _typo in ${_vim_typo[@]}; do eval "alias $_typo=$_vim_exexutable"; done
 for _typo in ${_sudo_typo[@]}; do eval "alias $_typo='sudo'"; done
 for _typo in ${_make_typo[@]}; do eval "alias $_typo='make'"; done
 for _typo in ${_pacman_typo[@]}; do eval "alias $_typo='pacman'"; done
+for _typo in ${_cat_typo[@]}; do eval "alias $_typo='cat'"; done
 
 alias rm='rm -v'
 alias mv='mv -v'
@@ -122,18 +134,26 @@ else
 fi
 
 # Shorthand
+alias bpvc='pelican -rl'
 alias cf='clang-format'
 alias dingtalk='systemctl --user start dingtalk.service'
+alias dl='axel -n 16'
 alias duh='du -h --max-depth'
+alias dvim="$_vim_exexutable -V10/tmp/vim-debug.log"
+alias g++='g++ -Wall'
 alias g='git'
 alias ga='git add'
+alias gaa='git add $(cg)'
 alias gb='git branch'
 alias gc='git commit -sv'
 alias gca='git commit -sv --amend'
 alias gcan='git commit -sv --amend --no-edit'
+alias gcc='gcc -Wall'
 alias gco='git checkout'
 alias gd='git diff'
 alias gdc='git diff --cached'
+alias gdd='git diff | delta'
+alias gdcd='git diff --cached | delta'
 alias gf='git fetch'
 alias gl='git log --all --graph --decorate --oneline'
 alias gla='git log --all --graph --decorate --format=fuller'
@@ -141,27 +161,25 @@ alias gll='git pull'
 alias gp='git push'
 alias gpf='git push --force'
 alias gs='git status'
-alias gcc='gcc -Wall'
-alias g++='g++ -Wall'
 alias hibernate='systemctl hibernate'
-alias lmk='latexmk'
-alias mtrn='mtr -n'
-alias open='xdg-open'
-alias p='python3 -u'
-alias p2='python2 -u'
+alias jobs='jobs -l'
 alias js='sudo journalctl --system'
 alias jsu='sudo journalctl --system -u'
 alias ju='journalctl --user'
 alias juu='journalctl --user -u'
+alias lmk='latexmk'
+alias lpvc='latexmk -pvc'
+alias mk='make -j$(expr $(nproc) - 1)'
+alias mtrn='mtr -n'
+alias nvrun='__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia '
+alias open='xdg-open'
+alias p2='python2 -u'
+alias p='python3 -u'
 alias sus='systemctl --user'
 alias sys='sudo systemctl --system'
 alias ts='telegram-send --timeout 86400'
-# alias vi='nvim'
-# alias vim='nvim'
 alias vi="$_vim_exexutable"
 alias vim="$_vim_exexutable"
-alias vimcmake="$_vim_exexutable CMakeLists.txt"
-alias dvim="$_vim_exexutable -V10/tmp/vim-debug.log"
 alias wget.k='wget --no-check-certificate'
 
 # View mode, open Neovim/Vim with 'modifiable' on and 'read-only' off
@@ -205,7 +223,8 @@ alias xargs='xargs '
 alias strace='strace '
 
 # Unset local variables
-unset _typo _clear_typo _git_typo _cd_typo _ls_typo _vim_typo _vim_exexutable
+unset _typo _clear_typo _git_typo _cd_typo _ls_typo _vim_typo
+unset _gpp_typo _cat_typo _pacman_typo _ll_typo _sudo_typo _make_typo
 
 # Syntax highlighting
 # vim: set filetype=sh:
