@@ -1,3 +1,6 @@
+if !exists('g:_nvimrc_loaded') " Prevent recursive loading of this file
+let g:_nvimrc_loaded = 1
+
 " Install plugins using https://github.com/junegunn/vim-plug -----------------
 set nocompatible
 filetype off
@@ -583,6 +586,8 @@ augroup CommentKeywordHighlight
 augroup END
 hi def link ComHiNegative ComHi
 hi def link ComHi Todo
+
+endif " Prevent recursive loading of this file
 
 " Author: Blurgy
 " Date:   Jul 24 2020
