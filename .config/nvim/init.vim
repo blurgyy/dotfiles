@@ -425,16 +425,11 @@ nnoremap <nowait><expr> <c-u>
 " Use <space> as mapleader
 let mapleader = ' '
 " Mapleader key bindings -----------------------------------------------------
+" (Use autocmd VimEnter * <cmd> to override any plugin-defined mappings)
 " Use friendlier command editing interface
 autocmd VimEnter * noremap <silent> <leader>: :<C-f>i
 autocmd VimEnter * noremap <silent> <leader>/ /<C-f>i
 autocmd VimEnter * noremap <silent> <leader>? ?<C-f>i
-" (Use autocmd VimEnter * <cmd> to override any plugin-defined mappings)
-autocmd VimEnter * noremap <silent> <leader>jk :w<CR>
-autocmd VimEnter * noremap <silent> <leader>kj :q<CR>
-autocmd VimEnter * noremap <silent> <leader>lj :qa<CR>
-autocmd VimEnter * noremap <silent> <leader>jl :wq<CR>
-autocmd VimEnter * noremap <silent> <leader>lh :wqa<CR>
 autocmd VimEnter * noremap <silent> <leader>n  :n<CR>
 autocmd VimEnter * noremap <silent> <leader>N  :N<CR>
 " Clear screen and redraw
