@@ -2,13 +2,21 @@ auto_activate_base: false
 changeps1: false
 channels:
   - defaults
+  - pytorch
+  - conda-forge
 show_channel_urls: true
 
 # Add python-coding-related packages by default when creating a new env
 create_default_packages:
-  - pylint
+  # linters, refactor tools
   - jedi
+  - pylint
   - rope
+  # pytorch
+  - pytorch
+  - cudatoolkit=11.0
+  # misc
+  - ipython
 
 # vim: set filetype=yaml:
 
