@@ -10,6 +10,7 @@ Plug 'dense-analysis/ale', {'for': 'rust'}          " Linting engine
 Plug 'maximbaz/lightline-ale', {'for': 'rust'}      " Lightline + ALE
 Plug 'neoclide/coc.nvim', {'branch': 'release'}     " Auto-completion
 Plug 'tpope/vim-fugitive'                           " Git plugin
+Plug 'airblade/vim-gitgutter'                       " Show diff when editing
 " Plug 'preservim/nerdtree'                           " File explorer
 " Plug 'justinmk/vim-dirvish'                         " File explorer
 " Plug 'kristijanhusak/vim-dirvish-git'               " Git plugin for dirvish
