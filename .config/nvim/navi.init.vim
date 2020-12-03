@@ -19,14 +19,14 @@ let g:vista_echo_cursor_strategy = 'floating_win'
 " Do not move cursor when opening a vista window
 let g:vista_stay_on_open = 0
 
-" Open vista window on BufRead
-autocmd BufRead * Vista
+" " Open vista window on BufRead
+" autocmd BufRead * Vista
 " Use <leader>o to toggle document tree
 autocmd VimEnter * nnoremap <silent> <leader>v :Vista!!<CR>
 " Close buffer if the only buffer left is Vista.vim's document tree
 autocmd BufEnter *
     \ if (winnr('$') == 1) &&
-    \ (&filetype == 'vista' || &filetype == 'vista_markdown') | q | endif
+    \ (&filetype == 'vista' || &filetype =~ 'vista.*') | q | endif
 
 " Author: Blurgy
 " Date:   Aug 01 2020
