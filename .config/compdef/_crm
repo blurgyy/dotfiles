@@ -1,0 +1,17 @@
+#compdef _crm crm
+
+function _crm() {
+    local _conda_envs_dir _conda_envs
+    _conda_envs_dir=~/.conda/envs
+    if [[ -d $_conda_envs_dir ]]; then
+        _conda_envs=$(command ls $_conda_envs_dir)
+    fi
+    if [[ -n $CONDA_DEFAULT_ENV ]]; then
+        _conda_envs=${_conda_envs//$CONDA_DEFAULT_ENV/}
+    fi
+    _arguments -C \
+        "1: :($_conda_envs)"
+}
+
+# Author: Blurgy <gy@blurgy.xyz>
+# Date:   Nov 16 2020, 09:44 [CST]
