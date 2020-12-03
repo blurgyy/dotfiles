@@ -462,7 +462,8 @@ autocmd VimEnter * nnoremap <silent> <leader>tk :tabmove -<CR>
 autocmd VimEnter * nnoremap <silent> <leader>w <C-w>
 " Format code
 autocmd VimEnter * nnoremap <silent>
-    \ <leader>y mY<Bar>:call FormatCode()<CR><Bar>`Yzz
+    \ <leader>y :call FormatCode()<CR>
+autocmd BufWrite * silent call FormatCode()
 " Remove all trailing whitespace
 autocmd VimEnter *
     \ nnoremap <silent> <leader>i
