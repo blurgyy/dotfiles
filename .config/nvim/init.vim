@@ -394,6 +394,9 @@ autocmd VimEnter * vnoremap <silent> <C-k> :m '<-2<CR>gv=gv
 autocmd VimEnter * vnoremap <silent> < <gv
 autocmd VimEnter * vnoremap <silent> > >gv
 autocmd VimEnter * vnoremap <silent> = =gv
+" Use <Tab> and <S-Tab> for indentation in visual mode
+autocmd VimEnter * vmap <silent> <Tab>   >
+autocmd VimEnter * vmap <silent> <S-Tab> <
 " Preserve selection after add/minus in visual mode
 autocmd VimEnter * vnoremap <silent> <C-a> <C-a>gv
 autocmd VimEnter * vnoremap <silent> <C-x> <C-x>gv
@@ -454,7 +457,7 @@ autocmd VimEnter * nnoremap <silent> <leader>th :tabprevious<CR>
 autocmd VimEnter * nnoremap <silent> <leader>tj :tabmove +<CR>
 autocmd VimEnter * nnoremap <silent> <leader>tk :tabmove -<CR>
 " Remap <leader>w to <C-w> to perform buffer actions
-autocmd VimEnter * nnoremap <silent> <leader>w <C-w>
+autocmd VimEnter * noremap <silent> <leader>w <C-w>
 " Format code
 autocmd VimEnter * nnoremap <silent>
     \ <leader>y :call FormatCode()<CR>
@@ -540,10 +543,10 @@ set showtabline=2
 "    characters.  Overruled by the 'M' flag.
 " set formatoptions=tcroqlm2B
 " Force setting formatoptions to custom value
-autocmd VimEnter * set formatoptions=tcroqnlm2B
+autocmd BufEnter * set formatoptions=tcroqnlm2B
 " Use 78 as textwidth, according to RFC2822 (forcibly, as some plugins messes
 " this up)
-autocmd VimEnter * if &filetype=='gitcommit'
+autocmd BufEnter * if &filetype=='gitcommit'
             \ |     set textwidth=72
             \ | else
             \ |     set textwidth=78
@@ -551,21 +554,21 @@ autocmd VimEnter * if &filetype=='gitcommit'
 set colorcolumn=79
 
 " Filetype-specific settings -------------------------------------------------
-au BufEnter * if expand('%:t') == 'CMakeLists.txt'
+autocmd BufEnter * if expand('%:t') == 'CMakeLists.txt'
     \ | set filetype=cmake
     \ | endif
-au BufEnter * if expand('%:e') == 'tags'
+autocmd BufEnter * if expand('%:e') == 'tags'
     \ | set filetype=tags
     \ | endif
-au BufEnter * let fext = expand('%:e')
+autocmd BufEnter * let fext = expand('%:e')
     \ | if fext=='service' || fext=='nspawn' || fext=='slice' || fext=='timer'
     \ | set filetype=systemd
     \ | endif
-au filetype gitcommit  setlocal tabstop=2 shiftwidth=2
+autocmd FileType gitcommit  setlocal tabstop=2 shiftwidth=2
     \ textwidth=72 colorcolumn=73
-au filetype markdown   setlocal tabstop=2 shiftwidth=2
-au filetype sshconfig  setlocal tabstop=2 shiftwidth=2
-au filetype yaml       setlocal tabstop=2 shiftwidth=2
+autocmd FileType markdown   setlocal tabstop=2 shiftwidth=2
+autocmd FileType sshconfig  setlocal tabstop=2 shiftwidth=2
+autocmd FileType yaml       setlocal tabstop=2 shiftwidth=2
 
 " Highlight keywords in comments ---------------------------------------------
 " from: https://stackoverflow.com/a/30552423/13482274
