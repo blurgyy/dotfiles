@@ -322,6 +322,30 @@ function FormatCode()
     endif
 endfunction
 
+" Load .exrc/.vimrc/.nvimrc in current git repository root, if it extsts.
+" A specific use case is to disable coc for a specific project.  To achieve
+" this, add below line to the root of the project's repository:
+"
+"       let b:coc_enabled = 0
+"
+" See :h b:coc_enabled for more info.
+if len(system('command -v git')) > 0
+    " Use `echo -n` to remove trailing character '\n'
+    let s:project_root
+        \ = expand(system('echo -n $(git rev-parse --show-toplevel)'))
+    if len(s:project_root) > 0
+        let s:rclist = ['.exrc', '.vimrc', '.nvimrc']
+        for s:file in s:rclist
+            let $localrc = s:project_root . '/' . s:file
+            if filereadable($localrc)
+                \ && $localrc != $MYVIMRC
+                source $localrc
+                break
+            endif
+        endfor
+    endif
+endif
+
 " Auto change directory when opening files in different directory
 " NOTE: autochdir is disabled, as it causes problems for some plugins
 " set autochdir
