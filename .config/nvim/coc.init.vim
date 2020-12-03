@@ -26,7 +26,8 @@ function! CocToggle()
         let b:coc_enabled = 1
     endif
 endfunction
-autocmd VimEnter * silent noremap <leader>cx :call CocToggle()<CR>
+autocmd VimEnter * silent noremap <leader>cpi :call CocPluginInstall()<CR>
+autocmd VimEnter * silent noremap <leader>cx  :call CocToggle()<CR>
 " Example configuration for coc.
 " From: https://github.com/neoclide/coc.nvim#example-vim-configuration
 
@@ -81,9 +82,9 @@ else
   inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endif
 
-" Use `g9` and `g0` to navigate diagnostics
-nmap <silent> g9 <Plug>(coc-diagnostic-prev)
-nmap <silent> g0 <Plug>(coc-diagnostic-next)
+" Use `[e` and `]e` to navigate through diagnostics
+nmap <silent> [e <Plug>(coc-diagnostic-prev)
+nmap <silent> ]e <Plug>(coc-diagnostic-next)
 
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)zz
