@@ -1,4 +1,4 @@
-# Use vi key bindings for python shell
+# Use vi key bindings for REPL shells
 set editing-mode vi
 
 # Author: Blurgy
