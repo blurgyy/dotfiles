@@ -22,7 +22,8 @@ function _blurgy_update {
 
 function _blurgy_set {
     _arguments \
-        "-l[Set screen backlight when available]"
+        "-l[Set screen backlight when available]" \
+        "-v[Set system master volume]"
 }
 
 function _blurgy_setup {
