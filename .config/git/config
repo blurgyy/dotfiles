@@ -1,29 +1,30 @@
 [core]
-	editor = nvim
+    editor = nvim
+    pager = bat
 [pull]
-	ff = only
+    ff = only
 [user]
-	name = Gaoyang Zhang
-	email = gy@blurgy.xyz
-	signingkey = ff02f82f94915004
+    name = Gaoyang Zhang
+    email = gy@blurgy.xyz
+    signingkey = ff02f82f94915004
 [gpg]
-	program = gpg
+    program = gpg
 [alias]
-	unstage = reset HEAD --
-	a = add
-	b = branch
-	bs = branch --set-upstream-to
-	bv = branch -vv
-	c = commit -sv
-	ca = commit -sv --amend
-	can = commit -sv --amend --no-edit
-	co = checkout
-	d = diff
-	dc = diff --cached
-	f = fetch
-	l = log --all --graph --decorate --oneline
-	la = log --all --graph --decorate --format=fuller
-	ll = pull
-	p = push
-	pf = push -f
-	s = status
+    unstage = reset HEAD --
+    a = add
+    b = branch
+    bs = branch --set-upstream-to
+    bv = branch -vv
+    c = commit -sv
+    ca = commit -sv --amend
+    can = commit -sv --amend --no-edit
+    co = checkout
+    d = diff
+    dc = diff --cached
+    f = fetch
+    l = log --all --graph --decorate --oneline
+    la = log --all --graph --decorate --format=fuller
+    ll = pull
+    p = push
+    pf = push -f
+    s = status
