@@ -4,6 +4,7 @@ channels:
   - defaults
   - pytorch
   - conda-forge
+  - anaconda
 show_channel_urls: true
 
 # Add python-coding-related packages by default when creating a new env
