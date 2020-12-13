@@ -3,7 +3,7 @@ function die(){
     if [[ $# -gt 0 ]]; then
         echo "$@"
     fi
-    command exit 169
+    builtin exit 169
 }
 
 # Colorful man page
@@ -135,6 +135,11 @@ function cact() {
             >&2
         return 1
     fi
+    if [[ -n $CONDA_DEFAULT_ENV ]]; then
+        echo "\`$CONDA_DEFAULT_ENV' is activated at the time, use" \
+            "\`cdeact\` to deactivate first." >&2
+        return 2
+    fi
     if [[ $# -eq 0 ]]; then
         local _curgdir
         _curgdir=$(cg)
@@ -146,7 +151,7 @@ function cact() {
             echo "Current directory '$_curgdir' is not known as a conda" \
                 "environment, use \`$0 \$ENVNAME\` to activate an" \
                 "environment with name \$ENVNAME." >&2
-            return 2
+            return 3
         fi
     else
         cinit
