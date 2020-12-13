@@ -62,19 +62,19 @@ __GITPROMPT(){
     echo "${GIT_PROMPT_PREFIX}${ref#refs/heads/}$(__GITDIRTY)${GIT_PROMPT_SUFFIX}"
 }
 __CONDAENV() {
-    if [[ -n $CONDA_PREFIX ]]; then
-        echo "$(__COLOR purple)(${CONDA_PREFIX##*/})$(__COLOR reset)"
+    if [[ -n $CONDA_DEFAULT_ENV ]]; then
+        echo " $(__COLOR purple)(${CONDA_DEFAULT_ENV})$(__COLOR reset)"
     fi
 }
 
 # Must use %{...%} to quote colors.
 # From: http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html#Visual-effects
-PS1=' $(__COLOR cyan)[%D{%T}] $(__COLOR boldcyan)%~$(__GITPROMPT) $(__CONDAENV)
+PS1=' $(__COLOR cyan)[%D{%T}] $(__COLOR boldcyan)%~$(__GITPROMPT)$(__CONDAENV)
 $(__COLOR boldgreen)%n$(__COLOR cyan)@$(__COLOR blue)%M$(__ISTHISROOT)$(__COLOR reset) '
 
 
 # Syntax highlighting
-# vim: set filetype=sh:
+# vim: set filetype=zsh:
 
 # Author: Blurgy
 # Date:   Jul 24 2020

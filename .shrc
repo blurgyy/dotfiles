@@ -20,7 +20,9 @@ if [[ "$currentshellinterpreter" =~ 'zsh' ]]; then
     # Only source ~/.zsh-theme when OMZ is installed
     if [[ -d "$ZSH" ]]; then
         # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-        if [[ -e ~/.zsh-theme.local ]]; then
+        if [[ -e ~/.config/zsh/theme ]]; then
+            . ~/.config/zsh/theme
+        elif [[ -e ~/.zsh-theme.local ]]; then
             . ~/.zsh-theme.local
         elif [[ -e ~/.zsh-theme ]]; then
             . ~/.zsh-theme
@@ -90,7 +92,7 @@ if [[ "$currentshellinterpreter" =~ 'zsh' ]]; then
     # plugins=(git)
 
     # update fpath to include custom auto-completion script
-    fpath=($HOME/.config/compdef $fpath)
+    fpath=($HOME/.config/zsh/compdef $fpath)
 
     source $ZSH/oh-my-zsh.sh
 
