@@ -23,7 +23,7 @@ function k(){
                 && echo "Session killed"
         fi
     else
-        exit "$@"
+        builtin exit "$@"
     fi
 }
 # Kill current tmux session
@@ -161,7 +161,7 @@ if command -v tmux > /dev/null; then
         tmux new-session -t $tsess \; \
             new-window -n $wname \; \
             select-window -t $wname \
-            && exit $?
+            && builtin exit $?
             # Exit ONLY after exiting from tmux session
             # Command `tmux kill-server` will return 127, in this way terminal
             # will not automatically exit.
