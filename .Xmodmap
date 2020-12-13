@@ -1,0 +1,8 @@
+! Swap Caps_Lock and Escape
+clear lock
+keysym Caps_Lock = Escape
+keysym Escape = Caps_Lock
+add lock = Caps_Lock
+
+! Author: Blurgy <gy@blurgy.xyz>
+! Date:   Dec 07 2020, 13:30 [CST]
