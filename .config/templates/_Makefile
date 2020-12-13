@@ -14,3 +14,5 @@ purge:
 fresh: purge all
 
 .PHONY: all clean fresh purge
+
+# vim: set ft=make:
