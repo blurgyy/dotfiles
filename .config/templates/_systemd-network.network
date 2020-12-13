@@ -1,0 +1,20 @@
+[Match]
+Name = # Interface name
+
+[Network]
+# [Static IP]
+Address = # IP address **with prefix length**.
+Address = # Address field can be specified multiple times.
+Gateway = # Gateway.
+DNS = # Domain name server address.
+DNS = # DNS field can be specified multiple times.
+# [/Static IP]
+
+# # [Dynamic IP]
+# DHCP = # Choose one of {yes,ipv4,ipv6}
+# # [/Dynamic IP]
+
+# vim: set ft=dosini:
+
+# Author: Blurgy <gy@blurgy.xyz>
+# Date:   Dec 08 2020, 22:08 [CST]
