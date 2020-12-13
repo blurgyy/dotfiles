@@ -84,12 +84,14 @@ _make_typo=(
     mkae
 )
 _pacman_typo=(
+    apcman
     pacamn
     pacma
     pacmana
     pacmna
     pamcan
     pamcna
+    pcman
 )
 _cat_typo=(
     caat
@@ -221,6 +223,9 @@ alias xargs='xargs '
 
 # Preserve aliases when using strace
 alias strace='strace '
+
+# Always use startx instead of xinit (both provided by xorg-xinit)
+alias xinit='startx'
 
 # Unset local variables
 unset _typo _clear_typo _git_typo _cd_typo _ls_typo _vim_typo
