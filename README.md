@@ -24,9 +24,13 @@ A collection of configuration files for mostly used tools.
 - GUI:
   - [Xmodmap](./.Xmodmap)
   - [xinitrc](./.xinitrc)
+  - [gtk](./.config/gtk-3.0/settings.ini)
   - [bspwm](./.config/bspwm/bspwmrc)
+  - [polybar](./.config/polybar/config)
   - [sxhkd](./.config/sxhkd/sxhkdrc)
   - [picom](./.config/picom/picom.conf)
+  - [redshift](./.config/redshift/redshift.conf)
+  - [deadd-notification-center](./.config/deadd/deadd.conf)
 - Miscellaneous:
   - [clang-format](./.clang-format)
   - [inputrc](./.inputrc)
@@ -42,3 +46,4 @@ A collection of configuration files for mostly used tools.
   - [yapf](./.config/yapf/style)
   - [fcitx5](./.config/fcitx5/config)
   - [templates](./.config/templates)
+  - [GHCi](./ghci)
