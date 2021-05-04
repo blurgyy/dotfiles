@@ -10,6 +10,10 @@ done
 for i in ~/.shfns*; do
     . $i
 done
+# If conda is present in current system, load related functions
+if [[ -n $_conda_root ]]; then
+    . ~/.shconda
+fi
 # And do the same for those with prefix ".shaliases"
 for i in ~/.shaliases*; do
     . $i
@@ -39,7 +43,7 @@ if command -v fzf >/dev/null 2>&1; then
 fi
 
 # Unset variables.
-unset fzfcomp fzfkeybinding
+unset homefzf fzfcomp fzfkeybinding
 
 # Cleanup duplicate entries in envvar $PATH
 # Reference: Top comment in answer 'https://unix.stackexchange.com/a/14896'
@@ -48,6 +52,12 @@ PATH=$(
         if (NR > 1) printf ORS; printf $a[$1]
     }'
 )
+
+# Show todolist managed by taskwarrior at the end of sourced scripts.
+if command -v task >/dev/null; then
+    echo " ** 先做完再做好 **"
+    task calendar
+fi
 
 # Syntax highlighting
 # vim: set filetype=sh:

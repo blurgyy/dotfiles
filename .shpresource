@@ -7,6 +7,17 @@ export PATH=$PATH:/bin
 # Mark current shell interpreter
 export currentshellinterpreter=$(ps -q $$ -o comm=)
 
+# Proxy environment, do not set for machines located oversea.
+if command -v date >/dev/null 2>&1 && [[ $(date +%Z) == 'CST' ]];
+    then
+    export http_proxy=http://127.0.0.1:9990
+    export https_proxy=http://127.0.0.1:9990
+    export npm_config_proxy=$http_proxy
+else
+    # Add a switch if proxy is not enabled automatically.
+    alias px='env http_proxy=http://127.0.0.1:9990 https_proxy=http://127.0.0.1:9990 npm_config_proxy=http://127.0.0.1:9990 '
+fi
+
 # tmux related functions and aliases
 if [[ -f ~/.shtmux ]]; then
     . ~/.shtmux
