@@ -9,10 +9,25 @@ ctrl + alt + z
 ctrl + alt + p
     zathura
 # Flameshot
+# Drag a rect as screenshot
 super + shift + s
     flameshot gui
-super + ctrl + s
+# Printscreen and save to clipboard
+super + shift + p
     flameshot full -c
+# OBS
+ctrl + alt + o
+    obs
+# Zotero
+ctrl + alt + i
+    zotero
+# Wechat dev tools
+ctrl + alt + w
+    /opt/wechat-devtool/bin/wxdt
+
+# restart polybar
+super + alt + p
+    bash ~/.config/polybar/launch.sh
 
 ##### Default configs from /usr/share/doc/bspwm/examples/sxhkdrc #####
 #
@@ -28,6 +43,9 @@ super + @space
 	dmenu_run
 
 # make sxhkd reload its configuration files:
+# Note: this command sends SIGUSR1 to the sxhkd process, sxhkd's
+# implementation specifies it to reload configuration file on receiving a
+# SIGUSR1 signal.
 super + Escape
 	pkill -USR1 -x sxhkd
 
@@ -85,7 +103,9 @@ super + {_,shift + }c
 
 # focus the next/previous desktop in the current monitor
 super + bracket{left,right}
-	bspc desktop -f {prev,next}.local
+	bspc desktop -f {prev,next}.local \
+        && notify-send --expire-time 750 \
+            "Current Desktop" "$(bspc query -D -d --names)"
 
 # focus the last node/desktop
 super + {grave,Tab}
@@ -99,7 +119,9 @@ super + {o,i}
 
 # focus or send to the given desktop
 super + {_,shift + }{1-9,0}
-	bspc {desktop -f,node -d} '^{1-9,10}'
+	bspc {desktop -f,node -d} '^{1-9,10}' \
+        && notify-send --expire-time 750 \
+            "Current Desktop" "$(bspc query -D -d --names)"
 
 #
 # preselect
@@ -136,3 +158,6 @@ super + alt + shift + {h,j,k,l}
 # move a floating window
 super + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
+
+# Author: Blurgy <gy@blurgy.xyz>
+# Date:   Dec 31 2020, 22:17 [CST]
