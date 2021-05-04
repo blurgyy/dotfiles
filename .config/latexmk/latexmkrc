@@ -2,11 +2,11 @@
 $pdf_mode = 5;
 $xelatex_silent_switch = "-interaction=batch-mode";
 
-# Use zathura in fullscreen
-$pdf_previewer = "zathura --mode fullscreen";
+# Use zathura as pdf previewer
+$pdf_previewer = "zathura";
 
-# Save output pdf to directory 'output/'
-$out_dir = "output";
+# Save output pdf to directory 'lmkbuild/'
+$out_dir = "lmkbuild";
 
 # Read from these files to compile pdf, elements in arrays should be separated
 # by commas.
