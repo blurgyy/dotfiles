@@ -1,6 +1,8 @@
 [core]
     editor = nvim
-    pager = bat
+    pager = bat --style=plain
+[init]
+    defaultBranch = main
 [pull]
     ff = only
 [user]
