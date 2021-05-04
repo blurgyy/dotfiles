@@ -1,3 +1,4 @@
+#!/usr/bin/zsh
 # Based on '3den' theme from OMZ
 
 # ANSI color codes
@@ -67,11 +68,20 @@ __CONDAENV() {
     fi
 }
 
+__JOBSCOUNT() {
+    local _jobscount
+    _jobscount=$(builtin jobs | command grep '^\[' | command wc -l)
+    if [[ $_jobscount -gt 0 ]]; then
+        echo "[+$_jobscount]"
+    fi
+}
+
 # Must use %{...%} to quote colors.
 # From: http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html#Visual-effects
 PS1=' $(__COLOR cyan)[%D{%T}] $(__COLOR boldcyan)%~$(__GITPROMPT)$(__CONDAENV)
 $(__COLOR boldgreen)%n$(__COLOR cyan)@$(__COLOR blue)%M$(__ISTHISROOT)$(__COLOR reset) '
 
+RPS1='$(__COLOR boldblue)$(__JOBSCOUNT)$(__COLOR reset)'
 
 # Syntax highlighting
 # vim: set filetype=zsh:
