@@ -5,6 +5,7 @@ channels:
   - pytorch
   - conda-forge
   - anaconda
+  - open3d-admin
 show_channel_urls: true
 
 # Add python-coding-related packages by default when creating a new env
@@ -15,9 +16,11 @@ create_default_packages:
   - rope
   # pytorch
   - pytorch
-  - cudatoolkit=11.0
+  - cudatoolkit=11.1
   # misc
   - ipython
+  - matplotlib
+  - pillow
 
 # vim: set filetype=yaml:
 
