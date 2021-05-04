@@ -19,7 +19,7 @@ font:
   bold_italic:
     family: jetbrains mono
     style: Bold Italic
-  size: 12
+  size: 15
 
 schemes:
   gruvbox_dark: &gruvbox_dark
