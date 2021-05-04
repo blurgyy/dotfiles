@@ -6,13 +6,13 @@
 # If there is only one window in current session, directly detach from current
 # session.
 function k(){
-    if [[ -n $TMUX ]]; then
+    if [[ -n $TMUX && -z $NVIM_LISTEN_ADDRESS ]]; then
         if [[ $(tmux display-message -p '#{window_panes}') -gt 1 ]] \
             && [[ $1 != '-f' ]]; then
-            echo "Not leaving session (multiple panes in current window)"
-            echo "Use \`$0 -f\` to kill anyway"
-            echo
-            echo "* Panes in current window:"
+            echo "Not leaving session (multiple panes in current window)" >&2
+            echo "Use \`$0 -f\` to kill anyway" >&2
+            echo >&2
+            echo "* Panes in current window:" >&2
             tmux list-panes
             return 1
         elif [[ $(tmux display-message -p '#{session_windows}') -gt 1 ]]; then
@@ -36,7 +36,8 @@ function ks() {
             && tmux kill-session -t "$1" \
             && echo "Session '$1' killed"
     else
-        echo "No session to kill (tmux is not running, are you $(whoami)?)"
+        echo "No session to kill (tmux is not running, are you $(whoami)?)" \
+            >&2
     fi
 }
 
@@ -57,10 +58,10 @@ function kw() {
     if [[ -n $TMUX ]]; then
         if [[ $(tmux display-message -p '#{window_panes}') -gt 1 ]] \
             && [[ $1 != "-f" ]] ; then
-            echo "Not killing window (multiple panes in current window)"
-            echo "Use \`$0 -f\` to kill anyway"
-            echo
-            echo "* Panes in current window:"
+            echo "Not killing window (multiple panes in current window)" >&2
+            echo "Use \`$0 -f\` to kill anyway" >&2
+            echo >&2
+            echo "* Panes in current window:" >&2
             tmux list-panes
             return 1
         elif [[ $(tmux display-message -p '#{session_windows}') -gt 1 ]]; then
@@ -75,7 +76,8 @@ function kw() {
                 && echo "Session killed"
         fi
     else
-        echo "No window to kill (tmux is not running, are you $(whoami)?)."
+        echo "No window to kill (tmux is not running, are you $(whoami)?)." \
+            >&2
     fi
 }
 # Rename current window
@@ -113,11 +115,12 @@ function kp(){
         if [[ $(tmux display-message -p '#{window_panes}') -gt 1 ]]; then
             tmux kill-pane && echo "Pane killed"
         else
-            echo "Only one pane in current window. Use \`kw\` to kill window"
+            echo "Only one pane in current window. Use \`kw\` to kill" \
+                "window" >&2
             return 1
         fi
     else
-        echo "No pane to kill (tmux is not running, are you $(whoami)?)"
+        echo "No pane to kill (tmux is not running, are you $(whoami)?)" >&2
     fi
 }
 
@@ -126,7 +129,7 @@ function KK(){
     if [[ -n $TMUX ]]; then
         tmux kill-server
     else
-        echo "No tmux server to kill"
+        echo "No tmux server to kill" >&2
     fi
 }
 
@@ -139,24 +142,24 @@ alias sw='tmux swap-window -dt'
 
 # Automatically run tmux on session start
 tsess='main'
-defwname=default
+default_wname=default
 wname="$(date '+%b-%d,%H-%M-%S')"
 if [[ -n $SSH_CONNECTION ]]; then
     wname+=" [ssh]"
-    defwname+=" [ssh]"
+    default_wname+=" [ssh]"
 fi
 if command -v tmux > /dev/null; then
     if [[ $(tty) =~ /dev/tty[0-9]* ]]; then
         # Do not autostart tmux in tty.
-        echo "Not autostarting tmux in tty"
+        echo "Not autostarting tmux in tty" >&2
     elif [[ 0 -eq $(id -u) ]]; then
         # Do not autostart tmux as root.
-        echo "Not autostarting tmux as root"
+        echo "Not autostarting tmux as root" >&2
     elif [[ -z $TMUX ]]; then
-        # If session 'main' does not exist, create first
-        if ! tmux has-session -t main 2> /dev/null; then
+        # If session '$tsess' does not exist, create first
+        if ! tmux has-session -t $tsess 2> /dev/null; then
             tmux start-server
-            tmux select-window -t main:0 \; rename-window ${defwname}
+            tmux select-window -t $tsess:0 \; rename-window ${default_wname}
         fi
         tmux new-session -t $tsess \; \
             new-window -n $wname \; \
