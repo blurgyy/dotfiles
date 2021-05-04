@@ -22,8 +22,17 @@ syntax enable
 " elseif ayucolor == 'dark'
 " hi! extrawhitespace guibg=#3a3a3a
 " endif
-autocmd BufEnter * hi! extrawhitespace guibg=#5c5856
+if &bg == 'dark'
+    autocmd BufEnter * hi! extrawhitespace guibg=#5c5856
+else
+    autocmd BufEnter * hi! extrawhitespace guibg=#ab9b72
+endif
 autocmd BufEnter * match extrawhitespace /\s\+$/
+
+" Use Pmenu highlight for CocFloating, because gruvbox does not seem to
+" provide light theme NormalFloat highlighting, which makes the floating
+" window in Coc very ugly.
+highlight link CocFloating Pmenu
 
 set cursorline
 if exists('+termguicolors')

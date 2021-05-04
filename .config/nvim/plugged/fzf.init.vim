@@ -7,17 +7,13 @@ endfunction
 command! ProjectFiles execute 'Files' s:find_git_root()
 
 " Use Ctrl-p to open file with fzf
-autocmd VimEnter * nnoremap <silent> <c-p> :ProjectFiles<CR>
+autocmd BufEnter * nnoremap <silent> <c-p> :ProjectFiles<CR>
 " Find lines
-autocmd VimEnter * nnoremap <silent> <c-l> :Lines<CR>
+autocmd BufEnter * nnoremap <silent> <c-l> :Lines<CR>
 " Find buffers
-autocmd VimEnter * nnoremap <silent> <c-b> :Buffers<CR>
-" Find marks. When in command-line window, pressing <C-m> (or <CR>) in normal
-" mode should execute the command currently under cursor, it can be achieved
-" by using `autocmd CmdwinEnter * unmap <C-m>` and `autocmd CmdwinLeave *
-" nnoremap <silent> <C-m> :Marks<CR>`. the to configurations has been added to
-" ~/.config/nvim/init.vim.
-autocmd VimEnter * nnoremap <silent> <C-m> :Marks<CR>
+autocmd BufEnter * nnoremap <silent> <c-b> :Buffers<CR>
+" Find marks
+autocmd BufEnter * nnoremap <silent> \m :Marks<CR>
 
 " Open fzf in a floating window
 " From: https://github.com/neovim/neovim/issues/9718#issuecomment-559573308

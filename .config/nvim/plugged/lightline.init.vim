@@ -26,8 +26,8 @@ let g:lightline#ale#indicator_checking = "..."
 " let g:lightline#ale#indicator_errors = "\uf05e"
 " let g:lightline#ale#indicator_ok = "\uf00c"
 
-" \ 'colorscheme': 'gruvbox',
 let g:lightline = {
+\ 'colorscheme': g:colors_name,
 \ 'active': {
 \   'left': [ [ 'mode', 'gitbranch', 'paste', 'cocstatus' ],
 \             [ 'filename', 'linter_checking', 'linter_errors',

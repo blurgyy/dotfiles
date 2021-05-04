@@ -11,7 +11,7 @@ if empty(glob("~/.local/share/nvim/site/autoload/plug.vim"))
     silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim
         \ --create-dirs
         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    autocmd VimEnter * PlugInstall --sync
+    autocmd BufEnter * PlugInstall --sync
         \ | source $MYVIMRC
 endif
 
@@ -109,7 +109,9 @@ let s:comment_ft = {
 \         'java',
 \         'javascript',
 \         'json',
+\         'jsonc',
 \         'php',
+\         'rust',
 \         'scala',
 \     ],
 \     '%': [
@@ -123,61 +125,75 @@ let s:comment_ft = {
 \         'vim',
 \     ],
 \     '--': [
-\         'lua'
+\         'lua',
+\         'haskell',
 \     ],
 \     '..': [
-\         'rst'
+\         'rst',
+\     ],
+\     '!': [
+\         'xmodmap',
+\         'xdefaults',
 \     ],
 \ }
 let s:ft_comment = {
 \   '': '#',
+\   'c': '//',
 \   'cmake': '#',
 \   'conf': '#',
+\   'cpp': '//',
 \   'dosini': '#',
 \   'gdb': '#',
 \   'gitcommit': '#',
 \   'gitignore': '#',
 \   'gitrebase': '#',
+\   'glsl': '//',
+\   'go': '//',
+\   'haskell': '--',
+\   'java': '//',
+\   'javascript': '//',
+\   'json': '//',
+\   'jsonc': '//',
+\   'lua': '--',
 \   'make': '#',
 \   'map': '#',
+\   'markdown': '>',
+\   'matlab': '%',
 \   'perl': '#',
 \   'php': '#',
 \   'python': '#',
 \   'readline': '#',
 \   'resolv': '#',
 \   'rst': '..',
+\   'rust': '//',
 \   'ruby': '#',
+\   'scala': '//',
 \   'sh': '#',
 \   'sshconfig': '#',
 \   'systemd': '#',
+\   'tex': '%',
 \   'tmux': '#',
+\   'toml': '#',
+\   'vim': '"',
+\   'xdefaults': '!',
+\   'xmodmap': '!',
 \   'yaml': '#',
 \   'zsh': '#',
-\   'c': '//',
-\   'cpp': '//',
-\   'glsl': '//',
-\   'go': '//',
-\   'java': '//',
-\   'javascript': '//',
-\   'json': '//',
-\   'scala': '//',
-\   'matlab': '%',
-\   'tex': '%',
-\   'toml': '#',
-\   'markdown': '>',
-\   'vim': '"',
-\   'lua': '--',
 \ }
-let s:formatters = {
-\     'python': 'yapf',
+let s:formaters = {
 \     'c': 'clang-format',
 \     'cpp': 'clang-format',
-\     'cs': 'clang-format',
-\     'cuda': 'clang-format',
-\     'glsl': 'clang-format',
-\     'java': 'clang-format',
-\     'javascript': 'clang-format',
-\     'rust': 'rustfmt',
+\     'cs': 'clang-format --assume-filename=csharp.cs',
+\     'css': 'css-beautify --end-with-newline',
+\     'cuda': 'clang-format --assume-filename=cuda.cu',
+\     'haskell': 'fourmolu',
+\     'java': 'clang-format --assume-filename=java.java',
+\     'javascript': 'clang-format --assume-filename=javascript.js',
+\     'json': 'jq --indent 4',
+\     'jsonc': 'jq --indent 4',
+\     'lua': 'lua-format',
+\     'python': 'yapf',
+\     'rust': 'rustfmt --config max_width=78',
 \ }
 " Functions ------------------------------------------------------------------
 function! CurrentChar()
@@ -205,10 +221,11 @@ function! Comment()
     endif
     let s:ft = &filetype
     let s:comch = get(s:ft_comment, s:ft, '#')
-    exec "normal! mC"
+    let l:view = winsaveview()
     exec "silent s:^[ \t\n]*::"
     exec "silent s:^:" . s:comch . " :g"
-    exec "normal! ==`C"
+    exec "normal! =="
+    call winrestview(l:view)
     unlet s:ft s:comch
 endfunction
 function! Uncomment()
@@ -216,9 +233,10 @@ function! Uncomment()
     let s:comch = get(s:ft_comment, s:ft, '#')
     " Only execute function when current line starts with comment char
     if match(getline(line('.')), "^[ \t\n]*[(".s:comch.")]\\+[ \t\n]*") == 0
-        exec "normal! mC"
+        let l:view = winsaveview()
         exec "silent s:^[ \t\n]*" . s:comch . "[ \t\n]*::g"
-        exec "normal! ==`C"
+        exec "normal! =="
+        call winrestview(l:view)
     endif
     unlet s:ft s:comch
 endfunction
@@ -299,39 +317,56 @@ function! ToggleMovementByDisplayLines()
     endif
 endfunction
 function FormatCode()
-    let l:formatter = get(s:formatters, &ft, "cat")
+    if get(b:, 'noformat', 0)
+        " Don't format code if b:noformat is set to 1.  This can be set in a
+        " project-local file .exrc (see below).
+        return
+    endif
+    let l:formatter = get(s:formaters, &ft, "cat")
     if l:formatter == 'cat'
         echom "No formatter is specified for filetype '".&ft."'"
     else
-        let l:view = winsaveview()
-        let l:current_buffer = getline(1, '$')
-        let l:formatted_content = systemlist(l:formatter, l:current_buffer)
-        if v:shell_error
-            echo v:shell_error
-            echoe 'Error occured when attempting to format current buffer'
-                \ 'with `'.l:formatter.'`, contents in current buffer are'
-                \ 'unchanged.'
-        else
-            " Do not modify buffer if already formatted
-            if l:current_buffer !=# l:formatted_content
-                execute '1,$delete'
-                call setline(1, l:formatted_content)
+        let l:command_exists = executable(split(l:formatter)[0])
+        if l:command_exists
+            let l:current_buffer = getline(1, '$')
+            let l:formatted_content = systemlist(l:formatter, l:current_buffer)
+            if v:shell_error
+                echo v:shell_error
+                echoe 'Contents unchanged (error occured)'
             else
-                echom 'Current buffer is already formatted with `'.l:formatter
-                            \ .'` contents in current buffer are unchanged.'
+                " Do not modify buffer if already formatted
+                if l:current_buffer !=# l:formatted_content
+                    let l:view = winsaveview()
+                    execute '1,$delete'
+                    call setline(1, l:formatted_content)
+                    call winrestview(l:view)
+                else
+                    echom 'Contents unchanged (already formatted)'
+                endif
             endif
+        else
+            echoe "Formatter '".split(l:formatter)[0]."' is not available"
         endif
-        call winrestview(l:view)
     endif
 endfunction
 
 " Load .exrc/.vimrc/.nvimrc in current git repository root, if it extsts.
-" A specific use case is to disable coc for a specific project.  To achieve
-" this, add below line to the root of the project's repository:
+" Use cases:
+"   1. Disable coc for a specific project.  To achieve this, add below line to
+"      the root of the project's repository:
 "
-"       let b:coc_enabled = 0
+"           autocmd BufEnter * let b:coc_enabled = 0
 "
-" See :h b:coc_enabled for more info.
+"      Note: Use BufEnter instead of BufAdd autocmd.
+"
+"      See :h b:coc_enabled for more info.
+"   2. Disable formating of all files in a repository (typically for a forked
+"      repository that is meant to submit a pull request to the original
+"      repository):
+"
+"           autocmd BufEnter * let b:noformat = 1
+"
+"      Note: Use BufEnter instead of BufAdd autocmd.
 if len(system('command -v git')) > 0
     " Use `echo -n` to remove trailing character '\n'
     let s:project_root
@@ -353,7 +388,7 @@ endif
 " NOTE: autochdir is disabled, as it causes problems for some plugins
 " set autochdir
 
-" Use system clipboard, need 'xclip' to be installed.
+" Use system clipboard, need 'xsel' to be installed.
 " See: ':h clipboard'
 set clipboard+=unnamed,unnamedplus
 
@@ -370,41 +405,41 @@ set undodir=~/.cache/nvim/undotree
 set undofile
 
 " Keybindings ----------------------------------------------------------------
-autocmd VimEnter * nnoremap <silent> % v%
-autocmd VimEnter * nnoremap <silent> Y y$
+autocmd BufEnter * nnoremap <silent> % v%
+autocmd BufEnter * nnoremap <silent> Y y$
 " Center search results
-autocmd VimEnter * nnoremap <silent> n nzz
-autocmd VimEnter * nnoremap <silent> N Nzz
-autocmd VimEnter * nnoremap <silent> * *zz
-autocmd VimEnter * nnoremap <silent> # #zz
-autocmd VimEnter * nnoremap <silent> g* g*zz
-autocmd VimEnter * nnoremap <silent> <C-o> <C-o>zz
-autocmd VimEnter * nnoremap <silent> <C-i> <C-i>zz
+autocmd BufEnter * nnoremap <silent> n nzz
+autocmd BufEnter * nnoremap <silent> N Nzz
+autocmd BufEnter * nnoremap <silent> * *zz
+autocmd BufEnter * nnoremap <silent> # #zz
+autocmd BufEnter * nnoremap <silent> g* g*zz
+autocmd BufEnter * nnoremap <silent> <C-o> <C-o>zz
+autocmd BufEnter * nnoremap <silent> <C-i> <C-i>zz
 " Center last insert position when using gi
-autocmd VimEnter * nnoremap gi gi<ESC>zzgi
+autocmd BufEnter * nnoremap gi gi<ESC>zzgi
 " Move single line down/up with ctrl+shift+{j,k}
 " From: https://vim.fandom.com/wiki/Moving_lines_up_or_down
-autocmd VimEnter * nnoremap <silent> <C-j> :m .+1<CR>=kj
-autocmd VimEnter * nnoremap <silent> <C-k> :m .-2<CR>=j
-autocmd VimEnter * inoremap <silent> <C-j> <Esc>:m .+1<CR>=kgi
-autocmd VimEnter * inoremap <silent> <C-k> <Esc>:m .-2<CR>=jgi
-autocmd VimEnter * vnoremap <silent> <C-j> :m '>+1<CR>gv=gv
-autocmd VimEnter * vnoremap <silent> <C-k> :m '<-2<CR>gv=gv
+autocmd BufEnter * nnoremap <silent> <C-j> :m .+1<CR>=kj
+autocmd BufEnter * nnoremap <silent> <C-k> :m .-2<CR>=j
+autocmd BufEnter * inoremap <silent> <C-j> <Esc>:m .+1<CR>=kgi
+autocmd BufEnter * inoremap <silent> <C-k> <Esc>:m .-2<CR>=jgi
+autocmd BufEnter * vnoremap <silent> <C-j> :m '>+1<CR>gv=gv
+autocmd BufEnter * vnoremap <silent> <C-k> :m '<-2<CR>gv=gv
 " Preserve selection after indentation actions
-autocmd VimEnter * vnoremap <silent> < <gv
-autocmd VimEnter * vnoremap <silent> > >gv
-autocmd VimEnter * vnoremap <silent> = =gv
+autocmd BufEnter * vnoremap <silent> < <gv
+autocmd BufEnter * vnoremap <silent> > >gv
+autocmd BufEnter * vnoremap <silent> = =gv
 " Use <Tab> and <S-Tab> for indentation in visual mode
-autocmd VimEnter * vmap <silent> <Tab>   >
-autocmd VimEnter * vmap <silent> <S-Tab> <
+autocmd BufEnter * vmap <silent> <Tab>   >
+autocmd BufEnter * vmap <silent> <S-Tab> <
 " Preserve selection after add/minus in visual mode
-autocmd VimEnter * vnoremap <silent> <C-a> <C-a>gv
-autocmd VimEnter * vnoremap <silent> <C-x> <C-x>gv
+autocmd BufEnter * vnoremap <silent> <C-a> <C-a>gv
+autocmd BufEnter * vnoremap <silent> <C-x> <C-x>gv
 " Faster scrolling
-autocmd VimEnter * nnoremap <silent> <C-e> 3<C-e>
-autocmd VimEnter * nnoremap <silent> <C-y> 3<C-y>
-autocmd VimEnter * vnoremap <silent> <C-e> 3<C-e>
-autocmd VimEnter * vnoremap <silent> <C-y> 3<C-y>
+autocmd BufEnter * nnoremap <silent> <C-e> 3<C-e>
+autocmd BufEnter * nnoremap <silent> <C-y> 3<C-y>
+autocmd BufEnter * vnoremap <silent> <C-e> 3<C-e>
+autocmd BufEnter * vnoremap <silent> <C-y> 3<C-y>
 " Scroll pop up window if any pop up window is shown
 " Reference:
 " https://github.com/neoclide/coc.nvim/issues/2472#issuecomment-711117854
@@ -414,58 +449,62 @@ nnoremap <nowait><expr> <c-u>
             \ coc#float#has_scroll() ? coc#float#scroll(0) : "\<c-u>"
 """ This is deprecated (or not)
 " " Auto expand brace
-" autocmd VimEnter * inoremap ( ()<Esc>i
-" autocmd VimEnter * inoremap [ []<Esc>i
-" autocmd VimEnter * inoremap { {}<Esc>i
+" autocmd BufEnter * inoremap ( ()<Esc>i
+" autocmd BufEnter * inoremap [ []<Esc>i
+" autocmd BufEnter * inoremap { {}<Esc>i
 " " Exit braces just by hitting the closing brace
-" autocmd VimEnter * inoremap ) <Esc>:if NextChar() == ")"<Bar>exec "normal! la"<Bar>elseif NextChar() == ""<Bar>exec "normal! a)"<Bar>else<Bar>exec "normal! li)"<Bar>endif<CR>a
-" autocmd VimEnter * inoremap ] <Esc>:if NextChar() == "]"<Bar>exec "normal! la"<Bar>elseif NextChar() == ""<Bar>exec "normal! a]"<Bar>else<Bar>exec "normal! li]"<Bar>endif<CR>a
-" autocmd VimEnter * inoremap } <Esc>:if NextChar() == "}"<Bar>exec "normal! la"<Bar>elseif NextChar() == ""<Bar>exec "normal! a}"<Bar>else<Bar>exec "normal! li}"<Bar>endif<CR>a
+" autocmd BufEnter * inoremap ) <Esc>:if NextChar() == ")"<Bar>exec "normal! la"<Bar>elseif NextChar() == ""<Bar>exec "normal! a)"<Bar>else<Bar>exec "normal! li)"<Bar>endif<CR>a
+" autocmd BufEnter * inoremap ] <Esc>:if NextChar() == "]"<Bar>exec "normal! la"<Bar>elseif NextChar() == ""<Bar>exec "normal! a]"<Bar>else<Bar>exec "normal! li]"<Bar>endif<CR>a
+" autocmd BufEnter * inoremap } <Esc>:if NextChar() == "}"<Bar>exec "normal! la"<Bar>elseif NextChar() == ""<Bar>exec "normal! a}"<Bar>else<Bar>exec "normal! li}"<Bar>endif<CR>a
 " Deprecated: Auto indent when pressing <Enter> inside braces
-" autocmd VimEnter * inoremap <CR> <CR><Esc>:if InsideBrace()<Bar>exec "normal! O"<Bar>endif<CR>
+" autocmd BufEnter * inoremap <CR> <CR><Esc>:if InsideBrace()<Bar>exec "normal! O"<Bar>endif<CR>
 " Deprecated: TODO: Auto delete closing brace when cursor is inside ()/[]/{}
 
 " Use <space> as mapleader
 let mapleader = ' '
 " Mapleader key bindings -----------------------------------------------------
-" (Use autocmd VimEnter * <cmd> to override any plugin-defined mappings)
+" (Use autocmd BufEnter * <cmd> to override any plugin-defined mappings)
 " Use friendlier command editing interface
-autocmd VimEnter * noremap <silent> <leader>: :<C-f>i
-autocmd VimEnter * noremap <silent> <leader>/ /<C-f>i
-autocmd VimEnter * noremap <silent> <leader>? ?<C-f>i
-autocmd VimEnter * noremap <silent> <leader>n  :n<CR>
-autocmd VimEnter * noremap <silent> <leader>N  :N<CR>
+autocmd BufEnter * noremap <silent> <leader>: :<C-f>i
+autocmd BufEnter * noremap <silent> <leader>/ /<C-f>i
+autocmd BufEnter * noremap <silent> <leader>? ?<C-f>i
+autocmd BufEnter * noremap <silent> <leader>n  :n<CR>
+autocmd BufEnter * noremap <silent> <leader>N  :N<CR>
 " Clear screen and redraw
-autocmd VimEnter * noremap <silent> <leader>m :mode<CR>
+autocmd BufEnter * noremap <silent> <leader>m :mode<CR>
 " Disable hlsearch until next search-related action is performed
-autocmd VimEnter * noremap <silent> <leader>h :nohlsearch<CR>
+autocmd BufEnter * noremap <silent> <leader>h :nohlsearch<CR>
 " Toggle movement by displayed lines
-autocmd VimEnter *
+autocmd BufEnter *
     \ noremap <silent> <leader>g :call ToggleMovementByDisplayLines()<CR>
 " Append punctuation at eol
-autocmd VimEnter * nnoremap <silent> <leader>;  mPA;<ESC>`P
-autocmd VimEnter * nnoremap <silent> <leader>,  mPA,<ESC>`P
-autocmd VimEnter * nnoremap <silent> <leader>.  mPA.<ESC>`P
+autocmd BufEnter * nnoremap <silent> <leader>;  mPA;<ESC>`P
+autocmd BufEnter * nnoremap <silent> <leader>,  mPA,<ESC>`P
+autocmd BufEnter * nnoremap <silent> <leader>.  mPA.<ESC>`P
 " New buffer(tab)
-autocmd VimEnter * nnoremap <silent> <leader>tn :tabnew<CR>
+autocmd BufEnter * nnoremap <silent> <leader>tn :tabnew<CR>
 " Close current buffer(tab)
-autocmd VimEnter * nnoremap <silent> <leader>tc :tabclose<CR>
+autocmd BufEnter * nnoremap <silent> <leader>tc :tabclose<CR>
 " Change buffer(tab)
-autocmd VimEnter * nnoremap <silent> <leader>tl :tabnext<CR>
-autocmd VimEnter * nnoremap <silent> <leader>th :tabprevious<CR>
+autocmd BufEnter * nnoremap <silent> <leader>tl :tabnext<CR>
+autocmd BufEnter * nnoremap <silent> <leader>th :tabprevious<CR>
 " Move tab
-autocmd VimEnter * nnoremap <silent> <leader>tj :tabmove +<CR>
-autocmd VimEnter * nnoremap <silent> <leader>tk :tabmove -<CR>
+autocmd BufEnter * nnoremap <silent> <leader>tj :tabmove +<CR>
+autocmd BufEnter * nnoremap <silent> <leader>tk :tabmove -<CR>
 " Remap <leader>w to <C-w> to perform buffer actions
-autocmd VimEnter * noremap <silent> <leader>w <C-w>
+autocmd BufEnter * noremap <silent> <leader>w <C-w>
 " Format code
-autocmd VimEnter * nnoremap <silent>
+autocmd BufEnter * nnoremap <silent>
     \ <leader>y :call FormatCode()<CR>
-autocmd BufWrite * silent call FormatCode()
+autocmd BufWritePre * silent call FormatCode()
+autocmd BufWritePost * silent filetype detect
 " Remove all trailing whitespace
-autocmd VimEnter *
+autocmd BufEnter *
     \ nnoremap <silent> <leader>i
-    \ mY:let _s=@/<Bar>:%s/\s\+$//e<Bar>:let@/=_s<CR>`Yzz
+    \ :let b:_winapperance = winsaveview()<Bar>
+    \ :%s/\s\+$//e<Bar>
+    \ :call winrestview(b:_winapperance)<CR>
+    \ :unlet b:_winapperance<CR>
 
 " Add custom header
 nnoremap <silent> <leader>s :call AppendSignature()<CR>
@@ -482,16 +521,14 @@ nnoremap <silent> <C-_> :call CommentToggle()<CR>
 vnoremap <silent> <C-_> :call CommentToggle()<CR>gv
 " Keybindings for command-line window ----------------------------------------
 autocmd CmdwinEnter * nnoremap <silent> <ESC> :q<CR>
-autocmd CmdwinEnter * nunmap <C-m>
 autocmd CmdwinLeave * nunmap <ESC>
-autocmd CmdwinLeave * nnoremap <silent> <C-m> :Marks<CR>
 
 " Set leader key timeout to 500ms
 set timeoutlen=500
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
-set updatetime=100
+set updatetime=75
 
 " Global settings ------------------------------------------------------------
 " '512: Marks will be rememberd for the last 512 edited files
@@ -502,7 +539,6 @@ set updatetime=100
 " h: Disables search highlighting when Vim starts
 set viminfo='512,<1024,s512,h
 
-set confirm
 set noswapfile
 set tabstop=4
 set shiftwidth=4
@@ -551,6 +587,9 @@ autocmd BufEnter * if &filetype=='gitcommit'
             \ | else
             \ |     set textwidth=78
             \ | endif
+autocmd BufEnter * if &filetype=='markdown'
+            \ | set iskeyword-=$
+            \ | endif
 set colorcolumn=79
 
 " Filetype-specific settings -------------------------------------------------
@@ -560,9 +599,11 @@ autocmd BufEnter * if expand('%:t') == 'CMakeLists.txt'
 autocmd BufEnter * if expand('%:e') == 'tags'
     \ | set filetype=tags
     \ | endif
-autocmd BufEnter * let fext = expand('%:e')
-    \ | if fext=='service' || fext=='nspawn' || fext=='slice' || fext=='timer'
+autocmd BufEnter * let s:fext = expand('%:e')
+    \ | if s:fext=='service' || s:fext=='nspawn' || s:fext=='slice' || s:fext=='timer'
     \ | set filetype=systemd
+    \ | elseif s:fext=='ipynb'
+    \ | set filetype=json
     \ | endif
 autocmd FileType gitcommit  setlocal tabstop=2 shiftwidth=2
     \ textwidth=72 colorcolumn=73
@@ -578,12 +619,17 @@ augroup CommentKeywordHighlight
                 \ /\v\c<(fixme|must|note|only|recall|should|todo|warn((ing))?|caveat|deprecated):?>/
                 \ containedin=.*Comment.*,vimCommentTitle
                 \ contained
-    au Syntax * syn match ComHiNegative
-                \ /\v\c<(should(( ?no|n'?))t|must(( ?no|n'?))t|do(( ?no|n'?))t|can(( ?no|'?))t)>/
+    au Syntax * syn match ComHiNegative1
+                \ /\v\c<(should(( ?no|n'?))t|must(( ?no|n'?))t|can(( ?no|'?))t)>/
+                \ containedin=.*Comment.*,vimCommentTitle
+                \ contained
+    au Syntax * syn match ComHiNegative2
+                \ /\v\c<(do((es))?(( ?no|n'?))t)>/
                 \ containedin=.*Comment.*,vimCommentTitle
                 \ contained
 augroup END
-hi def link ComHiNegative ComHi
+hi def link ComHiNegative1 ComHi
+hi def link ComHiNegative2 ComHi
 hi def link ComHi Todo
 
 endif " Prevent recursive loading of this file

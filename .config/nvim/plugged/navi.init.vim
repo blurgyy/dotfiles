@@ -1,6 +1,6 @@
 " Coc-explorer ===============================================================
 " Use <leader>d to toggle coc-explorer
-autocmd VimEnter *
+autocmd BufEnter *
     \ nnoremap <silent> <leader>d :CocCommand explorer --quit-on-open<CR>
 
 " Close buffer if the only buffer left is coc-explorer
@@ -18,11 +18,13 @@ let g:vista_default_executive = 'ctags'
 let g:vista_echo_cursor_strategy = 'floating_win'
 " Do not move cursor when opening a vista window
 let g:vista_stay_on_open = 0
+" Disable fancy icons that need extra fonts.
+let g:vista#renderer#enable_icon = 0
 
 " " Open vista window on BufRead
 " autocmd BufRead * Vista
 " Use <leader>o to toggle document tree
-autocmd VimEnter * nnoremap <silent> <leader>v :Vista!!<CR>
+autocmd BufEnter * nnoremap <silent> <leader>v :Vista!!<CR>
 " Close buffer if the only buffer left is Vista.vim's document tree
 autocmd BufEnter *
     \ if (winnr('$') == 1) &&

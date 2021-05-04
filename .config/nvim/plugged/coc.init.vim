@@ -1,33 +1,35 @@
-" Installed coc plugins:
-" - coc-cmake
-" - coc-diagnostic
-" - coc-explorer
-" - coc-highlight
-" - coc-html
-" - coc-json
-" - coc-lua
-" - coc-python
-" - coc-rls
-" - coc-sh
-" - coc-texlab " The texlab executable should be installed manualy
-" - coc-yaml
+" Install coc plugins.
 function! CocPluginInstall()
-    CocInstall coc-cmake coc-diagnostic coc-explorer coc-highlight
-                \ coc-html coc-json coc-lua coc-python
-                \ coc-rls coc-sh coc-texlab coc-yaml
+    CocInstall
+                \ coc-cmake
+                \ coc-css
+                \ coc-diagnostic
+                \ coc-explorer
+                \ coc-highlight
+                \ coc-html
+                \ coc-json
+                \ coc-lua
+                \ coc-markdownlint
+                \ coc-python
+                \ coc-r-lsp
+                \ coc-rust-analyzer
+                \ coc-sh
+                \ coc-texlab            " The `texlab` executable should be
+                                        " installed manually
+                \ coc-yaml
 endfunction
-let b:coc_enabled = 1
 function! CocToggle()
-    if b:coc_enabled
-        exec 'CocDisable'
+    let l:coc_enabled = get(b:, 'coc_enabled', 1)
+    if l:coc_enabled
         let b:coc_enabled = 0
+        exec 'CocDisable'
     else
-        exec 'CocEnable'
         let b:coc_enabled = 1
+        exec 'CocRestart'
     endif
 endfunction
-autocmd VimEnter * silent noremap <leader>cpi :call CocPluginInstall()<CR>
-autocmd VimEnter * silent noremap <leader>cx  :call CocToggle()<CR>
+autocmd BufEnter * silent noremap <leader>cpi :call CocPluginInstall()<CR>
+autocmd BufEnter * silent noremap <leader>cx  :call CocToggle()<CR>
 " Example configuration for coc.
 " From: https://github.com/neoclide/coc.nvim#example-vim-configuration
 
@@ -103,11 +105,28 @@ function! s:show_documentation()
   endif
 endfunction
 
+let s:coc_highlight_enabled = 0
+let g:coc_highlight_disable_size_threshold = 524288
+function ActivateCocCursorHoldAction()
+    if getfsize(expand('<afile>')) < g:coc_highlight_disable_size_threshold
+        if s:coc_highlight_enabled == 0
+            autocmd CursorHold * silent call CocActionAsync('highlight')
+            " hi CocHighlightText guibg=#123e70
+            let s:coc_highlight_enabled = 1
+        endif
+    else
+        autocmd! CursorHold *
+        let s:coc_highlight_enabled = 0
+        echom 'File too large, not enabling highlighting on CursorHold'
+    endif
+endfunction
+
 " Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
+" Supports file size up to 512 KB (524288 B)
+autocmd BufEnter * silent call ActivateCocCursorHoldAction()
 
 " Symbol renaming.
-autocmd VimEnter * nmap <leader>rn <Plug>(coc-rename)
+autocmd BufEnter * nmap <leader>rn <Plug>(coc-rename)
 
 " Formatting selected code.
 xmap <leader>f  <Plug>(coc-format-selected)
@@ -129,7 +148,7 @@ nmap <leader>a  <Plug>(coc-codeaction-selected)
 " Remap keys for applying codeAction to the current buffer.
 nmap <leader>ac  <Plug>(coc-codeaction)
 " Apply AutoFix to problem on the current line.
-autocmd VimEnter * nmap <leader>qf  <Plug>(coc-fix-current)
+autocmd BufEnter * nmap <leader>qf  <Plug>(coc-fix-current)
 
 " Map function and class text objects
 " NOTE: Requires 'textDocument.documentSymbol' support from the language server.

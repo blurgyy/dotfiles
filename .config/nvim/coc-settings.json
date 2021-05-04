@@ -3,6 +3,7 @@
     "coc.source.buffer.firstMatch": false,
     "diagnostic.virtualText": true,
     "python.pythonPath": "~/.gy/bin/pydummy",
+    "rust-analyzer.server.path": "/usr/bin/rust-analyzer",
     "languageserver": {
         "golang": {
             "command": "~/go/bin/gopls",
@@ -11,27 +12,62 @@
                 ".git/",
                 ".vim/"
             ],
-            "filetypes": ["go"]
+            "filetypes": [
+                "go"
+            ]
         },
-        "cpp": {
+        "ccls": {
+            "command": "ccls",
+            "filetypes": [
+                "c",
+                "cpp",
+                "cuda",
+                "objc",
+                "objcpp"
+            ],
+            "rootPatterns": [
+                "target"
+            ],
+            "initializationOptions": {
+                "cache": {
+                    "directory": "/tmp/ccls",
+                    "format": "binary"
+                },
+                "client": {
+                    "snippetSupport": true
+                },
+                "compilationDatabaseDirectory": "target"
+            }
+        },
+        "clangd": {
             "command": "clangd",
             "args": [
                 "-j=3",
                 "--background-index=true",
-                "--compile-commands-dir=build",
-                "--header-insertion=never"
+                "--compile-commands-dir=target",
+                "--header-insertion=never",
+                "--header-insertion-decorators"
             ],
             "rootPatterns": [
-                "build/",
-                ".git/"
+                "target"
+            ],
+            "filetypes": []
+        },
+        "haskell": {
+            "command": "haskell-language-server-wrapper",
+            "args": [
+                "--lsp"
+            ],
+            "rootPatterns": [
+                "*.cabal",
+                "stack.yaml",
+                "cabal.project",
+                "package.yaml",
+                "hie.yaml"
             ],
             "filetypes": [
-                "c",
-                "cpp",
-                "cc",
-                "c++",
-                "objc",
-                "objcpp"
+                "haskell",
+                "lhaskell"
             ]
         }
     }
