@@ -1,0 +1,131 @@
+# Note: global envvar $_conda_root should be set before this script is
+# sourced.  Executable $_conda_root/bin/conda should exist for _conda_root to
+# be a valid path for below functions.
+
+function cinit() {
+    if [[ -z $_conda_root ]]; then
+        echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
+            >&2
+        return 1
+    fi
+    local __conda_setup
+    if __conda_setup=$( \
+            ''$_conda_root'/bin/conda' 'shell.zsh' 'hook' 2> /dev/null \
+        ); then
+        eval "$__conda_setup"
+    else
+        if [ -f "$_conda_root/etc/profile.d/conda.sh" ]; then
+            . "$_conda_root/etc/profile.d/conda.sh"
+        else
+            export PATH="$_conda_root/bin:$PATH"
+        fi
+    fi
+    set +e
+}
+
+function ccreate() {
+    if [[ -z $_conda_root ]]; then
+        echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
+            >&2
+        return 1
+    fi
+    if [[ $# -eq 0 ]]; then
+        local _curgdir
+        _curgdir=$(cg)
+        _curgdir=${_curgdir##*/}
+        if ! grep -q "\b$_curgdir\b" <(clist); then
+            cinit
+            conda create -n $_curgdir
+        else
+            echo "'$_curgdir' is already a conda environment, refusing to" \
+                "recreate conda env '$_curgdir'" >&2
+            return 2
+        fi
+    else
+        cinit
+        conda create "$@"
+    fi
+}
+
+function cact() {
+    if [[ -z $_conda_root ]]; then
+        echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
+            >&2
+        return 1
+    fi
+    if [[ -n $CONDA_DEFAULT_ENV ]]; then
+        echo "\`$CONDA_DEFAULT_ENV' is activated at the time, use" \
+            "\`cdeact\` to deactivate first." >&2
+        return 2
+    fi
+    if [[ $# -eq 0 ]]; then
+        local _curgdir
+        _curgdir=$(cg)
+        _curgdir=${_curgdir##*/}
+        if grep -q "\b$_curgdir\b" <(clist); then
+            cinit
+            conda activate $_curgdir
+        else
+            echo "Current directory '$_curgdir' is not known as a conda" \
+                "environment, use \`$0 \$ENVNAME\` to activate an" \
+                "environment with name \$ENVNAME." >&2
+            return 3
+        fi
+    else
+        cinit
+        conda activate $1
+    fi
+}
+
+function cdeact() {
+    if [[ -z $_conda_root ]]; then
+        echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
+            >&2
+        return 1
+    fi
+    cinit
+    conda deactivate $1
+    unset CONDA_EXE CONDA_INTERNAL_OLDPATH CONDA_PYTHON_EXE CONDA_SHLVL
+}
+
+function crm() {
+    if [[ -z $_conda_root ]]; then
+        echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
+            >&2
+        return 1
+    fi
+    if [[ $# -eq 0 ]]; then
+        echo "Function \`$0\` takes 1 positional argument <env>," \
+            "which is not provided" >&2
+        return 2
+    fi
+    cinit
+    conda env remove --name $1
+}
+
+function clist() {
+    if [[ -z $_conda_root ]]; then
+        echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
+            >&2
+        return 1
+    fi
+    local _conda_envs_dir _conda_env _env_enabled
+    _conda_envs_dir=~/.conda/envs
+    if [[ ! -d $_conda_envs_dir ]] || [[ -z $(command ls $_conda_envs_dir) ]];
+    then
+        echo "No envs found" >&2
+    fi
+    for _conda_env in $(command ls $_conda_envs_dir); do
+        if [[ ${CONDA_PREFIX##*/} == $_conda_env ]]; then
+            _env_enabled='->'
+        else
+            _env_enabled='  '
+        fi
+        echo " $_env_enabled $_conda_env"
+    done
+}
+
+# vim: set ft=sh:
+
+# Author: Blurgy <gy@blurgy.xyz>
+# Date:   Dec 13 2020, 14:50 [CST]
