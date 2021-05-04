@@ -6,6 +6,9 @@
 for i in ~/.shexports*; do
     . $i
 done
+for i in ~/.shsensitive*; do
+    . $i
+done
 # Do the same for those with prefix ".shfns"
 for i in ~/.shfns*; do
     . $i

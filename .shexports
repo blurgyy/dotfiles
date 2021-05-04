@@ -1,0 +1,87 @@
+# Default editor.
+export EDITOR=nvim
+
+# WakaTime home
+export WAKATIME_HOME=$HOME/.config/wakatime
+
+# When calling `vim`, use Neovim if it's installed, use Vim otherwise.
+# This variable is used in .shaliases and .shfns
+command -v nvim >/dev/null 2>&1 \
+    && _vim_exexutable="nvim" \
+    || _vim_exexutable="vim"
+
+# Taskwarrior server data location
+export TASKDDATA=/var/lib/taskd
+
+# Default pager
+if command -v bat >/dev/null 2>&1; then
+    # export PAGER="bat -p"
+    export BAT_THEME="gruvbox-dark"
+    ## Man pager
+    #export MANPAGER="sh -c 'col -bx | bat -pl man'"
+fi
+
+# Github, use this jointly with .ssh/config in tracked dotfiles
+export GH="github:Blurgyy"
+
+# Domains.
+export BSITE="blurgy.xyz"
+export BLOG="gy.blurgy.xyz"
+
+# TeXlive-2021.
+export PATH="$PATH:/usr/local/texlive/2021/bin/x86_64-linux"
+export MANPATH="$MANPATH:/usr/local/texlive/2021/texmf-dist/doc/man"
+export INFOPATH="$INFOPATH:/usr/local/texlive/2021/texmf-dist/doc/info"
+
+# Perl5 Local::lib
+export PATH="$HOME/perl5/bin${PATH:+:${PATH}}"
+export PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"
+export PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"
+export PERL_MB_OPT="--install_base \"$HOME/perl5\""
+export PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"
+
+# npm.
+export PATH="$PATH:$HOME/.node_modules/bin"
+
+export PATH="$HOME/.local/bin:$HOME/.gy/local/bin:$HOME/.gy/bin:$PATH"
+export LC_ALL="en_US.UTF-8"
+export GPG_TTY=$(tty)
+
+export GEM_HOME="$HOME/gems"
+export PATH="$PATH:$HOME/gems/bin"
+command -v ruby >/dev/null 2>&1 && {
+    export PATH="$PATH:$(ruby -e 'print Gem.user_dir')/bin"
+} || true
+
+# Set root of anaconda
+if [[ -d /opt/anaconda ]]; then
+    export _conda_root=/opt/anaconda
+elif [[ -d ~/anaconda3 ]]; then
+    export _conda_root=~/anaconda3
+fi
+
+# OpenGL issue has been fixed.
+# # Disable OpenGL for taichi.
+# # This fixes https://forum.taichi.graphics/t/arch/425
+# export TI_ENABLE_OPENGL=0
+
+# Compiled binaries of go and rust
+PATH=$PATH:$HOME/.cargo/bin:$HOME/go/bin
+
+# Disable go mod, or coc.nvim won't work
+export GO111MODULE=off
+
+# Settings for fzf.
+# From: https://github.com/junegunn/fzf/wiki/Configuring-shell-key-bindings
+# Use fzf in tmux mode
+export FZF_TMUX=1
+# Use fd, fallback to find
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
+
+# Syntax highlighting
+# vim: set filetype=sh:
+
+# Author: Blurgy
+# Date:   Jul 24 2020
