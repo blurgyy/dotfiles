@@ -1,3 +1,57 @@
+# Rename files with name `xxx/yy.z` to `xxx/yy.z~`
+function bak() {
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: $0 <paths>" >&2
+        builtin return 1
+    fi
+    local _path _newpath
+    for _path in "$@"; do
+        if [[ ! -e $_path ]]; then
+            echo "'$_path' does not exist" >&2
+            builtin return 2
+        fi
+        # Remove trailing slashes
+        _path=$(sed 's:/\+$::' <<< $_path)
+        _newpath=$_path~
+        if [[ ! -e $_path~ ]]; then
+            mv -v $_path $_newpath
+        else
+            echo "Not overwriting existing '$_newpath'" >&2
+            builtin return 3
+        fi
+    done
+}
+
+# Rename files with name `xxx/yy.z!` to `xxx/yy.z`
+function debak() {
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: $0 <paths>" >&2
+        builtin return 1
+    fi
+    local _path _newpath
+    for _path in "$@"; do
+        if ! [[ -e $_path ]]; then
+            >&2 echo "'$_path' does not exist"
+            builtin return 2
+        fi
+        # Remove trailing slashes
+        _path=$(sed 's:/\+$::' <<< $_path)
+        if ! grep -q '~$' <<< $_path ;then
+            >&2 echo "Cannot debak file '$_path', because it does not have" \
+                "'~' as its suffix"
+            builtin return 4
+        fi
+        # Remove 1 trailing tilde from path as new path
+        _newpath=$(sed 's:~$::' <<< $_path)
+        if [[ ! -e $_newpath ]]; then
+            mv -v $_path $_newpath
+        else
+            >&2 echo "Not overwriting existing '$_newpath'"
+            builtin return 3
+        fi
+    done
+}
+
 # Show message and exit with code 169
 function die(){
     if [[ $# -gt 0 ]]; then
@@ -60,19 +114,11 @@ function gcnt(){
             fi
         else
             echo "Revision <$_revision>: not exist"
-            return 2
+            builtin return 2
         fi
     else
         echo "Not under a git repository"
-        return 1
-    fi
-}
-
-function sudo() {
-    if [[ $1 != '-i' ]]; then
-        command sudo -E "$@"
-    else
-        command sudo -i
+        builtin return 1
     fi
 }
 
@@ -98,113 +144,69 @@ function vimake() {
     fi
 }
 
-function cinit() {
-    if [[ -z $_conda_root ]]; then
-        echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
-            >&2
-        return 1
-    fi
-    if __conda_setup=$( \
-            ''$_conda_root'/bin/conda' 'shell.zsh' 'hook' 2> /dev/null \
-        ); then
-        eval "$__conda_setup"
-    else
-        if [ -f "$_conda_root/etc/profile.d/conda.sh" ]; then
-            . "$_conda_root/etc/profile.d/conda.sh"
-        else
-            export PATH="$_conda_root/bin:$PATH"
-        fi
-    fi
-    unset __conda_setup
-    set +e
-}
-
-function ccreate() {
-    if [[ -z $_conda_root ]]; then
-        echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
-            >&2
-        return 1
-    fi
-    cinit
-    conda create "$@"
-}
-
-function cact() {
-    if [[ -z $_conda_root ]]; then
-        echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
-            >&2
-        return 1
-    fi
-    if [[ -n $CONDA_DEFAULT_ENV ]]; then
-        echo "\`$CONDA_DEFAULT_ENV' is activated at the time, use" \
-            "\`cdeact\` to deactivate first." >&2
-        return 2
-    fi
-    if [[ $# -eq 0 ]]; then
-        local _curgdir
-        _curgdir=$(cg)
-        _curgdir=${_curgdir##*/}
-        if grep -q "\b$_curgdir\b" <(clist); then
-            cinit
-            conda activate $_curgdir
-        else
-            echo "Current directory '$_curgdir' is not known as a conda" \
-                "environment, use \`$0 \$ENVNAME\` to activate an" \
-                "environment with name \$ENVNAME." >&2
-            return 3
-        fi
-    else
-        cinit
-        conda activate $1
-    fi
-}
-
-function cdeact() {
-    if [[ -z $_conda_root ]]; then
-        echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
-            >&2
-        return 1
-    fi
-    cinit
-    conda deactivate $1
-    unset CONDA_EXE CONDA_INTERNAL_OLDPATH CONDA_PYTHON_EXE CONDA_SHLVL
-}
-
-function crm() {
-    if [[ -z $_conda_root ]]; then
-        echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
-            >&2
-        return 1
-    fi
-    if [[ $# -eq 0 ]]; then
-        echo "Function \`$0\` takes 1 positional argument <env>," \
-            "which is not provided" >&2
-        return 2
-    fi
-    cinit
-    conda env remove --name $1
-}
-
-function clist() {
-    if [[ -z $_conda_root ]]; then
-        echo "Anaconda cannot be found under ~/anaconda3, nor /opt/anaconda" \
-            >&2
-        return 1
-    fi
-    _conda_envs_dir=~/.conda/envs
-    if [[ ! -d $_conda_envs_dir ]] || [[ -z $(command ls $_conda_envs_dir) ]];
-    then
-        echo "No envs found" >&2
-    fi
-    for _conda_env in $(command ls $_conda_envs_dir); do
-        if [[ ${CONDA_PREFIX##*/} == $_conda_env ]]; then
-            _env_enabled='->'
-        else
-            _env_enabled='  '
-        fi
-        echo " $_env_enabled $_conda_env"
+# Generate a random 256-bit color in #rrggbb format
+function randcolor() {
+    RANDOM=$(date +%s)
+    local ret randnumber
+    ret='#'
+    for _ in {1..3}; do
+        randnumber=$RANDOM
+        ret+=$(printf "%02x" $(( randnumber % 0xff )))
     done
-    unset _conda_envs_dir _conda_env _env_enabled
+    echo $ret
+}
+
+# Clear current line in terminal.
+function ___clear_console() {
+    echo -ne $'\33[2K'"\r"
+}
+
+# Timer,
+function cdtimer() {
+    if [[ "$#" -eq 0 ]]; then
+        >&2 echo "$0: Approximate count down timer."
+        >&2 echo
+        >&2 echo "    Usage: $0 <SECONDS>"
+        builtin return 1
+    fi
+
+    local _countdown=$1 _
+    if [[ $_countdown -le 0 ]]; then
+        >&2 echo "Expected positive input (got $_countdown, which is less" \
+            "than or equal to 0)"
+        builtin return 2
+    fi
+    # while [[ $_countdown -gt 0 ]]; do
+    for __ in {$_countdown..1}; do
+        ___clear_console && echo -ne " -> Counting down: $__ .. "
+        sleep 1
+    done
+    ___clear_console && echo "Finished counting down $_countdown (s)"
+}
+
+# Random decision maker.
+function yesno() {
+    local _yes=$(( RANDOM % 2 ))
+    RANDOM=$RANDOM
+    tput smso
+    if [[ _yes -eq 1 ]]; then
+        tput setaf 2
+        echo yes
+    else
+        tput setaf 1
+        echo no
+    fi
+    tput rmso
+}
+
+function rfborder(){
+    if ! command -v bspc >/dev/null; then
+        >&2 echo "bspc is not executable"
+        builtin return 1
+    fi
+    local _ncolor=$(randcolor)
+    echo "Using randomly selected color $_ncolor for window border .."
+    bspc config focused_border_color "$_ncolor"
 }
 
 # Syntax highlighting
