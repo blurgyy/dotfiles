@@ -1,0 +1,21 @@
+[module/xbacklight]
+type = internal/xbacklight
+
+format = <label> <bar>
+label = 🔆
+
+bar-width = 10
+bar-indicator = #
+bar-indicator-foreground = #fff
+bar-indicator-font = 1
+bar-fill = =
+bar-fill-font = 1
+bar-fill-foreground = #9f78e1
+bar-empty = -
+bar-empty-font = 1
+bar-empty-foreground = ${colors.foreground-alt}
+
+# vim: ft=dosini
+
+# Author: Blurgy <gy@blurgy.xyz>
+# Date:   Apr 30 2021, 19:43 [CST]

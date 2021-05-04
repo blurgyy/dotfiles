@@ -1,0 +1,57 @@
+[bar/john]
+#monitor = ${env:MONITOR:HDMI-1}
+bottom = true
+width = 100%
+height = 42
+#offset-x = 1%
+#offset-y = 1%
+radius = 6.0
+fixed-center = false
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 3
+line-color = #f00
+
+border-size = 4
+border-color = #00000000
+
+padding-left = 0
+padding-right = 2
+
+module-margin-left = 1
+module-margin-right = 2
+
+# Note: Using `xxx-font = 1` will result in using 'font-0'
+# Reference: https://github.com/polybar/polybar/wiki/Fonts#user-content-fonts
+font-0 = Fira Code:style=Retina:antialias=true:pixelsize=12;1
+font-1 = Fira Sans:pixelsize=12;1
+# Install package `noto-fonts-emoji` to enable emoji support.
+font-2 = Noto Color Emoji:scale=10;1
+# Install package `ttf-nerd-fonts-symbols-mono` to enable support for many
+# unicodes.
+font-3 = Symbols Nerd Font:pixelsize=12;1
+
+modules-left = bspwm
+modules-center = xwindow
+modules-right = xbacklight pulseaudio memory cpu wlan battery temperature date powermenu
+
+tray-position = right
+tray-padding = 2
+# tray-background = #0063ff
+
+wm-restack = bspwm
+
+#override-redirect = true
+
+# scroll-up = bspwm-desknext
+# scroll-down = bspwm-deskprev
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+# vim: ft=dosini
+
+# Author: Blurgy <gy@blurgy.xyz>
+# Date:   Apr 30 2021, 19:04 [CST]

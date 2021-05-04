@@ -1,0 +1,9 @@
+[module/backlight-acpi]
+inherit = module/xbacklight
+type = internal/backlight
+card = intel_backlight
+
+# vim: ft=dosini
+
+# Author: Blurgy <gy@blurgy.xyz>
+# Date:   Apr 30 2021, 19:43 [CST]
