@@ -1,6 +1,0 @@
-:set prompt "\ESC[33m\STXGHCi> \ESC[m\STX"
-
--- vim: set ft=cabal:
-
--- Author: Blurgy <gy@blurgy.xyz>
--- Date:   Apr 12 2021, 10:52 [CST]

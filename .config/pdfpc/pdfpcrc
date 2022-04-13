@@ -1,8 +1,0 @@
-bind j next
-bind l next
-bind k prev
-bind h prev
-bind Escape quit
-
-bind C+d next10
-bind C+u prev10

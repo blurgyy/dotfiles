@@ -1,6 +1,0 @@
-*.cpp       text diff=cpp
-*.hpp       text diff=cpp
-*.md        text diff=markdown
-
-# Author: Blurgy <gy@blurgy.xyz>
-# Date:   May 04 2021, 14:35 [CST]
